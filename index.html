@@ -6091,23 +6091,36 @@ document.addEventListener('DOMContentLoaded', function(){
 </script><script>
 async function saveAllData() {
   try {
+    console.log("🚀 Memulai sinkronisasi penuh ke Supabase...");
+
+    // Ambil semua data dari localStorage (fallback jika variabel hilang)
+    const usersData = JSON.parse(localStorage.getItem('usersData') || '[]');
+    const studentsData = JSON.parse(localStorage.getItem('studentsData') || '[]');
+    const classesData = JSON.parse(localStorage.getItem('classesData') || '[]');
+    const materialsData = JSON.parse(localStorage.getItem('materialsData') || '[]');
+    const scheduleData = JSON.parse(localStorage.getItem('scheduleData') || '[]');
+    const activityScheduleData = JSON.parse(localStorage.getItem('activityScheduleData') || '[]');
+    const educationInfoData = JSON.parse(localStorage.getItem('educationInfoData') || '[]');
+
     // ===== USERS =====
     const { data: usersOld } = await window.supabase.from('users').select('username');
-    const localUsers = usersData.map(u => u.username);
-    const toDeleteUsers = usersOld.filter(u => !localUsers.includes(u.username));
+    const localUsers = (usersData || []).map(u => u.username);
+    const toDeleteUsers = (usersOld || []).filter(u => !localUsers.includes(u.username));
     if (toDeleteUsers.length > 0) {
-      await window.supabase.from('users').delete().in('username', toDeleteUsers.map(u => u.username));
-      console.log('🗑️ Users deleted from Supabase:', toDeleteUsers.map(u => u.username));
+      const { error: errDelU } = await window.supabase.from('users').delete().in('username', toDeleteUsers.map(u => u.username));
+      if (errDelU) console.error('❌ Gagal hapus users:', errDelU.message);
+      else console.log('🗑️ Users dihapus dari Supabase:', toDeleteUsers.map(u => u.username));
     }
     await window.supabase.from('users').upsert(usersData);
 
     // ===== STUDENTS =====
     const { data: oldStudents } = await window.supabase.from('students').select('username');
-    const localStudents = studentsData.map(s => s.username);
-    const toDelete = oldStudents.filter(s => !localStudents.includes(s.username));
+    const localStudents = (studentsData || []).map(s => s.username);
+    const toDelete = (oldStudents || []).filter(s => !localStudents.includes(s.username));
     if (toDelete.length > 0) {
-      await window.supabase.from('students').delete().in('username', toDelete.map(s => s.username));
-      console.log('🗑️ Students deleted from Supabase:', toDelete.map(s => s.username));
+      const { error: errDel } = await window.supabase.from('students').delete().in('username', toDelete.map(s => s.username));
+      if (errDel) console.error('❌ Gagal hapus siswa:', errDel.message);
+      else console.log('🗑️ Siswa dihapus dari Supabase:', toDelete.map(s => s.username));
     }
     await window.supabase.from('students').upsert(studentsData);
 
@@ -6129,6 +6142,33 @@ async function saveAllData() {
     console.log("✅ Semua data berhasil disimpan & disinkron dengan Supabase!");
   } catch (error) {
     console.error("❌ Gagal menyimpan data ke Supabase:", error.message);
+  }
+}
+
+// Load data langsung dari Supabase (tanpa dummy)
+async function loadAllData() {
+  try {
+    console.log("🌐 Mengambil data langsung dari Supabase...");
+    const { data: users } = await window.supabase.from('users').select('*');
+    const { data: students } = await window.supabase.from('students').select('*');
+    const { data: classes } = await window.supabase.from('classes').select('*');
+    const { data: materials } = await window.supabase.from('materials').select('*');
+    const { data: schedule } = await window.supabase.from('schedule').select('*');
+    const { data: activity } = await window.supabase.from('activity_schedule').select('*');
+    const { data: education } = await window.supabase.from('education_info').select('*');
+
+    // Simpan ke localStorage agar UI tetap bisa render cepat
+    localStorage.setItem('usersData', JSON.stringify(users || []));
+    localStorage.setItem('studentsData', JSON.stringify(students || []));
+    localStorage.setItem('classesData', JSON.stringify(classes || []));
+    localStorage.setItem('materialsData', JSON.stringify(materials || []));
+    localStorage.setItem('scheduleData', JSON.stringify(schedule || []));
+    localStorage.setItem('activityScheduleData', JSON.stringify(activity || []));
+    localStorage.setItem('educationInfoData', JSON.stringify(education || []));
+
+    console.log("✅ Semua data berhasil di-load dari Supabase!");
+  } catch (error) {
+    console.error("❌ Gagal mengambil data dari Supabase:", error.message);
   }
 }
 </script></body>
