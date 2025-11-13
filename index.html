@@ -8,10 +8,15 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
-    /* Normalize box-sizing */
-    * { box-sizing: border-box; }
+        body {
+            box-sizing: border-box;
+        }
+        
+        * {
+            box-sizing: border-box;
+        }
 
-    .sidebar-active {
+        .sidebar-active {
             background-color: #1e40af;
             color: white;
         }
@@ -89,16 +94,17 @@
         .super-admin-card-2 { background: linear-gradient(135deg, #10B981 0%, #059669 100%); } /* Green */
         .super-admin-card-3 { background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%); } /* Blue */
     </style>
-<!-- Note: removed local SDK includes which appeared to be development residues -->
-<!-- Supabase initialization (use a secure config or env to inject the anon key) -->
+<style>@view-transition { navigation: auto; }</style>
+<script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+<script src="/_sdk/element_sdk.js" type="text/javascript"></script>
+
 <script type="module">
   import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
   const SUPABASE_URL = 'https://uwigghirpvlnzqhruglq.supabase.co'
-  // REPLACE the placeholder with your anon key at runtime or via a secure config
-  const SUPABASE_ANON_KEY = 'REPLACE_WITH_ANON_KEY'
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV3aWdnaGlycHZsbnpxaHJ1Z2xxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMwNTE3NTksImV4cCI6MjA3ODYyNzc1OX0.P--M4TysIdMfwvM1KTd9fAkqyt2hg5WWdmKNuE67psk'
   window.supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 </script>
-<!-- End Supabase initialization -->
+
 </head>
 <body class="bg-white">
 <style>
@@ -118,11 +124,9 @@
   z-index: 10;
 }
 </style>
-
-    
-<div id="loginPage" class="login-bg min-h-screen flex items-center justify-center py-15 px-4 relative">
-  <div class="login-overlay"></div>
-  <div class="login-container max-w-md  w-full space-y-8 bg-white/90 p-8 rounded-2xl shadow-2xl backdrop-blur-md">
+<div class="login-bg min-h-screen flex items-center justify-center py-15 px-4 relative" id="loginPage">
+<div class="login-overlay"></div>
+<div class="login-container max-w-md w-full space-y-8 bg-white/90 p-8 rounded-2xl shadow-2xl backdrop-blur-md">
 <div class="max-w-md w-full space-y-8">
 <div class="text-center">
 <div class="bg-white-600 w-24 h-24 mx-auto rounded-lg flex items-center justify-center mb-4 shadow-lg">
@@ -144,7 +148,6 @@
 </div>
 </div>
 <div class="mt-4 text-center text-sm text-gray-600">
-</div>
 </div>
 </div>
 <div class="hidden min-h-full" id="dashboardPage">
@@ -5088,8 +5091,6 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 </script>
-
-
 <!-- === FITUR ZOOM INTERAKTIF PRO (KHUSUS SISWA) 
 <style>
   #zoomModal {
@@ -5288,13 +5289,11 @@ document.addEventListener('DOMContentLoaded', () => {
   #zoomPrev { left: 20px; }
   #zoomNext { right: 20px; }
 </style>
-
 <div id="zoomModal" onclick="closeZoom(event)">
-  <span id="zoomPrev" onclick="prevZoom(event)">&#10094;</span>
-  <img id="zoomImage" src="" alt="Zoomed Artwork" />
-  <span id="zoomNext" onclick="nextZoom(event)">&#10095;</span>
+<span id="zoomPrev" onclick="prevZoom(event)">❮</span>
+<img alt="Zoomed Artwork" id="zoomImage" src=""/>
+<span id="zoomNext" onclick="nextZoom(event)">❯</span>
 </div>
-
 <script>
   let currentZoomIndex = 0;
   let zoomImages = [];
@@ -5353,8 +5352,6 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 </script>
 <!-- === AKHIR FITUR ZOOM INTERAKTIF PRO === -->
-
-
 <!-- === FITUR FILTER KELAS & BATASAN VISIBILITAS SISWA === -->
 <script>
   // Daftar kelas contoh (bisa diganti dari database nanti)
@@ -5416,8 +5413,6 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 </script>
 <!-- === AKHIR FITUR FILTER KELAS === -->
-
-
 <!-- === PENYEMPURNAAN FILTER KELAS UNTUK SEMUA MODUL === -->
 <script>
   if (typeof window.daftarKelas === "undefined") window.daftarKelas = ['SR GOLD A', 'SR GOLD B', 'SR SILVER', 'SR PLATINUM'];
@@ -5477,8 +5472,6 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 </script>
 <!-- === AKHIR PENYEMPURNAAN FILTER KELAS === -->
-
-
 <!-- === FINAL FILTER DROPDOWN + CHECKLIST UNTUK SEMUA MODUL === -->
 <script>
   if (typeof window.daftarKelas === "undefined") window.daftarKelas = [
@@ -5545,8 +5538,6 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 </script>
 <!-- === AKHIR FILTER DROPDOWN + CHECKLIST FINAL === -->
-
-
 <!-- === PERBAIKAN FINAL MODUL JADWAL BELAJAR (FILTER KELAS AKTIF) === -->
 <script>
   const daftarKelasBelajar = [
@@ -5597,8 +5588,6 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 </script>
 <!-- === AKHIR PERBAIKAN MODUL JADWAL BELAJAR === -->
-
-
 <!-- === PERBAIKAN AKHIR MODUL JADWAL BELAJAR (SAMA DENGAN JADWAL KEGIATAN) === -->
 <script>
   const daftarKelasSchedule = [
@@ -5653,8 +5642,6 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 </script>
 <!-- === AKHIR PERBAIKAN MODUL JADWAL BELAJAR === -->
-
-
 <!-- BEGIN: Injected Fix — Regionalize Jadwal Belajar (LKS_141_ScheduleFix) -->
 <script>
 (function(){
@@ -5919,8 +5906,6 @@ document.addEventListener('DOMContentLoaded', () => {
 })();
 </script>
 <!-- END: Injected Fix — Regionalize Jadwal Belajar -->
-
-
 <script>
 // --- FIX: Modul Kelola Kelas ---
 function loadManageClasses() {
@@ -6105,152 +6090,5 @@ document.addEventListener('kelasUpdated', function(e) {
 document.addEventListener('DOMContentLoaded', function(){
     refreshActivityClassDropdown();
 });
-</script>
-<script>
-// === FILTER REGIONAL FIX v2 ===
-
-// Ambil daftar region unik + fallback manual
-function getAllRegions() {
-  const regionSet = new Set();
-  if (typeof availableRegions !== 'undefined' && availableRegions.length > 0) {
-    availableRegions.forEach(r => regionSet.add(r.name || r));
-  }
-  if (typeof availableClasses !== 'undefined' && availableClasses.length > 0) {
-    availableClasses.forEach(c => regionSet.add(c.region));
-  }
-  // Tambah fallback region default
-  regionSet.add('Pusat Bandung');
-  return Array.from(regionSet);
-}
-
-// Bangun dropdown regional
-function buildRegionDropdown() {
-  const regions = getAllRegions();
-  let options = '<option value="all">Semua Regional</option>';
-  regions.forEach(r => options += `<option value="${r}">${r}</option>`);
-  return `<select id="filterRegion" onchange="applyRegionFilter(this.value)" class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 ml-3">${options}</select>`;
-}
-
-// Terapkan filter hanya untuk modul aktif
-function applyRegionFilter(region) {
-  window.selectedRegion = region;
-  const activeTitle = document.querySelector('#contentArea h2')?.textContent || '';
-  if (activeTitle.includes('Kelola Kelas')) {
-    if (typeof loadManageClasses === 'function') loadManageClasses();
-  } else if (activeTitle.includes('Jadwal Belajar')) {
-    if (typeof loadLearningSchedule === 'function') loadLearningSchedule();
-  } else if (activeTitle.includes('Jadwal Kegiatan')) {
-    if (typeof loadActivitySchedule === 'function') loadActivitySchedule();
-  }
-}
-
-// === Patch Modul Kelola Kelas ===
-function loadManageClasses() {
-  const content = document.getElementById('contentArea');
-  let filteredClasses = availableClasses;
-  let selectedRegion = window.selectedRegion || 'all';
-
-  if (currentUser.role === 'Admin') {
-    filteredClasses = availableClasses.filter(cls => cls.region === currentUser.region);
-  } else if (currentUser.role === 'Super Admin' && selectedRegion !== 'all') {
-    filteredClasses = availableClasses.filter(cls => cls.region === selectedRegion);
-  }
-
-  const regionFilterHTML = currentUser.role === 'Super Admin' ? buildRegionDropdown() : '';
-
-  content.innerHTML = `
-    <div class="fade-in">
-      <div class="flex justify-between items-center mb-6">
-        <div class="flex items-center">
-          <h2 class="text-2xl font-bold text-gray-900">🏫 Kelola Kelas</h2>
-          ${regionFilterHTML}
-        </div>
-        <button onclick="addClass()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-sm">+ Tambah Kelas</button>
-      </div>
-      <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
-        <h3 class="text-xl font-semibold text-gray-900 mb-4">Daftar Kelas (${filteredClasses.length})</h3>
-        <div class="overflow-x-auto">
-          <table class="w-full">
-            <thead class="bg-blue-800 text-white">
-              <tr>
-                <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Nama Kelas</th>
-                <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Deskripsi</th>
-                <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Regional</th>
-                <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Aksi</th>
-              </tr>
-            </thead>
-            <tbody class="bg-white">
-              ${filteredClasses.map(cls => `
-                <tr class="border-t border-gray-200 hover:bg-blue-50">
-                  <td class="px-4 py-3 text-sm font-medium text-gray-900">${cls.name}</td>
-                  <td class="px-4 py-3 text-sm text-gray-600">${cls.description}</td>
-                  <td class="px-4 py-3 text-sm text-blue-600 font-medium">${cls.region}</td>
-                  <td class="px-4 py-3 text-sm">
-                    ${(currentUser.role === 'Super Admin' || cls.region === currentUser.region) ? 
-                      `<button onclick="editClass(${cls.id})" class="text-blue-600 hover:text-blue-800 mr-3">Edit</button>
-                      <button onclick="deleteClass(${cls.id})" class="text-red-600 hover:text-red-800">Hapus</button>` :
-                      `<span class='text-gray-400'>-</span>`}
-                  </td>
-                </tr>`).join('')}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>`;
-
-  if (currentUser.role === 'Super Admin' && document.getElementById('filterRegion')) {
-    document.getElementById('filterRegion').value = selectedRegion;
-  }
-}
-
-// === Tambahkan dropdown regional di Jadwal Belajar & Kegiatan ===
-function patchScheduleModules() {
-  if (currentUser.role !== 'Super Admin') return;
-  const title = document.querySelector('#contentArea h2')?.textContent || '';
-  if (title.includes('Jadwal Belajar') || title.includes('Jadwal Kegiatan')) {
-    if (!document.getElementById('filterRegion')) {
-      const header = document.querySelector('.flex.justify-between.items-center.mb-6') || document.querySelector('.schedule-header, .activity-header');
-      if (header) header.insertAdjacentHTML('beforeend', buildRegionDropdown());
-    }
-    if (document.getElementById('filterRegion')) {
-      document.getElementById('filterRegion').value = window.selectedRegion || 'all';
-    }
-  }
-}
-
-// Patch fungsi jadwal belajar
-const _oldLoadLearningSchedule = window.loadLearningSchedule;
-window.loadLearningSchedule = function() {
-  if (_oldLoadLearningSchedule) _oldLoadLearningSchedule();
-  patchScheduleModules();
-};
-
-// Patch fungsi jadwal kegiatan
-const _oldLoadActivitySchedule = window.loadActivitySchedule;
-window.loadActivitySchedule = function() {
-  if (_oldLoadActivitySchedule) _oldLoadActivitySchedule();
-  patchScheduleModules();
-};
-</script>
-
-
-// Connectivity check utility
-  try {
-  } catch (err) {
-  }
-}
-
-// showNotification used in several places, ensure exists
-      el = document.createElement('div')
-      el.id = id
-      el.className = 'notification ' + (type === 'error' ? 'error' : 'success')
-    }
-    el.textContent = msg
-    el.className = 'notification ' + (type === 'error' ? 'error' : 'success')
-    setTimeout(()=>{ try{ el.remove() }catch(e){} }, 4000)
-  }
-}
-
-</body>
+</script></body>
 </html>
-</script>
