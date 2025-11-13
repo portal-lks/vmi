@@ -239,7 +239,7 @@ function loadSession() {
                 try {
                     let logs = JSON.parse(localStorage.getItem('loginActivityLogs') || '[]');
                     const now = new Date().toLocaleString('id-ID', { hour12: false });
-                    const allUsers = getAllUsers();
+                    const allUsers = await loadAllData();
                     if (allUsers[username] && allUsers[username].role !== 'Super Admin') {
                         logs.unshift({
                             name: users[username].name,
@@ -259,7 +259,7 @@ window.addEventListener("DOMContentLoaded", () => {
 document.addEventListener("DOMContentLoaded", () => {
   const loginForm = document.getElementById('loginForm');
   if (loginForm) {
-    loginForm.addEventListener('submit', function(e) {
+    loginForm.addEventListener('submit', async function(e) {
       setTimeout(() => {
         if (currentUser) saveSession();
       }, 200);
@@ -411,12 +411,12 @@ window.saveAllData = saveAllData;
         }
 
         // Login Handler
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
             
-            const users = getAllUsers();
+            const users = await loadAllData();
 
             if (users[username] && users[username].password === password) {
                 currentUser = { username, ...users[username] };
@@ -425,7 +425,7 @@ window.saveAllData = saveAllData;
                 try {
                     let logs = JSON.parse(localStorage.getItem('loginActivityLogs') || '[]');
                     const now = new Date().toLocaleString('id-ID', { hour12: false });
-                    const allUsers = getAllUsers();
+                    const allUsers = await loadAllData();
                     if (allUsers[username] && allUsers[username].role !== 'Super Admin') {
                         logs.unshift({
                             name: users[username].name,
@@ -1080,7 +1080,7 @@ else if (role === 'Admin') {
                 </form>
             `);
 
-            document.getElementById('addAdminForm').addEventListener('submit', function(e) {
+            document.getElementById('addAdminForm').addEventListener('submit', async function(e) {
                 e.preventDefault();
                 const username = document.getElementById('adminUsername').value;
                 const name = document.getElementById('adminName').value;
@@ -1100,7 +1100,7 @@ else if (role === 'Admin') {
                     return;
                 }
 
-                if (getAllUsers()[username]) {
+                if (await loadAllData()[username]) {
                     showNotification('Username sudah digunakan!', 'error');
                     return;
                 }
@@ -1143,7 +1143,7 @@ else if (role === 'Admin') {
                 </form>
             `);
 
-            document.getElementById('editAdminForm').addEventListener('submit', function(e) {
+            document.getElementById('editAdminForm').addEventListener('submit', async function(e) {
                 e.preventDefault();
                 const newName = document.getElementById('editAdminName').value;
                 const newRegion = document.getElementById('editAdminRegion').value;
@@ -2381,7 +2381,7 @@ function loadAddStudent() {
   // Hook form submit
   const form = document.getElementById('addStudentForm');
   if (form) {
-    form.addEventListener('submit', function(e) {
+    form.addEventListener('submit', async function(e) {
       e.preventDefault();
       const name = document.getElementById('studentName').value.trim();
       const username = document.getElementById('studentUsername').value.trim();
@@ -2432,7 +2432,7 @@ function openAddStudentModal() {
       <div><button type="submit" class="w-full px-4 py-2 bg-green-600 text-white rounded-lg">Tambah</button></div>
     </form>
   `);
-  document.getElementById('addStudentQuickForm').addEventListener('submit', function(e){
+  document.getElementById('addStudentQuickForm').addEventListener('submit', async function(e) {
     e.preventDefault();
     const name = document.getElementById('qsName').value.trim();
     const username = document.getElementById('qsUsername').value.trim();
@@ -2454,7 +2454,7 @@ function openAddStudentModal() {
          * Memastikan password dapat diubah.
          */
         function editStudent(username) {
-            const allUsers = getAllUsers();
+            const allUsers = await loadAllData();
             const user = allUsers[username];
             if (!user || user.role !== 'Siswa') {
                 showNotification('Pengguna siswa tidak ditemukan!', 'error');
@@ -2510,7 +2510,7 @@ function openAddStudentModal() {
                 </form>
             `);
 
-            document.getElementById('editStudentForm').addEventListener('submit', function(e) {
+            document.getElementById('editStudentForm').addEventListener('submit', async function(e) {
                 e.preventDefault();
                 const newName = document.getElementById('editStudentName').value;
                 const newClass = document.getElementById('editStudentClass').value;
@@ -2550,7 +2550,7 @@ function openAddStudentModal() {
          * Menggunakan username sebagai kunci penghapusan.
          */
         function deleteStudent(username) {
-            const allUsers = getAllUsers();
+            const allUsers = await loadAllData();
             const user = allUsers[username];
              if (!user || user.role !== 'Siswa') {
                 showNotification('Pengguna siswa tidak ditemukan!', 'error');
@@ -2659,7 +2659,7 @@ function openAddStudentModal() {
                 </form>
             `);
 
-            document.getElementById('artworkForm').addEventListener('submit', function(e) {
+            document.getElementById('artworkForm').addEventListener('submit', async function(e) {
                 e.preventDefault();
                 const selectedStudentId = parseInt(document.getElementById('artworkStudentId').value);
                 const student = studentsData.find(s => s.id === selectedStudentId);
@@ -2713,7 +2713,7 @@ function openAddStudentModal() {
                 </form>
             `);
 
-            document.getElementById('editArtworkForm').addEventListener('submit', function(e) {
+            document.getElementById('editArtworkForm').addEventListener('submit', async function(e) {
                 e.preventDefault();
                 artwork.title = document.getElementById('editArtworkTitle').value;
                 artwork.description = document.getElementById('editArtworkDescription').value;
@@ -2746,7 +2746,7 @@ function openAddStudentModal() {
                 </div>
             `);
 
-            document.getElementById('editImageForm').addEventListener('submit', function(e) {
+            document.getElementById('editImageForm').addEventListener('submit', async function(e) {
                 e.preventDefault();
                 const fileInput = document.getElementById('newArtworkImage');
                 const file = fileInput.files[0];
@@ -2830,7 +2830,7 @@ function openAddStudentModal() {
                 </form>
             `);
 
-            document.getElementById('attendanceForm').addEventListener('submit', function(e) {
+            document.getElementById('attendanceForm').addEventListener('submit', async function(e) {
                 e.preventDefault();
                 const selectedStudentId = parseInt(document.getElementById('attendanceStudentId').value);
                 const student = studentsData.find(s => s.id === selectedStudentId);
@@ -2868,7 +2868,7 @@ function openAddStudentModal() {
                 </form>
             `);
 
-            document.getElementById('editAttendanceForm').addEventListener('submit', function(e) {
+            document.getElementById('editAttendanceForm').addEventListener('submit', async function(e) {
                 e.preventDefault();
                 attendance.date = document.getElementById('editAttendanceDate').value;
                 attendance.status = document.getElementById('editAttendanceStatus').value;
@@ -2956,7 +2956,7 @@ function openAddStudentModal() {
                 </form>
             `);
 
-            document.getElementById('skolastikTestForm').addEventListener('submit', function(e) {
+            document.getElementById('skolastikTestForm').addEventListener('submit', async function(e) {
                 e.preventDefault();
                 const selectedStudentId = parseInt(document.getElementById('skolastikTestStudentId').value);
                 const student = studentsData.find(s => s.id === selectedStudentId);
@@ -2999,7 +2999,7 @@ function openAddStudentModal() {
                 </form>
             `);
 
-            document.getElementById('editSkolastikTestForm').addEventListener('submit', function(e) {
+            document.getElementById('editSkolastikTestForm').addEventListener('submit', async function(e) {
                 e.preventDefault();
                 test.date = document.getElementById('editTestDate').value;
                 test.subject = document.getElementById('editTestSubject').value;
@@ -3078,7 +3078,7 @@ function openAddStudentModal() {
                 </form>
             `);
 
-            document.getElementById('tkaTestForm').addEventListener('submit', function(e) {
+            document.getElementById('tkaTestForm').addEventListener('submit', async function(e) {
                 e.preventDefault();
                 const selectedStudentId = parseInt(document.getElementById('tkaTestStudentId').value);
                 const student = studentsData.find(s => s.id === selectedStudentId);
@@ -3121,7 +3121,7 @@ function openAddStudentModal() {
                 </form>
             `);
 
-            document.getElementById('editTkaTestForm').addEventListener('submit', function(e) {
+            document.getElementById('editTkaTestForm').addEventListener('submit', async function(e) {
                 e.preventDefault();
                 test.date = document.getElementById('editTkaTestDate').value;
                 test.subject = document.getElementById('editTkaTestSubject').value;
@@ -3176,7 +3176,7 @@ function openAddStudentModal() {
                 </form>
             `);
 
-            document.getElementById('educationInfoForm').addEventListener('submit', function(e) {
+            document.getElementById('educationInfoForm').addEventListener('submit', async function(e) {
                 e.preventDefault();
                 const newInfo = {
                     id: educationInfo.length + 1,
@@ -3211,7 +3211,7 @@ function openAddStudentModal() {
                 </form>
             `);
 
-            document.getElementById('editEducationInfoForm').addEventListener('submit', function(e) {
+            document.getElementById('editEducationInfoForm').addEventListener('submit', async function(e) {
                 e.preventDefault();
                 info.title = document.getElementById('editInfoTitle').value;
                 info.content = document.getElementById('editInfoContent').value;
@@ -3304,7 +3304,7 @@ function openAddStudentModal() {
                 </form>
             `);
 
-            document.getElementById('materialForm').addEventListener('submit', function(e) {
+            document.getElementById('materialForm').addEventListener('submit', async function(e) {
                 e.preventDefault();
                 
                 const selectedClasses = Array.from(document.querySelectorAll('input[name="materialClasses"]:checked')).map(cb => cb.value);
@@ -3375,7 +3375,7 @@ function openAddStudentModal() {
                 </form>
             `);
 
-            document.getElementById('editMaterialForm').addEventListener('submit', function(e) {
+            document.getElementById('editMaterialForm').addEventListener('submit', async function(e) {
                 e.preventDefault();
                 
                 const updatedClasses = Array.from(document.querySelectorAll('input[name="editMaterialClasses"]:checked')).map(cb => cb.value);
@@ -3488,7 +3488,7 @@ function openAddStudentModal() {
                 </form>
             `);
 
-            document.getElementById('scheduleForm').addEventListener('submit', function(e) {
+            document.getElementById('scheduleForm').addEventListener('submit', async function(e) {
                 e.preventDefault();
                 
                 const selectedClasses = Array.from(document.querySelectorAll('input[name="scheduleClasses"]:checked')).map(cb => cb.value);
@@ -3572,7 +3572,7 @@ function openAddStudentModal() {
                 </form>
             `);
 
-            document.getElementById('editScheduleForm').addEventListener('submit', function(e) {
+            document.getElementById('editScheduleForm').addEventListener('submit', async function(e) {
                 e.preventDefault();
                 
                 const updatedClasses = Array.from(document.querySelectorAll('input[name="editScheduleClasses"]:checked')).map(cb => cb.value);
@@ -3685,7 +3685,7 @@ function openAddStudentModal() {
                 </form>
             `);
 
-            document.getElementById('editSchoolForm').addEventListener('submit', function(e) {
+            document.getElementById('editSchoolForm').addEventListener('submit', async function(e) {
                 e.preventDefault();
                 const newName = document.getElementById('editSchoolName').value.trim();
                 
@@ -3900,7 +3900,7 @@ function filterClasses() {
                 </form>
             `);
 
-            document.getElementById('addClassModalForm').addEventListener('submit', function(e) {
+            document.getElementById('addClassModalForm').addEventListener('submit', async function(e) {
                 e.preventDefault();
                 const name = document.getElementById('modalClassName').value;
                 const description = document.getElementById('modalClassDescription').value;
@@ -3953,7 +3953,7 @@ function filterClasses() {
                 </form>
             `);
 
-            document.getElementById('editClassForm').addEventListener('submit', function(e) {
+            document.getElementById('editClassForm').addEventListener('submit', async function(e) {
                 e.preventDefault();
                 const newName = document.getElementById('editClassName').value;
                 const newDescription = document.getElementById('editClassDescription').value;
@@ -4220,7 +4220,7 @@ function openAddActivity() {
         </form>
     `);
 
-    document.getElementById('addActivityForm').addEventListener('submit', function(e) {
+    document.getElementById('addActivityForm').addEventListener('submit', async function(e) {
         e.preventDefault();
         const newAct = {
             id: Date.now(),
@@ -4275,7 +4275,7 @@ function editActivity(id) {
         </form>
     `);
 
-    document.getElementById('editActivityForm').addEventListener('submit', function(e) {
+    document.getElementById('editActivityForm').addEventListener('submit', async function(e) {
         e.preventDefault();
         act.date = document.getElementById('editActivityDate').value;
         act.name = document.getElementById('editActivityName').value;
@@ -5172,7 +5172,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 <!-- === PENYEMPURNAAN FILTER KELAS UNTUK SEMUA MODUL === -->
 <script>
-  const daftarKelas = ['SR GOLD A', 'SR GOLD B', 'SR SILVER', 'SR PLATINUM'];
+  const daftarKelas_2 = ['SR GOLD A', 'SR GOLD B', 'SR SILVER', 'SR PLATINUM'];
 
   function renderDropdownKelas(targetId, modulName) {
     const container = document.getElementById(targetId);
@@ -5207,21 +5207,21 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Integrasi ke tiga modul dengan gaya Materi Kelas
-  const originalLoadJadwalBelajar = window.loadJadwalBelajar;
+  const originalLoadJadwalBelajar_2 = window.loadJadwalBelajar;
   window.loadJadwalBelajar = function() {
     originalLoadJadwalBelajar();
     renderDropdownKelas('filterKelasJadwalBelajar', 'jadwalBelajar');
     setTimeout(() => applyKelasFilter('jadwalBelajar'), 500);
   };
 
-  const originalLoadJadwalKegiatan = window.loadJadwalKegiatan;
+  const originalLoadJadwalKegiatan_2 = window.loadJadwalKegiatan;
   window.loadJadwalKegiatan = function() {
     originalLoadJadwalKegiatan();
     renderDropdownKelas('filterKelasJadwalKegiatan', 'jadwalKegiatan');
     setTimeout(() => applyKelasFilter('jadwalKegiatan'), 500);
   };
 
-  const originalLoadMateriKelas = window.loadMateriKelas;
+  const originalLoadMateriKelas_2 = window.loadMateriKelas;
   window.loadMateriKelas = function() {
     originalLoadMateriKelas();
     renderDropdownKelas('filterKelasMateriKelas', 'materiKelas');
@@ -5233,7 +5233,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 <!-- === FINAL FILTER DROPDOWN + CHECKLIST UNTUK SEMUA MODUL === -->
 <script>
-  const daftarKelas = [
+const daftarKelas_3as = [
     'Kelas SR GOLD A (Cabang Jakarta Selatan)',
     'Kelas SR GOLD B (Cabang Jakarta Selatan)',
     'Kelas SR SILVER (Cabang Bandung)',
@@ -5275,21 +5275,21 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Integrasi ke tiga modul: belajar, kegiatan, materi
-  const originalLoadJadwalBelajar = window.loadJadwalBelajar;
+const originalLoadJadwalBelajar_3ar = window.loadJadwalBelajar;
   window.loadJadwalBelajar = function() {
     originalLoadJadwalBelajar();
     renderFilterKelas('filterKelasJadwalBelajar', 'jadwalBelajar');
     setTimeout(() => applyFilterKelas('jadwalBelajar'), 500);
   };
 
-  const originalLoadJadwalKegiatan = window.loadJadwalKegiatan;
+const originalLoadJadwalKegiatan_3an = window.loadJadwalKegiatan;
   window.loadJadwalKegiatan = function() {
     originalLoadJadwalKegiatan();
     renderFilterKelas('filterKelasJadwalKegiatan', 'jadwalKegiatan');
     setTimeout(() => applyFilterKelas('jadwalKegiatan'), 500);
   };
 
-  const originalLoadMateriKelas = window.loadMateriKelas;
+const originalLoadMateriKelas_3as = window.loadMateriKelas;
   window.loadMateriKelas = function() {
     originalLoadMateriKelas();
     renderFilterKelas('filterKelasMateriKelas', 'materiKelas');
@@ -5397,7 +5397,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Perbarui fungsi loadSchedule agar identik dengan loadJadwalKegiatan
-  const originalLoadSchedule = window.loadSchedule;
+  const originalLoadSchedule_2 = window.loadSchedule;
   window.loadSchedule = function() {
     originalLoadSchedule();
     renderFilterKelasSchedule('filterKelasJadwalBelajar');
@@ -5565,7 +5565,7 @@ document.addEventListener('DOMContentLoaded', () => {
     `;
     openModal('Tambah Jadwal Belajar', modalHtml);
 
-    document.getElementById('addScheduleForm').addEventListener('submit', function(e){
+    document.getElementById('addScheduleForm').addEventListener('submit', async function(e) {
       e.preventDefault();
       const newObj = {
         id: Date.now(),
@@ -5629,7 +5629,7 @@ document.addEventListener('DOMContentLoaded', () => {
     `;
     openModal('Edit Jadwal Belajar', modalHtml);
 
-    document.getElementById('editScheduleForm').addEventListener('submit', function(e){
+    document.getElementById('editScheduleForm').addEventListener('submit', async function(e) {
       e.preventDefault();
       scheduleData[idx] = {
         ...scheduleData[idx],
@@ -6211,7 +6211,7 @@ function addRegionalAdmin() {
         </form>
     `);
 
-    document.getElementById('addAdminForm').addEventListener('submit', function(e) {
+    document.getElementById('addAdminForm').addEventListener('submit', async function(e) {
         e.preventDefault();
         const username = document.getElementById('adminUsername').value;
         const name = document.getElementById('adminName').value;
@@ -6231,7 +6231,7 @@ function addRegionalAdmin() {
             return;
         }
 
-        if (getAllUsers()[username]) {
+        if (await loadAllData()[username]) {
             showNotification('Username sudah digunakan!', 'error');
             return;
         }
