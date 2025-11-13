@@ -1,62 +1,262 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Sistem Informasi Laporan Kemajuan Siswa - Bimbel Gambar Villa Merah (Supabase)</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Bimbel Villa Merah — Online (Supabase)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Material Icons (outlined) -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Icons+Outlined" rel="stylesheet" />
+  <style>
+    body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial}
+    .mi{font-family:'Material Icons Outlined';font-weight:normal;font-style:normal}
+    .login-bg{background:url('FSRD.jpeg') center/cover no-repeat;min-height:100vh;position:relative}
+    .overlay{position:absolute;inset:0;background:rgba(255,255,255,0.85)}
+    .notification{position:fixed;right:20px;top:20px;padding:12px 18px;border-radius:10px;color:#fff;z-index:60}
+    .btn{padding:.5rem .9rem;border-radius:.6rem}
+  </style>
+</head>
+<body class="bg-gray-50">
+
+<!-- Login Page -->
+<div id="loginPage" class="login-bg flex items-center justify-center p-6">
+  <div class="overlay"></div>
+  <div class="relative z-10 max-w-md w-full bg-white/90 p-8 rounded-2xl shadow-lg">
+    <div class="text-center mb-4">
+      <img src="https://www.villamerah.com/assets/images/logo/logo-2.png" alt="logo" class="mx-auto w-24 h-24 object-contain"/>
+      <h1 class="text-2xl font-bold text-red-600">Bimbel Gambar Villa Merah</h1>
+      <p class="text-sm text-blue-600">Laporan Kemajuan Siswa — Online</p>
+    </div>
+
+    <form id="loginForm" class="space-y-4">
+      <div>
+        <label class="block text-sm font-medium">Username</label>
+        <input id="username" class="mt-1 block w-full px-3 py-2 border rounded-lg" required />
+      </div>
+      <div>
+        <label class="block text-sm font-medium">Password</label>
+        <input id="password" type="password" class="mt-1 block w-full px-3 py-2 border rounded-lg" required />
+      </div>
+      <div class="flex items-center justify-between">
+        <div class="text-sm text-gray-600">Role: Admin / Super Admin / Siswa</div>
+        <button class="btn bg-blue-600 text-white" type="submit">Masuk</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Dashboard -->
+<div id="dashboard" class="hidden min-h-screen flex">
+  <aside class="w-64 bg-gradient-to-b from-blue-700 to-blue-900 text-white p-4">
+    <div class="flex items-center gap-3 mb-6">
+      <div class="w-12 h-12 rounded-md bg-white/10 flex items-center justify-center"><img src="https://bimbelgambar.id/wp-content/uploads/2023/06/favicon-20200601113259.png" alt="logo" class="w-8 h-8"/></div>
+      <div>
+        <div id="userName" class="font-semibold"></div>
+        <div id="userRegion" class="text-xs opacity-80"></div>
+      </div>
+    </div>
+    <nav id="menuList" class="space-y-2"></nav>
+    <div class="mt-6">
+      <button id="btnLogout" class="w-full bg-red-600 py-2 rounded">Keluar</button>
+    </div>
+  </aside>
+
+  <main class="flex-1 p-8 overflow-auto">
+    <div id="contentArea"></div>
+  </main>
+</div>
+
+<!-- Modal -->
+<div id="modal" class="hidden fixed inset-0 z-50 items-center justify-center">
+  <div class="absolute inset-0 bg-black/40" onclick="closeModal()"></div>
+  <div class="relative bg-white rounded-lg p-6 w-full max-w-2xl shadow-lg z-10" id="modalBody"></div>
+</div>
+
+<!-- Notifications -->
+<div id="notifWrap" class="fixed right-6 top-6 z-60"></div>
+
+<!-- Supabase (ESM) and App JS -->
 <script type="module">
   import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
   const SUPABASE_URL = 'https://xopxgeexxptomzvegvmf.supabase.co';
   const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhvcHhnZWV4eHB0b216dmVndm1mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMwNDAyNjMsImV4cCI6MjA3ODYxNjI2M30.GLUEjYeqaDwyl21uds2t58RYVqNez-4onbbtPyVXZ0w';
-  window.supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
-</script>
-<style>
-body { box-sizing: border-box; }
-* { box-sizing: border-box; }
-.sidebar-active { background-color: #1e40af; color: white; }
-.fade-in { animation: fadeIn 0.3s ease-in; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px) } to { opacity: 1; transform: translateY(0) } }
-.notification { position: fixed; top:20px; right:20px; z-index:1000; padding:12px 24px; border-radius:8px; color:white; font-weight:500; animation: slideIn 0.3s ease-out }
-@keyframes slideIn { from { transform: translateX(100%); opacity:0 } to { transform: translateX(0); opacity:1 } }
-.success { background-color:#10b981 } .error { background-color:#ef4444 }
-</style>
-</head>
-<body class="bg-white">
-<div id="loginPage" class="min-h-screen flex items-center justify-center py-15 px-4 relative">
-  <div class="max-w-md w-full space-y-8 bg-white/90 p-8 rounded-2xl shadow-2xl backdrop-blur-md">
-    <h2 class="text-2xl text-center font-bold text-gray-900 mb-2 text-red-600">Bimbel Gambar Villa Merah</h2>
-    <h3 class="text-1xl text-center font-semibold text-blue-600">Laporan Kemajuan Siswa</h3>
-    <form class="mt-8 space-y-6" id="loginForm">
-      <div>
-        <label class="block text-sm font-medium text-gray-700 mb-1" for="username">Username</label>
-        <input id="username" name="username" class="w-full px-3 py-2 border rounded" type="text" placeholder="Masukkan username" required />
+  const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  // State
+  let currentUser = null;
+  let students = [];
+  let admins = [];
+  let schedules = [];
+  let activitySchedules = [];
+  let classMaterials = [];
+
+  // Helpers
+  function notify(msg, type='green'){
+    const d = document.createElement('div'); d.className = 'notification ' + (type==='green'? 'bg-emerald-500':'bg-red-500'); d.textContent = msg; document.getElementById('notifWrap').appendChild(d);
+    setTimeout(()=> d.remove(), 3000);
+  }
+  function openModal(html){ document.getElementById('modalBody').innerHTML = html; document.getElementById('modal').classList.remove('hidden'); }
+  function closeModal(){ document.getElementById('modal').classList.add('hidden'); }
+
+  // --- Load all app data (by permissions) ---
+  async function loadData(){
+    // admins
+    const { data: _admins } = await supabase.from('admins').select('*'); admins = _admins || [];
+    const { data: _students } = await supabase.from('students').select('*'); students = _students || [];
+    const { data: _schedules } = await supabase.from('schedules').select('*'); schedules = _schedules || [];
+    const { data: _acts } = await supabase.from('activity_schedules').select('*'); activitySchedules = _acts || [];
+    const { data: _mats } = await supabase.from('class_materials').select('*'); classMaterials = _mats || [];
+  }
+
+  // --- Auth / Login ---
+  document.getElementById('loginForm').addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    const u = document.getElementById('username').value.trim();
+    const p = document.getElementById('password').value.trim();
+    if(!u||!p){ notify('Isi username & password', 'red'); return; }
+
+    // Try admin
+    let { data: admin } = await supabase.from('admins').select('*').eq('username', u).eq('password', p).maybeSingle();
+    if(admin){ currentUser = {...admin, role: admin.role || 'Admin'}; afterLogin(); return; }
+
+    // Try student
+    let { data: student } = await supabase.from('students').select('*').eq('username', u).eq('password', p).maybeSingle();
+    if(student){ currentUser = {...student, role: 'Siswa'}; afterLogin(); return; }
+
+    notify('Username atau password salah', 'red');
+  });
+
+  async function afterLogin(){
+    await loadData();
+    document.getElementById('loginPage').classList.add('hidden');
+    document.getElementById('dashboard').classList.remove('hidden');
+    document.getElementById('userName').textContent = currentUser.name || currentUser.username;
+    document.getElementById('userRegion').textContent = currentUser.region || '';
+    renderMenu(); renderHome();
+  }
+
+  // Logout
+  document.getElementById('btnLogout').addEventListener('click', async ()=>{ currentUser=null; document.getElementById('dashboard').classList.add('hidden'); document.getElementById('loginPage').classList.remove('hidden'); });
+
+  // --- Menu based on role ---
+  function renderMenu(){
+    const list = document.getElementById('menuList'); list.innerHTML='';
+    const items = [{id:'home',label:'Home',icon:'home'},{id:'schedules',label:'Jadwal Belajar',icon:'calendar_month'},{id:'activities',label:'Jadwal Kegiatan',icon:'event'},{id:'materials',label:'Materi Kelas',icon:'menu_book'}];
+    if(currentUser.role==='Admin' || currentUser.role==='Super Admin'){ items.push({id:'students',label:'Data Siswa',icon:'person'}); }
+    if(currentUser.role==='Super Admin'){ items.push({id:'admins',label:'Kelola Admin',icon:'shield'}); }
+    items.forEach(i=>{
+      const btn = document.createElement('button'); btn.className='w-full text-left px-3 py-2 rounded hover:bg-white/10 flex items-center gap-3'; btn.innerHTML=`<span class="mi">${i.icon}</span><span>${i.label}</span>`;
+      btn.onclick = ()=>{ if(i.id==='home') renderHome(); if(i.id==='schedules') renderSchedules(); if(i.id==='activities') renderActivities(); if(i.id==='materials') renderMaterials(); if(i.id==='students') renderStudents(); if(i.id==='admins') renderAdmins(); };
+      list.appendChild(btn);
+    });
+  }
+
+  // --- Home ---
+  function renderHome(){
+    const el = document.getElementById('contentArea');
+    const totalStudents = students.length;
+    const myStudents = currentUser.role==='Siswa' ? 1 : (students.filter(s=>s.region===currentUser.region).length);
+    el.innerHTML = `
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="p-6 bg-white rounded-lg shadow"> <h3 class="font-semibold">Total Siswa</h3><p class="text-3xl font-bold">${totalStudents}</p></div>
+        <div class="p-6 bg-white rounded-lg shadow"> <h3 class="font-semibold">Siswa di wilayahmu</h3><p class="text-3xl font-bold">${myStudents}</p></div>
+        <div class="p-6 bg-white rounded-lg shadow"> <h3 class="font-semibold">Materi</h3><p class="text-3xl font-bold">${classMaterials.length}</p></div>
       </div>
-      <div>
-        <label class="block text-sm font-medium text-gray-700 mb-1" for="password">Password</label>
-        <input id="password" name="password" class="w-full px-3 py-2 border rounded" type="password" placeholder="Masukkan password" required />
-      </div>
-      <button class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded" type="submit">Masuk</button>
-    </form>
-  </div>
-</div>
-<div id="dashboardPage" class="hidden min-h-screen p-8">
-  <h1 class="text-3xl font-bold mb-4">Dashboard</h1>
-  <div id="contentArea" class="fade-in text-gray-800"></div>
-  <button id="logoutBtn" class="mt-4 px-4 py-2 bg-red-600 text-white rounded">Keluar</button>
-</div>
-<script>
-let currentUser = null;
-let studentsData = [], regionalAdmins = [], scheduleData = [];
-function showNotification(msg,type='success'){const n=document.createElement('div');n.className=`notification ${type}`;n.textContent=msg;document.body.appendChild(n);setTimeout(()=>n.remove(),3000);}
-async function loadAllData(){try{const {data:students}=await window.supabase.from('students').select('*');studentsData=students||[];const {data:admins}=await window.supabase.from('admins').select('*');regionalAdmins=admins||[];const {data:sched}=await window.supabase.from('schedules').select('*');scheduleData=sched||[];console.log('Data loaded from Supabase');}catch(e){console.error('Load failed',e);}}
-function saveSession(){localStorage.setItem('currentUser',JSON.stringify(currentUser));}
-function logout(){localStorage.removeItem('currentUser');currentUser=null;document.getElementById('dashboardPage').classList.add('hidden');document.getElementById('loginPage').classList.remove('hidden');}
-function showDashboard(){document.getElementById('loginPage').classList.add('hidden');document.getElementById('dashboardPage').classList.remove('hidden');document.getElementById('contentArea').innerHTML=`Halo, <b>${currentUser.name||currentUser.username}</b>! Data kamu sekarang online.`;}
-document.getElementById('loginForm').addEventListener('submit',async e=>{e.preventDefault();const username=document.getElementById('username').value;const password=document.getElementById('password').value;try{const {data:admin}=await window.supabase.from('admins').select('*').eq('username',username).eq('password',password).maybeSingle();if(admin){currentUser=admin;showDashboard();saveSession();return;}const {data:student}=await window.supabase.from('students').select('*').eq('username',username).eq('password',password).maybeSingle();if(student){currentUser=student;showDashboard();saveSession();return;}showNotification('Username atau password salah','error');}catch(err){console.error(err);showNotification('Gagal login','error');}});
-document.getElementById('logoutBtn').addEventListener('click',logout);
-window.addEventListener('DOMContentLoaded',async()=>{await loadAllData();const cu=localStorage.getItem('currentUser');if(cu){currentUser=JSON.parse(cu);showDashboard();}});
+      <div class="mt-6 p-6 bg-white rounded-lg shadow"> <h3 class="font-semibold mb-3">Ringkasan Jadwal</h3> <div id="homeSchedules"></div> </div>
+    `;
+    const list = schedules.slice(0,6).map(s=>`<div class='p-2 border-b'>${s.date} — ${s.subject} (${s.region|| '-'})</div>`).join('');
+    document.getElementById('homeSchedules').innerHTML = list || '<div class="text-sm text-gray-500">Belum ada jadwal</div>';
+  }
+
+  // --- Schedules ---
+  function renderSchedules(){
+    const el = document.getElementById('contentArea');
+    const rows = schedules.map(s=>`<tr class="odd:bg-gray-50"><td class="px-3 py-2">${s.id}</td><td class="px-3 py-2">${s.date}</td><td class="px-3 py-2">${s.day||''}</td><td class="px-3 py-2">${s.subject}</td><td class="px-3 py-2">${s.region||''}</td><td class="px-3 py-2">${JSON.stringify(s.classes||[]).replace(/\"/g,'') }</td><td class="px-3 py-2">${canEdit('schedules')? `<button class='px-2 py-1 bg-blue-600 text-white rounded' onclick='editSchedule(${s.id})'>Edit</button>`:''}</td></tr>`).join('');
+    el.innerHTML = `
+      <div class='flex justify-between items-center mb-4'><h2 class='text-xl font-bold'>Jadwal Belajar</h2><button class='btn bg-green-600 text-white' onclick='newSchedule()'>Tambah Jadwal</button></div>
+      <div class='overflow-x-auto bg-white rounded shadow'><table class='min-w-full'><thead class='bg-gray-100'><tr><th class='p-2'>ID</th><th class='p-2'>Tanggal</th><th class='p-2'>Hari</th><th class='p-2'>Mata Pelajaran</th><th class='p-2'>Region</th><th class='p-2'>Kelas</th><th class='p-2'>Aksi</th></tr></thead><tbody>${rows}</tbody></table></div>
+    `;
+  }
+
+  window.newSchedule = function(){
+    openModal(`
+      <h3 class='text-lg font-semibold mb-3'>Tambah Jadwal</h3>
+      <div class='space-y-2'>
+        <input id='ns_date' type='date' class='w-full border p-2 rounded' />
+        <input id='ns_subject' placeholder='Mata pelajaran' class='w-full border p-2 rounded' />
+        <input id='ns_region' placeholder='Region' class='w-full border p-2 rounded' />
+        <input id='ns_classes' placeholder='Koma-separator kelas, contoh: Gold,Advance' class='w-full border p-2 rounded' />
+        <div class='flex justify-end gap-2'><button class='btn bg-gray-200' onclick='closeModal()'>Batal</button><button class='btn bg-blue-600 text-white' onclick='saveNewSchedule()'>Simpan</button></div>
+      </div>`);
+  }
+  window.saveNewSchedule = async function(){
+    const date = document.getElementById('ns_date').value; const subject = document.getElementById('ns_subject').value; const region = document.getElementById('ns_region').value; const classes = document.getElementById('ns_classes').value.split(',').map(s=>s.trim()).filter(Boolean);
+    const { error } = await supabase.from('schedules').insert([{ date, subject, region, classes }]);
+    if(error){ notify('Gagal simpan jadwal'); console.error(error); } else { notify('Jadwal tersimpan'); closeModal(); await loadData(); renderSchedules(); }
+  }
+
+  window.editSchedule = function(id){
+    const s = schedules.find(x=>x.id===id); if(!s) return; openModal(`
+      <h3 class='text-lg font-semibold mb-3'>Edit Jadwal #${id}</h3>
+      <div class='space-y-2'>
+        <input id='es_date' type='date' value='${s.date}' class='w-full border p-2 rounded' />
+        <input id='es_subject' value='${s.subject||''}' class='w-full border p-2 rounded' />
+        <input id='es_region' value='${s.region||''}' class='w-full border p-2 rounded' />
+        <input id='es_classes' value='${(s.classes||[]).join(',')}' class='w-full border p-2 rounded' />
+        <div class='flex justify-end gap-2'><button class='btn bg-gray-200' onclick='closeModal()'>Batal</button><button class='btn bg-blue-600 text-white' onclick='saveEditSchedule(${id})'>Simpan</button></div>
+      </div>`);
+  }
+  window.saveEditSchedule = async function(id){
+    const date = document.getElementById('es_date').value; const subject = document.getElementById('es_subject').value; const region = document.getElementById('es_region').value; const classes = document.getElementById('es_classes').value.split(',').map(s=>s.trim()).filter(Boolean);
+    const { error } = await supabase.from('schedules').update({ date, subject, region, classes }).eq('id', id);
+    if(error){ notify('Gagal update jadwal','red'); console.error(error); } else { notify('Diperbarui'); closeModal(); await loadData(); renderSchedules(); }
+  }
+
+  // --- Activities ---
+  function renderActivities(){
+    const el = document.getElementById('contentArea');
+    const rows = activitySchedules.map(a=>`<tr class='odd:bg-gray-50'><td class='p-2'>${a.id}</td><td class='p-2'>${a.date}</td><td class='p-2'>${a.activity_name||a.name||''}</td><td class='p-2'>${a.place||''}</td><td class='p-2'>${a.region||''}</td></tr>`).join('');
+    el.innerHTML = `<div class='flex justify-between items-center mb-4'><h2 class='text-xl font-bold'>Jadwal Kegiatan</h2><button class='btn bg-green-600 text-white' onclick='newActivity()'>Tambah</button></div><div class='bg-white rounded shadow overflow-auto'><table class='min-w-full'><thead class='bg-gray-100'><tr><th class='p-2'>ID</th><th class='p-2'>Tanggal</th><th class='p-2'>Nama</th><th class='p-2'>Tempat</th><th class='p-2'>Region</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+  }
+  window.newActivity = function(){ openModal(`<h3 class='text-lg mb-3'>Tambah Kegiatan</h3><input id='na_date' type='date' class='w-full p-2 border rounded mb-2'/><input id='na_name' placeholder='Nama kegiatan' class='w-full p-2 border rounded mb-2'/><input id='na_place' placeholder='Tempat' class='w-full p-2 border rounded mb-2'/><input id='na_region' placeholder='Region' class='w-full p-2 border rounded mb-4'/><div class='flex justify-end gap-2'><button class='btn bg-gray-200' onclick='closeModal()'>Batal</button><button class='btn bg-blue-600 text-white' onclick='saveNewActivity()'>Simpan</button></div>`); }
+  window.saveNewActivity = async function(){ const date=document.getElementById('na_date').value; const name=document.getElementById('na_name').value; const place=document.getElementById('na_place').value; const region=document.getElementById('na_region').value; const { error } = await supabase.from('activity_schedules').insert([{ date, activity_name: name, place, region }]); if(error){ notify('Gagal simpan','red'); } else { notify('Tersimpan'); closeModal(); await loadData(); renderActivities(); } }
+
+  // --- Materials ---
+  function renderMaterials(){
+    const el = document.getElementById('contentArea');
+    const rows = classMaterials.map(m=>`<tr class='odd:bg-gray-50'><td class='p-2'>${m.id}</td><td class='p-2'>${m.title}</td><td class='p-2'>${m.class||''}</td><td class='p-2'>${m.region||''}</td><td class='p-2'><a class='text-blue-600' href='${m.file_url||'#'}' target='_blank'>Lihat</a></td></tr>`).join('');
+    el.innerHTML = `<div class='flex justify-between items-center mb-4'><h2 class='text-xl font-bold'>Materi Kelas</h2><button class='btn bg-green-600 text-white' onclick='newMaterial()'>Tambah Materi</button></div><div class='bg-white rounded shadow overflow-auto'><table class='min-w-full'><thead class='bg-gray-100'><tr><th class='p-2'>ID</th><th class='p-2'>Judul</th><th class='p-2'>Kelas</th><th class='p-2'>Region</th><th class='p-2'>File</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+  }
+  window.newMaterial = function(){ openModal(`<h3 class='text-lg mb-3'>Tambah Materi</h3><input id='m_title' placeholder='Judul' class='w-full p-2 border rounded mb-2'/><input id='m_class' placeholder='Kelas' class='w-full p-2 border rounded mb-2'/><input id='m_region' placeholder='Region' class='w-full p-2 border rounded mb-2'/><input id='m_file' placeholder='URL file (pdf/gdrive/etc)' class='w-full p-2 border rounded mb-4'/><div class='flex justify-end gap-2'><button class='btn bg-gray-200' onclick='closeModal()'>Batal</button><button class='btn bg-blue-600 text-white' onclick='saveNewMaterial()'>Simpan</button></div>`); }
+  window.saveNewMaterial = async function(){ const title=document.getElementById('m_title').value; const cls=document.getElementById('m_class').value; const region=document.getElementById('m_region').value; const file=document.getElementById('m_file').value; const { error } = await supabase.from('class_materials').insert([{ title, class: cls, region, file_url: file }]); if(error){ notify('Gagal','red') } else { notify('Tersimpan'); closeModal(); await loadData(); renderMaterials(); } }
+
+  // --- Students (Admin & Super Admin) ---
+  function canEdit(asset){ return currentUser && (currentUser.role==='Admin' || currentUser.role==='Super Admin'); }
+  function renderStudents(){ if(!canEdit('students')) return renderHome(); const el = document.getElementById('contentArea');
+    const list = (currentUser.role==='Super Admin') ? students : students.filter(s=>s.region===currentUser.region);
+    const rows = list.map(s=>`<tr class='odd:bg-gray-50'><td class='p-2'>${s.id}</td><td class='p-2'>${s.name}</td><td class='p-2'>${s.username}</td><td class='p-2'>${s.class||''}</td><td class='p-2'>${s.region||''}</td><td class='p-2'><button class='btn bg-yellow-500 text-white' onclick='editStudent(${s.id})'>Edit</button></td></tr>`).join('');
+    el.innerHTML = `<div class='flex justify-between items-center mb-4'><h2 class='text-xl font-bold'>Data Siswa</h2><button class='btn bg-green-600 text-white' onclick='newStudent()'>Tambah Siswa</button></div><div class='bg-white rounded shadow overflow-auto'><table class='min-w-full'><thead class='bg-gray-100'><tr><th class='p-2'>ID</th><th class='p-2'>Nama</th><th class='p-2'>Username</th><th class='p-2'>Kelas</th><th class='p-2'>Region</th><th class='p-2'>Aksi</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+  }
+  window.newStudent = function(){ openModal(`<h3 class='text-lg mb-3'>Tambah Siswa</h3><input id='st_name' placeholder='Nama' class='w-full p-2 border rounded mb-2'/><input id='st_username' placeholder='Username' class='w-full p-2 border rounded mb-2'/><input id='st_password' placeholder='Password (default siswa123)' class='w-full p-2 border rounded mb-2'/><input id='st_class' placeholder='Kelas' class='w-full p-2 border rounded mb-2'/><input id='st_region' placeholder='Region' class='w-full p-2 border rounded mb-4'/><div class='flex justify-end gap-2'><button class='btn bg-gray-200' onclick='closeModal()'>Batal</button><button class='btn bg-blue-600 text-white' onclick='saveNewStudent()'>Simpan</button></div>`); }
+  window.saveNewStudent = async function(){ const name=document.getElementById('st_name').value; const username=document.getElementById('st_username').value; const password=document.getElementById('st_password').value || 'siswa123'; const cls=document.getElementById('st_class').value; const region=document.getElementById('st_region').value; const { error } = await supabase.from('students').insert([{ name, username, password, class: cls, region }]); if(error){ notify('Gagal simpan siswa','red'); console.error(error); } else { notify('Siswa tersimpan'); closeModal(); await loadData(); renderStudents(); } }
+  window.editStudent = function(id){ const s = students.find(x=>x.id===id); if(!s) return; openModal(`<h3 class='text-lg mb-3'>Edit Siswa</h3><input id='es_name' value='${s.name||''}' class='w-full p-2 border rounded mb-2'/><input id='es_username' value='${s.username||''}' class='w-full p-2 border rounded mb-2' disabled/><input id='es_password' placeholder='Kosongkan kalau tidak ganti' class='w-full p-2 border rounded mb-2'/><input id='es_class' value='${s.class||''}' class='w-full p-2 border rounded mb-2'/><input id='es_region' value='${s.region||''}' class='w-full p-2 border rounded mb-4'/><div class='flex justify-end gap-2'><button class='btn bg-gray-200' onclick='closeModal()'>Batal</button><button class='btn bg-blue-600 text-white' onclick='saveEditStudent(${id})'>Simpan</button></div>`); }
+  window.saveEditStudent = async function(id){ const name=document.getElementById('es_name').value; const pass=document.getElementById('es_password').value; const cls=document.getElementById('es_class').value; const region=document.getElementById('es_region').value; const payload = { name, class: cls, region }; if(pass) payload.password = pass; const { error } = await supabase.from('students').update(payload).eq('id', id); if(error){ notify('Gagal update','red'); } else { notify('Diperbarui'); closeModal(); await loadData(); renderStudents(); } }
+
+  // --- Admins (Super Admin only) ---
+  function renderAdmins(){ if(currentUser.role!=='Super Admin'){ renderHome(); return; } const el = document.getElementById('contentArea'); const rows = admins.map(a=>`<tr class='odd:bg-gray-50'><td class='p-2'>${a.username}</td><td class='p-2'>${a.name}</td><td class='p-2'>${a.region||''}</td><td class='p-2'>${a.role||''}</td></tr>`).join(''); el.innerHTML = `<div class='mb-4 flex justify-between items-center'><h2 class='text-xl font-bold'>Kelola Admin Regional</h2><button class='btn bg-green-600 text-white' onclick='newAdmin()'>Tambah Admin</button></div><div class='bg-white rounded shadow overflow-auto'><table class='min-w-full'><thead class='bg-gray-100'><tr><th class='p-2'>Username</th><th class='p-2'>Nama</th><th class='p-2'>Region</th><th class='p-2'>Role</th></tr></thead><tbody>${rows}</tbody></table></div>`; }
+  window.newAdmin = function(){ openModal(`<h3 class='text-lg mb-3'>Tambah Admin</h3><input id='ad_username' placeholder='username' class='w-full p-2 border rounded mb-2'/><input id='ad_password' placeholder='password' class='w-full p-2 border rounded mb-2'/><input id='ad_name' placeholder='nama' class='w-full p-2 border rounded mb-2'/><input id='ad_region' placeholder='region' class='w-full p-2 border rounded mb-2'/><select id='ad_role' class='w-full p-2 border rounded mb-4'><option>Admin</option><option>Super Admin</option></select><div class='flex justify-end gap-2'><button class='btn bg-gray-200' onclick='closeModal()'>Batal</button><button class='btn bg-blue-600 text-white' onclick='saveNewAdmin()'>Simpan</button></div>`); }
+  window.saveNewAdmin = async function(){ const username=document.getElementById('ad_username').value; const password=document.getElementById('ad_password').value; const name=document.getElementById('ad_name').value; const region=document.getElementById('ad_region').value; const role=document.getElementById('ad_role').value; const { error } = await supabase.from('admins').insert([{ username, password, name, region, role }]); if(error){ notify('Gagal simpan admin','red'); console.error(error); } else { notify('Admin tersimpan'); closeModal(); await loadData(); renderAdmins(); } }
+
+  // --- Init: try restore session via localStorage ---
+  (async ()=>{
+    const saved = localStorage.getItem('bm_currentUser');
+    if(saved){ try{ currentUser = JSON.parse(saved); await loadData(); document.getElementById('loginPage').classList.add('hidden'); document.getElementById('dashboard').classList.remove('hidden'); document.getElementById('userName').textContent = currentUser.name || currentUser.username; document.getElementById('userRegion').textContent = currentUser.region || ''; renderMenu(); renderHome(); }catch(e){ console.warn('session restore failed', e); } }
+  })();
+
+  // persist session after login
+  const originalAfterLogin = afterLogin;
+  afterLogin = async function(){ await originalAfterLogin(); localStorage.setItem('bm_currentUser', JSON.stringify(currentUser)); };
+
 </script>
 </body>
 </html>
