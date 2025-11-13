@@ -97,14 +97,12 @@
 <style>@view-transition { navigation: auto; }</style>
 <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
 <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
-
 <script type="module">
   import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
   const SUPABASE_URL = 'https://uwigghirpvlnzqhruglq.supabase.co'
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV3aWdnaGlycHZsbnpxaHJ1Z2xxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMwNTE3NTksImV4cCI6MjA3ODYyNzc1OX0.P--M4TysIdMfwvM1KTd9fAkqyt2hg5WWdmKNuE67psk'
   window.supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 </script>
-
 </head>
 <body class="bg-white">
 <style>
@@ -6090,5 +6088,48 @@ document.addEventListener('kelasUpdated', function(e) {
 document.addEventListener('DOMContentLoaded', function(){
     refreshActivityClassDropdown();
 });
+</script><script>
+async function saveAllData() {
+  try {
+    // ===== USERS =====
+    const { data: usersOld } = await window.supabase.from('users').select('username');
+    const localUsers = usersData.map(u => u.username);
+    const toDeleteUsers = usersOld.filter(u => !localUsers.includes(u.username));
+    if (toDeleteUsers.length > 0) {
+      await window.supabase.from('users').delete().in('username', toDeleteUsers.map(u => u.username));
+      console.log('🗑️ Users deleted from Supabase:', toDeleteUsers.map(u => u.username));
+    }
+    await window.supabase.from('users').upsert(usersData);
+
+    // ===== STUDENTS =====
+    const { data: oldStudents } = await window.supabase.from('students').select('username');
+    const localStudents = studentsData.map(s => s.username);
+    const toDelete = oldStudents.filter(s => !localStudents.includes(s.username));
+    if (toDelete.length > 0) {
+      await window.supabase.from('students').delete().in('username', toDelete.map(s => s.username));
+      console.log('🗑️ Students deleted from Supabase:', toDelete.map(s => s.username));
+    }
+    await window.supabase.from('students').upsert(studentsData);
+
+    // ===== CLASSES =====
+    await window.supabase.from('classes').upsert(classesData);
+
+    // ===== MATERIALS =====
+    await window.supabase.from('materials').upsert(materialsData);
+
+    // ===== SCHEDULE =====
+    await window.supabase.from('schedule').upsert(scheduleData);
+
+    // ===== ACTIVITY SCHEDULE =====
+    await window.supabase.from('activity_schedule').upsert(activityScheduleData);
+
+    // ===== EDUCATION INFO =====
+    await window.supabase.from('education_info').upsert(educationInfoData);
+
+    console.log("✅ Semua data berhasil disimpan & disinkron dengan Supabase!");
+  } catch (error) {
+    console.error("❌ Gagal menyimpan data ke Supabase:", error.message);
+  }
+}
 </script></body>
 </html>
