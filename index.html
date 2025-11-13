@@ -95,8 +95,6 @@
         .super-admin-card-3 { background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%); } /* Blue */
     </style>
 <style>@view-transition { navigation: auto; }</style>
-<script src="/_sdk/data_sdk.js" type="text/javascript"></script>
-<script src="/_sdk/element_sdk.js" type="text/javascript"></script>
 <script type="module">
   import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
   const SUPABASE_URL = 'https://uwigghirpvlnzqhruglq.supabase.co'
@@ -6131,5 +6129,113 @@ async function saveAllData() {
     console.error("❌ Gagal menyimpan data ke Supabase:", error.message);
   }
 }
-</script></body>
+</script>
+<!-- AUTO-SAVE GLOBAL: wraps key arrays with Proxy + debounced saveAllData -->
+<script>
+(function(){
+  // Debounce helper
+  function debounce(fn, wait){
+    let t;
+    return function(...a){
+      clearTimeout(t);
+      t = setTimeout(()=>fn.apply(this,a), wait);
+    }
+  }
+
+  // Wait until saveAllData exists
+  function whenReady(checkFn, cb, timeout=5000){
+    const start = Date.now();
+    (function poll(){
+      try {
+        if (checkFn()) return cb();
+      } catch(e){}
+      if (Date.now() - start > timeout) return; 
+      setTimeout(poll, 150);
+    })();
+  }
+
+  whenReady(()=>typeof window.saveAllData === 'function', ()=>{
+    console.log('%c🔁 Auto-save glue initializing...', 'color:cyan');
+
+    const arraysToWrap = ['studentsData','regionalAdmins','availableClasses','classMaterials','scheduleData','activityScheduleData','educationInfo'];
+
+    // Debounced save function
+    const debouncedSave = debounce(()=>{
+      try {
+        console.log('🔔 Auto-save triggered — saving all data to Supabase...');
+        window.saveAllData();
+      } catch(e){ console.error('Auto-save failed', e); }
+    }, 2500);
+
+    function makeProxy(arrName){
+      try {
+        let target = window[arrName];
+        if (!target) return;
+        if (target.__isProxied) return; // already wrapped
+        const mutatingMethods = ['push','pop','shift','unshift','splice','sort','reverse'];
+        const handler = {
+          get(t, prop){
+            const orig = t[prop];
+            if (typeof orig === 'function' && mutatingMethods.includes(prop)){
+              return function(...args){
+                const res = Array.prototype[prop].apply(t, args);
+                debouncedSave();
+                return res;
+              }
+            }
+            return orig;
+          },
+          set(t, prop, value){
+            const res = Reflect.set(t, prop, value);
+            // if structural change, trigger save
+            if (prop !== '__isProxied') debouncedSave();
+            return res;
+          }
+        };
+        const proxy = new Proxy(target, handler);
+        // mark and replace global reference
+        proxy.__isProxied = true;
+        window[arrName] = proxy;
+        console.log(`⚙️ Wrapped ${arrName} for auto-save.`);
+      } catch(e){
+        console.warn('Failed to proxy', arrName, e);
+      }
+    }
+
+    // Try wrap now and also on interval for late-created arrays
+    arraysToWrap.forEach(a=> makeProxy(a));
+    const wrapInterval = setInterval(()=>{
+      let allWrapped = true;
+      arraysToWrap.forEach(a=>{
+        if (!window[a] || (window[a] && window[a].__isProxied)) return;
+        makeProxy(a);
+      });
+      // stop after everything has proxy or after 10s
+    }, 500);
+
+    // Also intercept calls to saveAllData to ensure it's debounced from here as well
+    const originalSave = window.saveAllData;
+    window.saveAllData = function(...args){
+      // call original, but make sure to log
+      try {
+        return originalSave.apply(this, args);
+      } catch(e){
+        console.error('saveAllData error', e);
+      }
+    };
+
+    // Optional: save periodically as fallback (every 1 minute)
+    setInterval(()=>{
+      try {
+        console.log('⏱️ Periodic auto-save fallback running...');
+        window.saveAllData();
+      } catch(e){}
+    }, 60000);
+
+    console.log('%c✅ Auto-save global initialized (debounced on changes).', 'color:lime');
+  }, 8000);
+})();
+</script>
+
+</body>
 </html>
