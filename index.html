@@ -298,16 +298,13 @@ async function loadAllData() {
 }
 
 function saveSession() {
-  localStorage.setItem("currentUser", JSON.stringify(currentUser));
 }
 function loadSession() {
-  const cu = localStorage.getItem("currentUser");
   if (cu) {
     currentUser = JSON.parse(cu);
     showDashboard();
                 // 🔥 Record login activity (except Super Admin itself)
                 try {
-                    let logs = JSON.parse(localStorage.getItem('loginActivityLogs') || '[]');
                     const now = new Date().toLocaleString('id-ID', { hour12: false });
                     const allUsers = getAllUsers();
                     if (allUsers[username] && allUsers[username].role !== 'Super Admin') {
@@ -317,7 +314,6 @@ function loadSession() {
                             region: users[username].region || '-',
                             time: now
                         });
-                        localStorage.setItem('loginActivityLogs', JSON.stringify(logs.slice(0, 100)));
                     }
                 } catch (err) { console.error('Gagal menyimpan log aktivitas:', err); }
   }
@@ -339,7 +335,6 @@ document.addEventListener("DOMContentLoaded", () => {
 const originalLogout = logout;
 logout = function() {
   saveAllData();
-  localStorage.removeItem("currentUser");
   originalLogout();
 };
 window.saveAllData = saveAllData;
@@ -674,7 +669,6 @@ let activityScheduleData = [
                 showDashboard();
                 // 🔥 Record login activity (except Super Admin itself)
                 try {
-                    let logs = JSON.parse(localStorage.getItem('loginActivityLogs') || '[]');
                     const now = new Date().toLocaleString('id-ID', { hour12: false });
                     const allUsers = getAllUsers();
                     if (allUsers[username] && allUsers[username].role !== 'Super Admin') {
@@ -684,7 +678,6 @@ let activityScheduleData = [
                             region: users[username].region || '-',
                             time: now
                         });
-                        localStorage.setItem('loginActivityLogs', JSON.stringify(logs.slice(0, 100)));
                     }
                 } catch (err) { console.error('Gagal menyimpan log aktivitas:', err); }
             } else {
@@ -1203,7 +1196,6 @@ else if (role === 'Admin') {
                 return;
             }
 
-            let logs = JSON.parse(localStorage.getItem('loginActivityLogs') || '[]');
 
             content.innerHTML = `
                 <div class='fade-in'>
@@ -1241,7 +1233,6 @@ else if (role === 'Admin') {
         }
 
         window.clearActivityLogs = function() {
-            localStorage.removeItem('loginActivityLogs');
             showNotification('Log aktivitas berhasil dihapus!', 'success');
             loadLogActivity();
         }
@@ -4583,7 +4574,6 @@ function loadActivitySchedule() {
     (Array.from(new Set(availableClasses.filter(c => currentUser.role === 'Super Admin' || c.region === currentUser.region).map(c=>c.name))).map(n=>n)) : ["Kelas GOLD","Kelas SILVER","Kelas BRONZE"]);
   classOptions.unshift("Semua Kelas");
 
-  const currentFilter = localStorage.getItem("selectedClassFilter_activity") || "Semua Kelas";
 
   // Normalize items for rendering (support older shapes)
   const normalized = activityScheduleData.map(item => {
@@ -4670,7 +4660,6 @@ function loadActivitySchedule() {
   if (canEdit) {
     const sel = document.getElementById("classFilterDropdownActivity");
     sel.addEventListener("change", () => {
-      localStorage.setItem("selectedClassFilter_activity", sel.value);
       loadActivitySchedule();
     });
   }
@@ -4823,7 +4812,6 @@ function loadSchedule() {
   const classOptions = (typeof availableClasses !== 'undefined' ? Array.from(new Set(availableClasses.filter(c => currentUser.role === 'Super Admin' || c.region === currentUser.region).map(c=>c.name))) : ["Kelas GOLD","Kelas SILVER","Kelas BRONZE"]);
   classOptions.unshift("Semua Kelas");
 
-  const currentFilter = localStorage.getItem("selectedClassFilter_schedule") || "Semua Kelas";
 
   // normalize scheduleData items
   const normalized = scheduleData.map(item => ({
@@ -4898,7 +4886,6 @@ function loadSchedule() {
 
   if (canEdit) {
     document.getElementById("classFilterSchedule").addEventListener("change", (e)=> {
-      localStorage.setItem("selectedClassFilter_schedule", e.target.value);
       loadSchedule();
     });
   }
