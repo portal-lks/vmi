@@ -7,14 +7,6 @@
 <title>Sistem Informasi Laporan Kemajuan Siswa - Bimbel Gambar Villa Merah</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-<!-- Supabase UMD client -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js/dist/umd/supabase.min.js"></script>
-<script>
-  const SUPABASE_URL = 'https://xopxgeexxptomzvegvmf.supabase.co';
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhvcHhnZWV4eHB0b216dmVndm1mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMwNDAyNjMsImV4cCI6MjA3ODYxNjI2M30.GLUEjYeqaDwyl21uds2t58RYVqNez-4onbbtPyVXZ0w';
-  window.supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-</script>
-
 <style>
         body {
             box-sizing: border-box;
@@ -239,7 +231,7 @@ function loadSession() {
                 try {
                     let logs = JSON.parse(localStorage.getItem('loginActivityLogs') || '[]');
                     const now = new Date().toLocaleString('id-ID', { hour12: false });
-                    const allUsers = await loadAllData();
+                    const allUsers = getAllUsers();
                     if (allUsers[username] && allUsers[username].role !== 'Super Admin') {
                         logs.unshift({
                             name: users[username].name,
@@ -259,7 +251,7 @@ window.addEventListener("DOMContentLoaded", () => {
 document.addEventListener("DOMContentLoaded", () => {
   const loginForm = document.getElementById('loginForm');
   if (loginForm) {
-    loginForm.addEventListener('submit', async function(e) {
+    loginForm.addEventListener('submit', function(e) {
       setTimeout(() => {
         if (currentUser) saveSession();
       }, 200);
@@ -274,179 +266,339 @@ logout = function() {
 };
 window.saveAllData = saveAllData;
 
-        // Data Storage (migrated to Supabase)
+        // Data Storage
         let currentUser = null;
         let currentModule = 'home';
-        let selectedClass = 'all';
-        let selectedClassMaterial = 'all';
-        let selectedClassSchedule = 'all';
-        let selectedAdminRegion = 'all';
+        let selectedClass = 'all'; 
+        let selectedClassMaterial = 'all'; // Filter untuk Materi (TAMBAHAN BARU)
+        let selectedClassSchedule = 'all'; // Filter untuk Jadwal (TAMBAHAN BARU)
+        let selectedAdminRegion = 'all'; // NEW: Filter Global Admin
+        
+        // Data Admin Regional yang terpisah - MODIFIED REGIONAL NAMES
+        let regionalAdmins = [
+            { username: 'admin_jaksel', password: 'admin123', role: 'Admin', name: 'Admin Jakarta Selatan', region: 'Cabang Jakarta Selatan' },
+            { username: 'admin_jaktim', password: 'admin123', role: 'Admin', name: 'Admin Jakarta Timur', region: 'Cabang Jakarta Timur' },
+            { username: 'admin_bandung', password: 'admin123', role: 'Admin', name: 'Admin Bandung', region: 'Pusat Bandung' }
+        ];
 
-        // Data arrays (initially empty) — will be loaded from Supabase on app start
-        let regionalAdmins = [];
-        let availableClasses = [];
-        let studentsData = [];
-        let educationInfo = [];
-        let classMaterials = [];
-        let scheduleData = [];
-        let activityScheduleData = [];
-        let availableSchools = [];
+        // Gabungan semua users, termasuk Super Admin
+        const superAdminUser = { username: 'superadmin', password: 'super123', role: 'Super Admin', name: 'Super Admin Utama', region: 'Pusat' };
+        
+        /**
+         * FUNGSI MODIFIKASI: Mengambil semua pengguna dari Super Admin, Admin Regional, dan Siswa (studentsData).
+         * Akun Siswa sekarang sepenuhnya diurus oleh studentsData.
+         */
+        function getAllUsers() {
+            const users = {};
+            
+            // Tambahkan Super Admin
+            users[superAdminUser.username] = superAdminUser;
+            
+            // Tambahkan Admin Regional
+            regionalAdmins.forEach(admin => {
+                users[admin.username] = admin;
+            });
+            
+            // Tambahkan Siswa dari studentsData
+            studentsData.forEach(student => {
+                // Gunakan username dan password dari studentsData (yang kini sudah dimodifikasi)
+                if (student.username) { 
+                    users[student.username] = { 
+                        password: student.password || 'siswa123', // Gunakan password yang tersimpan, default ke 'siswa123' jika tidak ada
+                        role: 'Siswa', 
+                        name: student.name, 
+                        region: student.region 
+                    };
+                }
+            });
 
-        // Remove local dummy data and localStorage keys to make system pure-online
-        (function clearLocalDummyData() {
-            try {
-                localStorage.removeItem('studentsData');
-                localStorage.removeItem('regionalAdmins');
-                localStorage.removeItem('availableClasses');
-                localStorage.removeItem('educationInfo');
-                localStorage.removeItem('scheduleData');
-                localStorage.removeItem('activityScheduleData');
-                localStorage.removeItem('classMaterials');
-                localStorage.removeItem('availableSchools');
-                localStorage.removeItem('bm_currentUser');
-                localStorage.removeItem('currentUser');
-                localStorage.removeItem('loginActivityLogs');
-                console.log('Local dummy data cleared (pure online mode).');
-            } catch (e) { console.warn('Failed to clear local dummy data', e); }
-        })();
-
-        // Helper: get Supabase client
-        function sb() {
-            return window.supabaseClient;
+            return users;
         }
 
-        // Load all data from Supabase (full sync)
-        async function loadAllData() {
-            try {
-                // admins
-                const { data: admins, error: aErr } = await sb().from('admins').select('*');
-                if (aErr) console.warn('admins load error', aErr); else regionalAdmins = admins || [];
+        // Data Sekolah Baru
+        // MODIFIED: availableClasses kini memiliki properti region
+        let availableClasses = [
+            { id: 1, name: 'Gold', description: 'Kelas dasar intensif.', region: 'Cabang Jakarta Selatan' },
+            { id: 2, name: 'Advance', description: 'Kelas lanjutan untuk persiapan kompetisi.', region: 'Cabang Jakarta Selatan' },
+            { id: 3, name: 'Minat Seni', description: 'Kelas santai untuk hobi.', region: 'Cabang Jakarta Timur' },
+            { id: 4, name: 'Arsitek', description: 'Kelas khusus persiapan masuk jurusan Arsitektur.', region: 'Pusat Bandung' }
+        ];
 
-                // students
-                const { data: students, error: sErr } = await sb().from('students').select('*');
-                if (sErr) console.warn('students load error', sErr); else studentsData = students || [];
-
-                // classes
-                const { data: classes, error: cErr } = await sb().from('classes').select('*');
-                if (cErr) console.warn('classes load error', cErr); else availableClasses = classes || [];
-
-                // education info
-                const { data: edu, error: eiErr } = await sb().from('education_info').select('*');
-                if (eiErr) console.warn('education_info load error', eiErr); else educationInfo = edu || [];
-
-                // class materials
-                const { data: mats, error: mErr } = await sb().from('class_materials').select('*');
-                if (mErr) console.warn('class_materials load error', mErr); else classMaterials = mats || [];
-
-                // schedules
-                const { data: sch, error: schErr } = await sb().from('schedules').select('*');
-                if (schErr) console.warn('schedules load error', schErr); else scheduleData = sch || [];
-
-                // activity schedules
-                const { data: acts, error: actErr } = await sb().from('activity_schedules').select('*');
-                if (actErr) console.warn('activity_schedules load error', actErr); else activityScheduleData = acts || [];
-
-                // available schools (derive from students table if no separate table)
-                const schools = [...new Set((studentsData || []).map(s => s.school).filter(Boolean))];
-                availableSchools = schools;
-
-                console.log('Loaded all data from Supabase.');
-            } catch (err) {
-                console.error('Failed to load data from Supabase, app may be offline', err);
+        // MODIFIED REGIONAL NAMES IN STUDENTS DATA (MENAMBAH USERNAME DAN PASSWORD)
+        let studentsData = [
+            {
+                id: 1,
+                name: 'Budi Santoso',
+                username: 'siswa1', // <<< TAMBAH USERNAME
+                password: 'siswa123', // <<< TAMBAH PASSWORD
+                class: 'Gold',
+                region: 'Cabang Jakarta Selatan',
+                school: 'SMA Negeri 1 Jakarta', // Data Sekolah
+                artworks: [
+                    {
+                        id: 1,
+                        title: 'Sketsa Pemandangan Gunung',
+                        description: 'Gambar pemandangan gunung dengan teknik pensil',
+                        date: '2024-01-15',
+                        image: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%2387CEEB" width="400" height="300"/%3E%3Ccircle cx="320" cy="60" r="40" fill="%23FFD700"/%3E%3Cpath d="M0,200 Q100,150 200,200 T400,200 L400,300 L0,300 Z" fill="%234CAF50"/%3E%3Cpath d="M80,120 L120,200 L40,200 Z" fill="%238B4513"/%3E%3Cpath d="M80,80 Q60,100 40,120 Q100,110 120,120 Q100,100 80,80" fill="%232E7D32"/%3E%3Ctext x="200" y="280" text-anchor="middle" fill="%23333" font-size="14"%3EPemandangan Gunung%3C/text%3E%3C/svg%3E',
+                        comment: 'Komposisi bagus, perhatikan detail bayangan pada gunung'
+                    },
+                    {
+                        id: 2,
+                        title: 'Potret Wajah',
+                        description: 'Latihan menggambar proporsi wajah manusia',
+                        date: '2024-01-20',
+                        image: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23F5F5DC" width="400" height="300"/%3E%3Cellipse cx="200" cy="150" rx="80" ry="100" fill="%23FFE4C4"/%3E%3Cellipse cx="180" cy="130" rx="10" ry="15" fill="%23000"/%3E%3Cellipse cx="220" cy="130" rx="10" ry="15" fill="%23000"/%3Cpath d="M185,160 Q200,170 215,160" stroke="%23000" fill="none" stroke-width="2"/%3E%3Cpath d="M190,180 Q200,190 210,180" stroke="%23000" fill="none" stroke-width="2"/%3E%3Ctext x="200" y="280" text-anchor="middle" fill="%23333" font-size="14"%3EPotret Wajah%3C/text%3E%3C/text%3E%3C/svg%3E',
+                        comment: 'Proporsi wajah sudah baik, tingkatkan detail pada mata dan hidung'
+                    }
+                ],
+                attendance: [
+                    { date: '2024-01-08', status: 'Hadir' },
+                    { date: '2024-01-15', status: 'Hadir' },
+                    { date: '2024-01-22', status: 'Izin' },
+                    { date: '2024-01-29', status: 'Hadir' }
+                ],
+                skolastikTests: [
+                    { date: '2024-01-10', subject: 'Matematika Dasar', score: 85, comment: 'Pemahaman konsep sudah baik, tingkatkan latihan soal' },
+                    { date: '2024-01-17', subject: 'Bahasa Indonesia', score: 90, comment: 'Kemampuan membaca dan menulis sangat baik' },
+                    { date: '2024-01-24', subject: 'Bahasa Inggris', score: 78, comment: 'Perlu latihan lebih pada grammar dan vocabulary' }
+                ],
+                tkaTests: [
+                    { date: '2024-01-12', subject: 'Penalaran Umum', score: 82, comment: 'Logika berpikir sudah berkembang dengan baik' },
+                    { date: '2024-01-19', subject: 'Pengetahuan Kuantitatif', score: 75, comment: 'Perlu latihan lebih pada soal-soal hitungan cepat' },
+                    { date: '2024-01-26', subject: 'Literasi Bahasa Indonesia', score: 88, comment: 'Kemampuan memahami teks sangat baik' }
+                ]
+            },
+            {
+                id: 2,
+                name: 'Sari Dewi',
+                username: 'siswa2', // <<< TAMBAH USERNAME
+                password: 'siswa123', // <<< TAMBAH PASSWORD
+                class: 'Advance',
+                region: 'Cabang Jakarta Timur',
+                school: 'SMA Swasta 7 Bandung', // Data Sekolah
+                artworks: [
+                    {
+                        id: 1,
+                        title: 'Still Life Buah-buahan',
+                        description: 'Gambar still life dengan teknik pensil warna',
+                        date: '2024-01-18',
+                        image: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23FFFAF0" width="400" height="300"/%3E%3Cellipse cx="150" cy="180" rx="40" ry="35" fill="%23FF6347"/%3E%3Cellipse cx="250" cy="170" rx="35" ry="40" fill="%23FFD700"/%3E%3Cellipse cx="200" cy="200" rx="30" ry="25" fill="%23FF4500"/%3E%3Cpath d="M140,150 Q150,140 160,150" stroke="%23228B22" fill="none" stroke-width="3"/%3E%3Cpath d="M240,135 Q250,125 260,135" stroke="%23228B22" fill="none" stroke-width="3"/%E%3Ctext x="200" y="280" text-anchor="middle" fill="%23333" font-size="14"%3EStill Life Buah%3C/text%3E%3C/svg%3E',
+                        comment: 'Penggunaan warna sangat bagus, perhatikan pencahayaan dan bayangan'
+                    }
+                ],
+                attendance: [
+                    { date: '2024-01-08', status: 'Hadir' },
+                    { date: '2024-01-15', status: 'Hadir' },
+                    { date: '2024-01-22', status: 'Hadir' },
+                    { date: '2024-01-29', status: 'Sakit' }
+                ],
+                skolastikTests: [
+                    { date: '2024-01-11', subject: 'Matematika Dasar', score: 92, comment: 'Kemampuan analisis matematika sangat baik' },
+                    { date: '2024-01-18', subject: 'Bahasa Indonesia', score: 95, comment: 'Kemampuan berbahasa luar biasa' }
+                ],
+                tkaTests: [
+                    { date: '2024-01-13', subject: 'Penalaran Umum', score: 90, comment: 'Kemampuan berpikir logis sangat baik' },
+                    { date: '2024-01-20', subject: 'Pengetahuan Kuantitatif', score: 85, comment: 'Konsisten dalam mengerjakan soal matematika' }
+                ]
+            },
+            {
+                id: 3,
+                name: 'Ahmad Rizki',
+                username: 'siswa3', // <<< TAMBAH USERNAME
+                password: 'siswa123', // <<< TAMBAH PASSWORD
+                class: 'Gold', // Mengubah 'Minat Seni' menjadi 'Gold' karena kelas 'Minat Seni' di Jkt Sel telah dihapus dan diganti dengan 'Gold'
+                region: 'Cabang Jakarta Selatan',
+                school: 'SMA Negeri 1 Jakarta', // Data Sekolah
+                artworks: [
+                    {
+                        id: 1,
+                        title: 'Sketsa Arsitektur',
+                        description: 'Gambar perspektif bangunan dengan teknik pensil',
+                        date: '2024-01-22',
+                        image: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23E6F3FF" width="400" height="300"/%3E%3Cpath d="M50,250 L150,100 L350,100 L350,250 Z" fill="%23D3D3D3" stroke="%23000" stroke-width="2"/%3E%3Crect x="100" y="180" width="40" height="70" fill="%23654321"/%3E%3Crect x="200" y="150" width="60" height="40" fill="%234169E1"/%3E%3Crect x="280" y="170" width="50" height="50" fill="%234169E1"/%3E%3Cpath d="M150,100 L200,50 L400,50 L350,100 Z" fill="%23B22222"/%3E%3Ctext x="200" y="280" text-anchor="middle" fill="%23333" font-size="14"%3EArsitektur Bangunan%3C/text%3E%3C/svg%3E',
+                        comment: 'Perspektif sudah baik, tingkatkan detail pada elemen arsitektur'
+                    }
+                ],
+                attendance: [
+                    { date: '2024-01-08', status: 'Hadir' },
+                    { date: '2024-01-15', status: 'Hadir' },
+                    { date: '2024-01-22', status: 'Hadir' },
+                    { date: '2024-01-29', status: 'Hadir' }
+                ],
+                skolastikTests: [
+                    { date: '2024-01-12', subject: 'Matematika Dasar', score: 88, comment: 'Kemampuan problem solving yang baik' },
+                    { date: '2024-01-19', subject: 'Bahasa Indonesia', score: 82, comment: 'Perlu meningkatkan kemampuan analisis teks' }
+                ],
+                tkaTests: [
+                    { date: '2024-01-14', subject: 'Penalaran Umum', score: 86, comment: 'Kemampuan logika berkembang dengan baik' },
+                    { date: '2024-01-21', subject: 'Pengetahuan Kuantitatif', score: 79, comment: 'Perlu latihan lebih pada perhitungan cepat' }
+                ]
+            },
+            {
+                id: 4,
+                name: 'Maya Putri',
+                username: 'siswa4', // <<< TAMBAH USERNAME
+                password: 'siswa123', // <<< TAMBAH PASSWORD
+                class: 'Minat Seni', // Mengubah 'Arsitek' menjadi 'Minat Seni' karena kelas 'Arsitek' di Jkt Timur telah dihapus
+                region: 'Cabang Jakarta Timur',
+                school: 'SMA Swasta 7 Bandung', // Data Sekolah
+                artworks: [
+                    {
+                        id: 1,
+                        title: 'Desain Rumah Minimalis',
+                        description: 'Sketsa desain rumah minimalis 2 lantai',
+                        date: '2024-01-25',
+                        image: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23F0F8FF" width="400" height="300"/%3E%3Crect x="50" y="150" width="300" height="120" fill="%23D3D3D3" stroke="%23000" stroke-width="2"/%3E%3Crect x="80" y="200" width="40" height="70" fill="%23654321"/%3E%3Crect x="150" y="180" width="60" height="40" fill="%234169E1"/%3E%3Crect x="250" y="180" width="60" height="40" fill="%234169E1"/%3E%3Cpath d="M50,150 L200,80 L350,150 Z" fill="%23B22222"/%3E%3Ctext x="200" y="290" text-anchor="middle" fill="%23333" font-size="12"%3ERumah Minimalis 2 Lantai%3C/text%3E%3C/svg%3E',
+                        comment: 'Desain arsitektur yang baik, perhatikan proporsi dan detail struktur'
+                    }
+                ],
+                attendance: [
+                    { date: '2024-01-08', status: 'Hadir' },
+                    { date: '2024-01-15', status: 'Hadir' },
+                    { date: '2024-01-22', status: 'Hadir' },
+                    { date: '2024-01-29', status: 'Hadir' }
+                ],
+                skolastikTests: [
+                    { date: '2024-01-13', subject: 'Matematika Dasar', score: 91, comment: 'Kemampuan matematika untuk arsitektur sangat baik' },
+                    { date: '2024-01-20', subject: 'Fisika Dasar', score: 87, comment: 'Pemahaman konsep fisika bangunan baik' }
+                ],
+                tkaTests: [
+                    { date: '2024-01-15', subject: 'Penalaran Spasial', score: 93, comment: 'Kemampuan visualisasi ruang sangat baik untuk arsitektur' },
+                    { date: '2024-01-22', subject: 'Pengetahuan Kuantitatif', score: 88, comment: 'Kemampuan perhitungan teknis baik' }
+                ]
+            },
+            {
+                id: 5,
+                name: 'Rina Sari',
+                username: 'siswa5', // <<< TAMBAH USERNAME
+                password: 'siswa123', // <<< TAMBAH PASSWORD
+                class: 'Arsitek', // Mengubah 'Gold' menjadi 'Arsitek' karena kelas 'Gold' di Bdg telah dihapus
+                region: 'Pusat Bandung',
+                school: 'SMK Seni Rupa', // Data Sekolah
+                artworks: [
+                    {
+                        id: 1,
+                        title: 'Lukisan Cat Air Bunga',
+                        description: 'Lukisan bunga mawar dengan teknik cat air',
+                        date: '2024-01-28',
+                        image: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23FFF8DC" width="400" height="300"/%3E%3Ccircle cx="200" cy="150" r="60" fill="%23FF69B4" opacity="0.8"/%3E%3Ccircle cx="180" cy="130" r="25" fill="%23FF1493" opacity="0.6"/%3E%3Ccircle cx="220" cy="130" r="25" fill="%23FF1493" opacity="0.6"/%3E%3Ccircle cx="200" cy="170" r="25" fill="%23FF1493" opacity="0.6"/%3E%3Cpath d="M200,210 Q190,240 200,250 Q210,240 200,210" fill="%23228B22"/%3E%3Ctext x="200" y="280" text-anchor="middle" fill="%23333" font-size="14"%3EBunga Mawar Cat Air%3C/text%3E%3C/svg%3E',
+                        comment: 'Teknik cat air sudah baik, perhatikan gradasi warna'
+                    }
+                ],
+                attendance: [
+                    { date: '2024-01-08', status: 'Hadir' },
+                    { date: '2024-01-15', status: 'Hadir' },
+                    { date: '2024-01-22', status: 'Hadir' },
+                    { date: '2024-01-29', status: 'Hadir' }
+                ],
+                skolastikTests: [
+                    { date: '2024-01-14', subject: 'Matematika Dasar', score: 89, comment: 'Kemampuan analisis yang baik' },
+                    { date: '2024-01-21', subject: 'Bahasa Indonesia', score: 93, comment: 'Kemampuan berbahasa sangat baik' }
+                ],
+                tkaTests: [
+                    { date: '2024-01-16', subject: 'Penalaran Umum', score: 87, comment: 'Logika berpikir berkembang baik' },
+                    { date: '2024-01-23', subject: 'Literasi Bahasa Indonesia', score: 91, comment: 'Kemampuan memahami teks sangat baik' }
+                ]
+            },
+            {
+                id: 6,
+                name: 'Doni Pratama',
+                username: 'siswa6', // <<< TAMBAH USERNAME
+                password: 'siswa123', // <<< TAMBAH PASSWORD
+                class: 'Advance',
+                region: 'Pusat Bandung',
+                school: 'SMK Seni Rupa', // Data Sekolah
+                artworks: [
+                    {
+                        id: 1,
+                        title: 'Sketsa Potret Realistis',
+                        description: 'Potret wajah dengan teknik pensil realistis',
+                        date: '2024-01-30',
+                        image: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23F5F5DC" width="400" height="300"/%3E%3Cellipse cx="200" cy="150" rx="70" ry="90" fill="%23FDBCB4"/%3E%3Cellipse cx="180" cy="130" rx="8" ry="12" fill="%23000"/%3E%3Cellipse cx="220" cy="130" rx="8" ry="12" fill="%23000"/%3E%3Cpath d="M185,155 Q200,165 215,155" stroke="%23000" fill="none" stroke-width="2"/%3E%3Cpath d="M190,175 Q200,185 210,175" stroke="%23000" fill="none" stroke-width="2"/%3E%3Cpath d="M170,120 Q180,115 190,120" stroke="%238B4513" fill="none" stroke-width="3"/%E%3Cpath d="M210,120 Q220,115 230,120" stroke="%238B4513" fill="none" stroke-width="3"/%E%3Ctext x="200" y="280" text-anchor="middle" fill="%23333" font-size="14"%3EPotret Realistis%3C/text%3E%3C/svg%3E',
+                        comment: 'Detail dan proporsi sangat baik, tingkatkan teknik shading'
+                    }
+                ],
+                attendance: [
+                    { date: '2024-01-08', status: 'Hadir' },
+                    { date: '2024-01-15', status: 'Hadir' },
+                    { date: '2024-01-22', status: 'Izin' },
+                    { date: '2024-01-29', status: 'Hadir' }
+                ],
+                skolastikTests: [
+                    { date: '2024-01-15', subject: 'Matematika Dasar', score: 86, comment: 'Kemampuan problem solving baik' },
+                    { date: '2024-01-22', subject: 'Bahasa Inggris', score: 84, comment: 'Perlu latihan lebih pada vocabulary' }
+                ],
+                tkaTests: [
+                    { date: '2024-01-17', subject: 'Penalaran Umum', score: 89, comment: 'Kemampuan analisis sangat baik' },
+                    { date: '2024-01-24', subject: 'Pengetahuan Kuantitatif', score: 82, comment: 'Konsisten dalam mengerjakan soal' }
+                ]
             }
-        }
+        ];
 
-        // Save functions: upsert to Supabase (best-effort)
-        async function saveAllData() {
-            try {
-                // upsert students
-                for (const s of studentsData) {
-                    const payload = { ...s };
-                    await sb().from('students').upsert(payload, { onConflict: 'id' });
-                }
-                // upsert admins
-                for (const a of regionalAdmins) {
-                    await sb().from('admins').upsert(a, { onConflict: 'username' });
-                }
-                // upsert classes
-                for (const c of availableClasses) {
-                    await sb().from('classes').upsert(c, { onConflict: 'id' });
-                }
-                // upsert education info
-                for (const e of educationInfo) {
-                    await sb().from('education_info').upsert(e, { onConflict: 'id' });
-                }
-                // upsert materials
-                for (const m of classMaterials) {
-                    await sb().from('class_materials').upsert(m, { onConflict: 'id' });
-                }
-                // upsert schedules
-                for (const s of scheduleData) {
-                    await sb().from('schedules').upsert(s, { onConflict: 'id' });
-                }
-                // upsert activities
-                for (const a of activityScheduleData) {
-                    await sb().from('activity_schedules').upsert(a, { onConflict: 'id' });
-                }
-                console.log('saveAllData: attempted upserts to Supabase.');
-            } catch (err) {
-                console.error('saveAllData error', err);
+        let educationInfo = [
+            {
+                id: 1,
+                title: 'Sistem Ujian SNBP 2026',
+                content: 'Seleksi Nasional Berdasarkan Prestasi (SNBP) 2026 menggunakan sistem nilai rapor dan prestasi akademik. Bobot penilaian: 50% nilai rapor, 30% prestasi akademik, 20% portofolio. Pendaftaran dibuka mulai Februari 2026 dengan kuota 20% dari total daya tampung perguruan tinggi.',
+                date: '2024-01-15'
+            },
+            {
+                id: 2,
+                title: 'Sistem Ujian SNBT 2026',
+                content: 'Seleksi Nasional Berdasarkan Tes (SNBT) 2026 terdiri dari Tes Skolastik dan Tes Literasi. Materi tes fokus pada kemampuan penalaran dan pemecahan masalah. Tes dilaksanakan secara serentak di seluruh Indonesia pada bulan Mei 2026.',
+                date: '2024-01-20'
+            },
+            {
+                id: 3,
+                title: 'Sistem Ujian Mandiri 2026',
+                content: 'Ujian mandiri perguruan tinggi 2026 memiliki format yang beragam. Beberapa PT menggunakan tes tertulis, wawancara, atau portofolio sesuai program studi. Jadwal ujian mandiri umumnya dilaksanakan setelah pengumuman SNBT.',
+                date: '2024-01-25'
             }
-        }
+        ];
 
-        // Login check against Supabase (admins then students)
-        async function checkCredentials(username, password) {
-            try {
-                const { data: admin } = await sb().from('admins').select('*').eq('username', username).eq('password', password).maybeSingle();
-                if (admin) return { ...admin, role: admin.role || 'Admin' };
+        // MODIFIED: properti 'region' ditambahkan ke setiap materi
+        let classMaterials = [
+            { id: 1, topic: 'Pengenalan Alat Gambar', description: 'Mengenal berbagai jenis pensil (2H, HB, 2B, 4B, 6B), kertas gambar, penghapus, dan alat gambar dasar lainnya untuk memulai belajar menggambar dengan benar', classes: ['Gold', 'Advance'], region: 'Cabang Jakarta Selatan' },
+            { id: 2, topic: 'Teknik Garis Dasar', description: 'Belajar membuat garis lurus, lengkung, dan berbagai jenis garis sebagai dasar menggambar. Latihan kontrol tangan dan tekanan pensil', classes: ['Advance', 'Minat Seni'], region: 'Cabang Jakarta Timur' },
+            { id: 3, topic: 'Bentuk Geometri Dasar', description: 'Menggambar lingkaran, persegi, segitiga, dan bentuk geometri dasar lainnya dengan proporsi yang tepat', classes: ['Gold', 'Advance'], region: 'Cabang Jakarta Selatan' },
+            { id: 4, topic: 'Perspektif 1 Titik', description: 'Memahami dan menerapkan perspektif satu titik hilang untuk menciptakan kedalaman dalam gambar objek dan bangunan', classes: ['Arsitek', 'Advance'], region: 'Pusat Bandung' },
+            { id: 5, topic: 'Shading dan Tekstur', description: 'Teknik membuat bayangan dan tekstur pada objek untuk memberikan dimensi dan realisme. Belajar gradasi dan kontras', classes: ['Minat Seni'], region: 'Cabang Jakarta Timur' },
+            { id: 6, topic: 'Perspektif 2 Titik', description: 'Teknik perspektif dua titik hilang untuk menggambar objek dari sudut pandang yang lebih kompleks', classes: ['Arsitek'], region: 'Pusat Bandung' },
+            { id: 7, topic: 'Anatomi Manusia', description: 'Mempelajari proporsi dan anatomi tubuh manusia untuk menggambar figur yang akurat dan realistis', classes: ['Gold'], region: 'Cabang Jakarta Selatan' },
+            { id: 8, topic: 'Komposisi Lanjutan', description: 'Teknik komposisi untuk karya yang lebih kompleks dengan multiple objek dan elemen. Prinsip rule of thirds dan golden ratio', classes: ['Minat Seni', 'Advance'], region: 'Cabang Jakarta Timur' },
+            { id: 9, topic: 'Teknik Rendering', description: 'Teknik finishing dan rendering untuk menghasilkan karya gambar yang profesional dan detail', classes: ['Advance', 'Arsitek'], region: 'Pusat Bandung' }
+        ];
 
-                const { data: student } = await sb().from('students').select('*').eq('username', username).eq('password', password).maybeSingle();
-                if (student) return { ...student, role: 'Siswa' };
+        // MODIFIED: Data jadwal diisi dengan properti 'region'
+        let scheduleData = [
+            { id: 1, date: '2025-11-05', day: 'Selasa', subject: 'Pengenalan Alat Gambar', classes: ['Gold', 'Advance'], region: 'Cabang Jakarta Selatan' },
+            { id: 2, date: '2025-11-06', day: 'Rabu', subject: 'Perspektif 1 Titik', classes: ['Minat Seni'], region: 'Cabang Jakarta Timur' },
+            { id: 3, date: '2025-11-07', day: 'Kamis', subject: 'Anatomi Manusia', classes: ['Arsitek', 'Advance'], region: 'Pusat Bandung' }
+        ];
 
-                return null;
-            } catch (err) {
-                console.error('checkCredentials failed', err);
-                return null;
-            }
-        }
+// === Data Jadwal Kegiatan (Baru) ===
+let activityScheduleData = [
+  { id: 1, date: '2025-11-10', name: 'Workshop Arsitektur', goal: 'Melatih kemampuan menggambar bangunan', classes: ['Arsitek'], region: 'Pusat Bandung' },
+  { id: 2, date: '2025-11-12', name: 'Pameran Seni', goal: 'Menampilkan hasil karya siswa', classes: ['Gold', 'Advance'], region: 'Cabang Jakarta Selatan' }
+];
 
         // Login Handler
-        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            const username = document.getElementById('username').value.trim();
-            const password = document.getElementById('password').value.trim();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            const users = getAllUsers();
 
-            // Special built-in Super Admin fallback (local) if needed
-            if (username === 'superadmin' && password === 'super123') {
-                currentUser = { username: 'superadmin', name: 'Super Admin', role: 'Super Admin', region: 'Pusat' };
-                saveSession();
-                showNotification('Login berhasil (Super Admin).', 'success');
+            if (users[username] && users[username].password === password) {
+                currentUser = { username, ...users[username] };
                 showDashboard();
-                return;
-            }
-
-            // Try checkCredentials which queries Supabase (admins then students)
-            const user = await checkCredentials(username, password);
-            if (user) {
-                // normalize role strings
-                if (user.role && /super admin/i.test(user.role)) {
-                    user.role = 'Super Admin';
-                } else if (user.role && /admin/i.test(user.role)) {
-                    user.role = 'Admin';
-                } else if (user.role && /siswa|student/i.test(user.role)) {
-                    user.role = 'Siswa';
-                }
-
-                currentUser = user;
-                saveSession();
-                showNotification('Login berhasil!', 'success');
-                showDashboard();
-                try { saveAllData(); } catch(e){ /* best-effort */ }
-            } else {
-                showNotification('Username atau password salah!', 'error');
-            }
-        });
-                    const allUsers = await loadAllData();
+                // 🔥 Record login activity (except Super Admin itself)
+                try {
+                    let logs = JSON.parse(localStorage.getItem('loginActivityLogs') || '[]');
+                    const now = new Date().toLocaleString('id-ID', { hour12: false });
+                    const allUsers = getAllUsers();
                     if (allUsers[username] && allUsers[username].role !== 'Super Admin') {
                         logs.unshift({
                             name: users[username].name,
@@ -1101,7 +1253,7 @@ else if (role === 'Admin') {
                 </form>
             `);
 
-            document.getElementById('addAdminForm').addEventListener('submit', async function(e) {
+            document.getElementById('addAdminForm').addEventListener('submit', function(e) {
                 e.preventDefault();
                 const username = document.getElementById('adminUsername').value;
                 const name = document.getElementById('adminName').value;
@@ -1121,7 +1273,7 @@ else if (role === 'Admin') {
                     return;
                 }
 
-                if (await loadAllData()[username]) {
+                if (getAllUsers()[username]) {
                     showNotification('Username sudah digunakan!', 'error');
                     return;
                 }
@@ -1164,7 +1316,7 @@ else if (role === 'Admin') {
                 </form>
             `);
 
-            document.getElementById('editAdminForm').addEventListener('submit', async function(e) {
+            document.getElementById('editAdminForm').addEventListener('submit', function(e) {
                 e.preventDefault();
                 const newName = document.getElementById('editAdminName').value;
                 const newRegion = document.getElementById('editAdminRegion').value;
@@ -2402,7 +2554,7 @@ function loadAddStudent() {
   // Hook form submit
   const form = document.getElementById('addStudentForm');
   if (form) {
-    form.addEventListener('submit', async function(e) {
+    form.addEventListener('submit', function(e) {
       e.preventDefault();
       const name = document.getElementById('studentName').value.trim();
       const username = document.getElementById('studentUsername').value.trim();
@@ -2453,7 +2605,7 @@ function openAddStudentModal() {
       <div><button type="submit" class="w-full px-4 py-2 bg-green-600 text-white rounded-lg">Tambah</button></div>
     </form>
   `);
-  document.getElementById('addStudentQuickForm').addEventListener('submit', async function(e) {
+  document.getElementById('addStudentQuickForm').addEventListener('submit', function(e){
     e.preventDefault();
     const name = document.getElementById('qsName').value.trim();
     const username = document.getElementById('qsUsername').value.trim();
@@ -2475,7 +2627,7 @@ function openAddStudentModal() {
          * Memastikan password dapat diubah.
          */
         function editStudent(username) {
-            const allUsers = await loadAllData();
+            const allUsers = getAllUsers();
             const user = allUsers[username];
             if (!user || user.role !== 'Siswa') {
                 showNotification('Pengguna siswa tidak ditemukan!', 'error');
@@ -2531,7 +2683,7 @@ function openAddStudentModal() {
                 </form>
             `);
 
-            document.getElementById('editStudentForm').addEventListener('submit', async function(e) {
+            document.getElementById('editStudentForm').addEventListener('submit', function(e) {
                 e.preventDefault();
                 const newName = document.getElementById('editStudentName').value;
                 const newClass = document.getElementById('editStudentClass').value;
@@ -2571,7 +2723,7 @@ function openAddStudentModal() {
          * Menggunakan username sebagai kunci penghapusan.
          */
         function deleteStudent(username) {
-            const allUsers = await loadAllData();
+            const allUsers = getAllUsers();
             const user = allUsers[username];
              if (!user || user.role !== 'Siswa') {
                 showNotification('Pengguna siswa tidak ditemukan!', 'error');
@@ -2680,7 +2832,7 @@ function openAddStudentModal() {
                 </form>
             `);
 
-            document.getElementById('artworkForm').addEventListener('submit', async function(e) {
+            document.getElementById('artworkForm').addEventListener('submit', function(e) {
                 e.preventDefault();
                 const selectedStudentId = parseInt(document.getElementById('artworkStudentId').value);
                 const student = studentsData.find(s => s.id === selectedStudentId);
@@ -2734,7 +2886,7 @@ function openAddStudentModal() {
                 </form>
             `);
 
-            document.getElementById('editArtworkForm').addEventListener('submit', async function(e) {
+            document.getElementById('editArtworkForm').addEventListener('submit', function(e) {
                 e.preventDefault();
                 artwork.title = document.getElementById('editArtworkTitle').value;
                 artwork.description = document.getElementById('editArtworkDescription').value;
@@ -2767,7 +2919,7 @@ function openAddStudentModal() {
                 </div>
             `);
 
-            document.getElementById('editImageForm').addEventListener('submit', async function(e) {
+            document.getElementById('editImageForm').addEventListener('submit', function(e) {
                 e.preventDefault();
                 const fileInput = document.getElementById('newArtworkImage');
                 const file = fileInput.files[0];
@@ -2851,7 +3003,7 @@ function openAddStudentModal() {
                 </form>
             `);
 
-            document.getElementById('attendanceForm').addEventListener('submit', async function(e) {
+            document.getElementById('attendanceForm').addEventListener('submit', function(e) {
                 e.preventDefault();
                 const selectedStudentId = parseInt(document.getElementById('attendanceStudentId').value);
                 const student = studentsData.find(s => s.id === selectedStudentId);
@@ -2889,7 +3041,7 @@ function openAddStudentModal() {
                 </form>
             `);
 
-            document.getElementById('editAttendanceForm').addEventListener('submit', async function(e) {
+            document.getElementById('editAttendanceForm').addEventListener('submit', function(e) {
                 e.preventDefault();
                 attendance.date = document.getElementById('editAttendanceDate').value;
                 attendance.status = document.getElementById('editAttendanceStatus').value;
@@ -2977,7 +3129,7 @@ function openAddStudentModal() {
                 </form>
             `);
 
-            document.getElementById('skolastikTestForm').addEventListener('submit', async function(e) {
+            document.getElementById('skolastikTestForm').addEventListener('submit', function(e) {
                 e.preventDefault();
                 const selectedStudentId = parseInt(document.getElementById('skolastikTestStudentId').value);
                 const student = studentsData.find(s => s.id === selectedStudentId);
@@ -3020,7 +3172,7 @@ function openAddStudentModal() {
                 </form>
             `);
 
-            document.getElementById('editSkolastikTestForm').addEventListener('submit', async function(e) {
+            document.getElementById('editSkolastikTestForm').addEventListener('submit', function(e) {
                 e.preventDefault();
                 test.date = document.getElementById('editTestDate').value;
                 test.subject = document.getElementById('editTestSubject').value;
@@ -3099,7 +3251,7 @@ function openAddStudentModal() {
                 </form>
             `);
 
-            document.getElementById('tkaTestForm').addEventListener('submit', async function(e) {
+            document.getElementById('tkaTestForm').addEventListener('submit', function(e) {
                 e.preventDefault();
                 const selectedStudentId = parseInt(document.getElementById('tkaTestStudentId').value);
                 const student = studentsData.find(s => s.id === selectedStudentId);
@@ -3142,7 +3294,7 @@ function openAddStudentModal() {
                 </form>
             `);
 
-            document.getElementById('editTkaTestForm').addEventListener('submit', async function(e) {
+            document.getElementById('editTkaTestForm').addEventListener('submit', function(e) {
                 e.preventDefault();
                 test.date = document.getElementById('editTkaTestDate').value;
                 test.subject = document.getElementById('editTkaTestSubject').value;
@@ -3197,7 +3349,7 @@ function openAddStudentModal() {
                 </form>
             `);
 
-            document.getElementById('educationInfoForm').addEventListener('submit', async function(e) {
+            document.getElementById('educationInfoForm').addEventListener('submit', function(e) {
                 e.preventDefault();
                 const newInfo = {
                     id: educationInfo.length + 1,
@@ -3232,7 +3384,7 @@ function openAddStudentModal() {
                 </form>
             `);
 
-            document.getElementById('editEducationInfoForm').addEventListener('submit', async function(e) {
+            document.getElementById('editEducationInfoForm').addEventListener('submit', function(e) {
                 e.preventDefault();
                 info.title = document.getElementById('editInfoTitle').value;
                 info.content = document.getElementById('editInfoContent').value;
@@ -3325,7 +3477,7 @@ function openAddStudentModal() {
                 </form>
             `);
 
-            document.getElementById('materialForm').addEventListener('submit', async function(e) {
+            document.getElementById('materialForm').addEventListener('submit', function(e) {
                 e.preventDefault();
                 
                 const selectedClasses = Array.from(document.querySelectorAll('input[name="materialClasses"]:checked')).map(cb => cb.value);
@@ -3396,7 +3548,7 @@ function openAddStudentModal() {
                 </form>
             `);
 
-            document.getElementById('editMaterialForm').addEventListener('submit', async function(e) {
+            document.getElementById('editMaterialForm').addEventListener('submit', function(e) {
                 e.preventDefault();
                 
                 const updatedClasses = Array.from(document.querySelectorAll('input[name="editMaterialClasses"]:checked')).map(cb => cb.value);
@@ -3509,7 +3661,7 @@ function openAddStudentModal() {
                 </form>
             `);
 
-            document.getElementById('scheduleForm').addEventListener('submit', async function(e) {
+            document.getElementById('scheduleForm').addEventListener('submit', function(e) {
                 e.preventDefault();
                 
                 const selectedClasses = Array.from(document.querySelectorAll('input[name="scheduleClasses"]:checked')).map(cb => cb.value);
@@ -3593,7 +3745,7 @@ function openAddStudentModal() {
                 </form>
             `);
 
-            document.getElementById('editScheduleForm').addEventListener('submit', async function(e) {
+            document.getElementById('editScheduleForm').addEventListener('submit', function(e) {
                 e.preventDefault();
                 
                 const updatedClasses = Array.from(document.querySelectorAll('input[name="editScheduleClasses"]:checked')).map(cb => cb.value);
@@ -3706,7 +3858,7 @@ function openAddStudentModal() {
                 </form>
             `);
 
-            document.getElementById('editSchoolForm').addEventListener('submit', async function(e) {
+            document.getElementById('editSchoolForm').addEventListener('submit', function(e) {
                 e.preventDefault();
                 const newName = document.getElementById('editSchoolName').value.trim();
                 
@@ -3921,7 +4073,7 @@ function filterClasses() {
                 </form>
             `);
 
-            document.getElementById('addClassModalForm').addEventListener('submit', async function(e) {
+            document.getElementById('addClassModalForm').addEventListener('submit', function(e) {
                 e.preventDefault();
                 const name = document.getElementById('modalClassName').value;
                 const description = document.getElementById('modalClassDescription').value;
@@ -3974,7 +4126,7 @@ function filterClasses() {
                 </form>
             `);
 
-            document.getElementById('editClassForm').addEventListener('submit', async function(e) {
+            document.getElementById('editClassForm').addEventListener('submit', function(e) {
                 e.preventDefault();
                 const newName = document.getElementById('editClassName').value;
                 const newDescription = document.getElementById('editClassDescription').value;
@@ -4241,7 +4393,7 @@ function openAddActivity() {
         </form>
     `);
 
-    document.getElementById('addActivityForm').addEventListener('submit', async function(e) {
+    document.getElementById('addActivityForm').addEventListener('submit', function(e) {
         e.preventDefault();
         const newAct = {
             id: Date.now(),
@@ -4296,7 +4448,7 @@ function editActivity(id) {
         </form>
     `);
 
-    document.getElementById('editActivityForm').addEventListener('submit', async function(e) {
+    document.getElementById('editActivityForm').addEventListener('submit', function(e) {
         e.preventDefault();
         act.date = document.getElementById('editActivityDate').value;
         act.name = document.getElementById('editActivityName').value;
@@ -5193,7 +5345,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 <!-- === PENYEMPURNAAN FILTER KELAS UNTUK SEMUA MODUL === -->
 <script>
-  const daftarKelas_2 = ['SR GOLD A', 'SR GOLD B', 'SR SILVER', 'SR PLATINUM'];
+  const daftarKelas = ['SR GOLD A', 'SR GOLD B', 'SR SILVER', 'SR PLATINUM'];
 
   function renderDropdownKelas(targetId, modulName) {
     const container = document.getElementById(targetId);
@@ -5228,21 +5380,21 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Integrasi ke tiga modul dengan gaya Materi Kelas
-  const originalLoadJadwalBelajar_2 = window.loadJadwalBelajar;
+  const originalLoadJadwalBelajar = window.loadJadwalBelajar;
   window.loadJadwalBelajar = function() {
     originalLoadJadwalBelajar();
     renderDropdownKelas('filterKelasJadwalBelajar', 'jadwalBelajar');
     setTimeout(() => applyKelasFilter('jadwalBelajar'), 500);
   };
 
-  const originalLoadJadwalKegiatan_2 = window.loadJadwalKegiatan;
+  const originalLoadJadwalKegiatan = window.loadJadwalKegiatan;
   window.loadJadwalKegiatan = function() {
     originalLoadJadwalKegiatan();
     renderDropdownKelas('filterKelasJadwalKegiatan', 'jadwalKegiatan');
     setTimeout(() => applyKelasFilter('jadwalKegiatan'), 500);
   };
 
-  const originalLoadMateriKelas_2 = window.loadMateriKelas;
+  const originalLoadMateriKelas = window.loadMateriKelas;
   window.loadMateriKelas = function() {
     originalLoadMateriKelas();
     renderDropdownKelas('filterKelasMateriKelas', 'materiKelas');
@@ -5254,7 +5406,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 <!-- === FINAL FILTER DROPDOWN + CHECKLIST UNTUK SEMUA MODUL === -->
 <script>
-const daftarKelas_3as = [
+  const daftarKelas = [
     'Kelas SR GOLD A (Cabang Jakarta Selatan)',
     'Kelas SR GOLD B (Cabang Jakarta Selatan)',
     'Kelas SR SILVER (Cabang Bandung)',
@@ -5296,21 +5448,21 @@ const daftarKelas_3as = [
   }
 
   // Integrasi ke tiga modul: belajar, kegiatan, materi
-const originalLoadJadwalBelajar_3ar = window.loadJadwalBelajar;
+  const originalLoadJadwalBelajar = window.loadJadwalBelajar;
   window.loadJadwalBelajar = function() {
     originalLoadJadwalBelajar();
     renderFilterKelas('filterKelasJadwalBelajar', 'jadwalBelajar');
     setTimeout(() => applyFilterKelas('jadwalBelajar'), 500);
   };
 
-const originalLoadJadwalKegiatan_3an = window.loadJadwalKegiatan;
+  const originalLoadJadwalKegiatan = window.loadJadwalKegiatan;
   window.loadJadwalKegiatan = function() {
     originalLoadJadwalKegiatan();
     renderFilterKelas('filterKelasJadwalKegiatan', 'jadwalKegiatan');
     setTimeout(() => applyFilterKelas('jadwalKegiatan'), 500);
   };
 
-const originalLoadMateriKelas_3as = window.loadMateriKelas;
+  const originalLoadMateriKelas = window.loadMateriKelas;
   window.loadMateriKelas = function() {
     originalLoadMateriKelas();
     renderFilterKelas('filterKelasMateriKelas', 'materiKelas');
@@ -5418,7 +5570,7 @@ const originalLoadMateriKelas_3as = window.loadMateriKelas;
   }
 
   // Perbarui fungsi loadSchedule agar identik dengan loadJadwalKegiatan
-  const originalLoadSchedule_2 = window.loadSchedule;
+  const originalLoadSchedule = window.loadSchedule;
   window.loadSchedule = function() {
     originalLoadSchedule();
     renderFilterKelasSchedule('filterKelasJadwalBelajar');
@@ -5586,7 +5738,7 @@ const originalLoadMateriKelas_3as = window.loadMateriKelas;
     `;
     openModal('Tambah Jadwal Belajar', modalHtml);
 
-    document.getElementById('addScheduleForm').addEventListener('submit', async function(e) {
+    document.getElementById('addScheduleForm').addEventListener('submit', function(e){
       e.preventDefault();
       const newObj = {
         id: Date.now(),
@@ -5650,7 +5802,7 @@ const originalLoadMateriKelas_3as = window.loadMateriKelas;
     `;
     openModal('Edit Jadwal Belajar', modalHtml);
 
-    document.getElementById('editScheduleForm').addEventListener('submit', async function(e) {
+    document.getElementById('editScheduleForm').addEventListener('submit', function(e){
       e.preventDefault();
       scheduleData[idx] = {
         ...scheduleData[idx],
@@ -6232,7 +6384,7 @@ function addRegionalAdmin() {
         </form>
     `);
 
-    document.getElementById('addAdminForm').addEventListener('submit', async function(e) {
+    document.getElementById('addAdminForm').addEventListener('submit', function(e) {
         e.preventDefault();
         const username = document.getElementById('adminUsername').value;
         const name = document.getElementById('adminName').value;
@@ -6252,7 +6404,7 @@ function addRegionalAdmin() {
             return;
         }
 
-        if (await loadAllData()[username]) {
+        if (getAllUsers()[username]) {
             showNotification('Username sudah digunakan!', 'error');
             return;
         }
@@ -6376,3 +6528,197 @@ function loadManageAdmins() {
 }
 </script>
 <!-- === END PATCH === -->
+
+<!-- Supabase integration (appended by assistant) -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js/dist/umd/supabase.min.js"></script>
+<script>
+  // --- Supabase configuration ---
+  const SUPABASE_URL = "https://xebqmgfmtahsxopcamhv.supabase.co";
+  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlYnFtZ2ZtdGFoc3hvcGNhbWh2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMwNDg4MDksImV4cCI6MjA3ODYyNDgwOX0.jMDw1ySk-WaedSr1g1HUQV-1XMWTJqsY_f0hxKX8LmQ";
+  const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  // Utility to show notification (reuse existing showNotification if present)
+  function showNotification(message, type='success') { 
+      if (typeof window.showNotification === 'function') {
+          window.showNotification(message, type);
+          return;
+      }
+      alert(message);
+  }
+
+  // Replace existing login form listeners by cloning the form (removes previous listeners)
+  document.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('loginForm');
+      if (form) {
+          const clone = form.cloneNode(true);
+          form.parentNode.replaceChild(clone, form);
+
+          clone.addEventListener('submit', async function(e) {
+              e.preventDefault();
+              const username = document.getElementById('username').value.trim();
+              const password = document.getElementById('password').value.trim();
+
+              if (!username || !password) {
+                  showNotification('Isi username dan password', 'error');
+                  return;
+              }
+
+              try {
+                  // Query users table for username
+                  let result = await supabase
+                      .from('users')
+                      .select('*')
+                      .eq('username', username)
+                      .limit(1);
+
+                  let data = result.data;
+                  let error = result.error;
+
+                  if (error) throw error;
+
+                  if (!data || data.length === 0) {
+                      showNotification('Username tidak ditemukan', 'error');
+                      return;
+                  }
+
+                  const user = data[0];
+
+                  // NOTE: this example compares plaintext password.
+                  // For security, store hashed passwords in Supabase and verify on server or use Supabase Auth.
+                  if (user.password !== password) {
+                      showNotification('Password salah', 'error');
+                      return;
+                  }
+
+                  // Set currentUser (structure similar to original app)
+                  window.currentUser = { username: user.username, role: user.role || 'Siswa', name: user.name || user.username, region: user.region || '-' };
+                  // Save session (original saveSession uses localStorage)
+                  if (typeof window.saveSession === 'function') window.saveSession();
+                  if (typeof window.showDashboard === 'function') {
+                      window.showDashboard();
+                      showNotification('Login berhasil', 'success');
+                  } else {
+                      showNotification('Login berhasil (but original UI function missing)', 'success');
+                  }
+
+                  // Record login into a Supabase table 'login_activity' if exists
+                  try {
+                      await supabase.from('login_activity').insert([{
+                          username: user.username,
+                          name: user.name || user.username,
+                          role: user.role || 'Siswa',
+                          region: user.region || '-',
+                          time: new Date().toISOString()
+                      }]);
+                  } catch (err) {
+                      // ignore logging errors silently
+                      console.warn('Tidak bisa simpan log login ke Supabase:', err && err.message ? err.message : err);
+                  }
+
+                  // load remote data after login
+                  if (typeof window.loadAllData === 'function') {
+                      await window.loadAllData(); // original function might exist; if not, our fallback below will run
+                  } else {
+                      await loadRemoteData();
+                  }
+              } catch (err) {
+                  console.error(err);
+                  showNotification('Gagal login: ' + (err && err.message ? err.message : err), 'error');
+              }
+          });
+      }
+
+      // Load remote data once on page load (so dashboard modules can use variables)
+      if (!window.__remoteDataLoaded) {
+          loadRemoteData().catch(err => console.error('loadRemoteData error', err));
+      }
+  });
+
+  // Fetch core tables from Supabase and populate global variables used by the app
+  async function loadRemoteData() {
+      try {
+          // students
+          let sres = await supabase.from('students').select('*');
+          let students = sres.data;
+          if (sres.error) throw sres.error;
+
+          // classes
+          let cres = await supabase.from('classes').select('*');
+          let classes = cres.data;
+          if (cres.error) throw cres.error;
+
+          // materials
+          let mres = await supabase.from('materials').select('*');
+          let materials = mres.data;
+          if (mres.error) throw mres.error;
+
+          // schedule
+          let schres = await supabase.from('schedule').select('*');
+          let schedules = schres.data;
+          if (schres.error) throw schres.error;
+
+          // activities
+          let actres = await supabase.from('activities').select('*');
+          let activities = actres.data;
+          if (actres.error) throw actres.error;
+
+          // regional admins (optional)
+          let rres = await supabase.from('regional_admins').select('*');
+          let regionalAdmins = rres.data;
+
+          // make sure variables exist in global scope (fallback to empty arrays)
+          window.studentsData = students || window.studentsData || [];
+          window.availableClasses = classes || window.availableClasses || [];
+          window.classMaterials = materials || window.classMaterials || [];
+          window.scheduleData = schedules || window.scheduleData || [];
+          window.activityScheduleData = activities || window.activityScheduleData || [];
+          window.regionalAdmins = regionalAdmins || window.regionalAdmins || [];
+
+          // If studentsData has JSON fields (artworks, attendance, tests) stored as JSON strings, try to parse them
+          window.studentsData = window.studentsData.map(s => {
+              try {
+                  if (s.artworks && typeof s.artworks === 'string') s.artworks = JSON.parse(s.artworks);
+              } catch(e){}
+              try {
+                  if (s.attendance && typeof s.attendance === 'string') s.attendance = JSON.parse(s.attendance);
+              } catch(e){}
+              try {
+                  if (s.skolastikTests && typeof s.skolastikTests === 'string') s.skolastikTests = JSON.parse(s.skolastikTests);
+              } catch(e){}
+              try {
+                  if (s.tkaTests && typeof s.tkaTests === 'string') s.tkaTests = JSON.parse(s.tkaTests);
+              } catch(e){}
+              return s;
+          });
+
+          window.__remoteDataLoaded = true;
+          console.log('Data remote berhasil dimuat dari Supabase.');
+          if (typeof window.loadHome === 'function' && window.currentUser) window.loadHome();
+      } catch (err) {
+          console.error('Gagal memuat data dari Supabase:', err);
+          // keep existing local data if remote fails
+      }
+  }
+
+  // Helper: write back to Supabase (example for saving a student)
+  async function saveStudentToSupabase(student) {
+      try {
+          const res = await supabase.from('students').upsert(student, { onConflict: 'id' });
+          if (res.error) throw res.error;
+          showNotification('Data siswa tersimpan ke Supabase', 'success');
+          return res.data;
+      } catch (err) {
+          console.error('Gagal menyimpan student:', err);
+          showNotification('Gagal menyimpan student ke Supabase: ' + (err && err.message ? err.message : err), 'error');
+      }
+  }
+
+  // Expose for debugging
+  window.supabase = supabase;
+  window.loadRemoteData = loadRemoteData;
+  window.saveStudentToSupabase = saveStudentToSupabase;
+
+  // Security note in console
+  console.info('Supabase client initialized. Note: For production, prefer using Supabase Auth or server-side endpoints to validate credentials and never store plaintext passwords.');
+</script>
+<!-- End Supabase integration -->
