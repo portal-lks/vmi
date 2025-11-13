@@ -5365,7 +5365,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <!-- === FITUR FILTER KELAS & BATASAN VISIBILITAS SISWA === -->
 <script>
   // Daftar kelas contoh (bisa diganti dari database nanti)
-  const daftarKelas = ['SR GOLD A', 'SR GOLD B', 'SR SILVER', 'SR PLATINUM'];
+  if (typeof window.daftarKelas === "undefined") window.daftarKelas = ['SR GOLD A', 'SR GOLD B', 'SR SILVER', 'SR PLATINUM'];
 
   // Utility render dropdown kelas
   function renderDropdownKelas(targetId) {
@@ -5401,21 +5401,21 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Injek filter ke 3 modul target
-  const originalLoadJadwalBelajar = window.loadJadwalBelajar;
+  if (typeof window.originalLoadJadwalBelajar === "undefined") window.originalLoadJadwalBelajar = window.loadJadwalBelajar;
   window.loadJadwalBelajar = function() {
     originalLoadJadwalBelajar();
     renderDropdownKelas('filterKelasJadwalBelajar');
     setTimeout(applyKelasFilter, 500);
   };
 
-  const originalLoadJadwalKegiatan = window.loadJadwalKegiatan;
+  if (typeof window.originalLoadJadwalKegiatan === "undefined") window.originalLoadJadwalKegiatan = window.loadJadwalKegiatan;
   window.loadJadwalKegiatan = function() {
     originalLoadJadwalKegiatan();
     renderDropdownKelas('filterKelasJadwalKegiatan');
     setTimeout(applyKelasFilter, 500);
   };
 
-  const originalLoadMateriKelas = window.loadMateriKelas;
+  if (typeof window.originalLoadMateriKelas === "undefined") window.originalLoadMateriKelas = window.loadMateriKelas;
   window.loadMateriKelas = function() {
     originalLoadMateriKelas();
     renderDropdownKelas('filterKelasMateriKelas');
@@ -5427,7 +5427,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 <!-- === PENYEMPURNAAN FILTER KELAS UNTUK SEMUA MODUL === -->
 <script>
-  const daftarKelas = ['SR GOLD A', 'SR GOLD B', 'SR SILVER', 'SR PLATINUM'];
+  if (typeof window.daftarKelas === "undefined") window.daftarKelas = ['SR GOLD A', 'SR GOLD B', 'SR SILVER', 'SR PLATINUM'];
 
   function renderDropdownKelas(targetId, modulName) {
     const container = document.getElementById(targetId);
@@ -5462,21 +5462,21 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Integrasi ke tiga modul dengan gaya Materi Kelas
-  const originalLoadJadwalBelajar = window.loadJadwalBelajar;
+  if (typeof window.originalLoadJadwalBelajar === "undefined") window.originalLoadJadwalBelajar = window.loadJadwalBelajar;
   window.loadJadwalBelajar = function() {
     originalLoadJadwalBelajar();
     renderDropdownKelas('filterKelasJadwalBelajar', 'jadwalBelajar');
     setTimeout(() => applyKelasFilter('jadwalBelajar'), 500);
   };
 
-  const originalLoadJadwalKegiatan = window.loadJadwalKegiatan;
+  if (typeof window.originalLoadJadwalKegiatan === "undefined") window.originalLoadJadwalKegiatan = window.loadJadwalKegiatan;
   window.loadJadwalKegiatan = function() {
     originalLoadJadwalKegiatan();
     renderDropdownKelas('filterKelasJadwalKegiatan', 'jadwalKegiatan');
     setTimeout(() => applyKelasFilter('jadwalKegiatan'), 500);
   };
 
-  const originalLoadMateriKelas = window.loadMateriKelas;
+  if (typeof window.originalLoadMateriKelas === "undefined") window.originalLoadMateriKelas = window.loadMateriKelas;
   window.loadMateriKelas = function() {
     originalLoadMateriKelas();
     renderDropdownKelas('filterKelasMateriKelas', 'materiKelas');
@@ -5488,7 +5488,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 <!-- === FINAL FILTER DROPDOWN + CHECKLIST UNTUK SEMUA MODUL === -->
 <script>
-  const daftarKelas = [
+  if (typeof window.daftarKelas === "undefined") window.daftarKelas = [
     'Kelas SR GOLD A (Cabang Jakarta Selatan)',
     'Kelas SR GOLD B (Cabang Jakarta Selatan)',
     'Kelas SR SILVER (Cabang Bandung)',
@@ -5530,21 +5530,21 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Integrasi ke tiga modul: belajar, kegiatan, materi
-  const originalLoadJadwalBelajar = window.loadJadwalBelajar;
+  if (typeof window.originalLoadJadwalBelajar === "undefined") window.originalLoadJadwalBelajar = window.loadJadwalBelajar;
   window.loadJadwalBelajar = function() {
     originalLoadJadwalBelajar();
     renderFilterKelas('filterKelasJadwalBelajar', 'jadwalBelajar');
     setTimeout(() => applyFilterKelas('jadwalBelajar'), 500);
   };
 
-  const originalLoadJadwalKegiatan = window.loadJadwalKegiatan;
+  if (typeof window.originalLoadJadwalKegiatan === "undefined") window.originalLoadJadwalKegiatan = window.loadJadwalKegiatan;
   window.loadJadwalKegiatan = function() {
     originalLoadJadwalKegiatan();
     renderFilterKelas('filterKelasJadwalKegiatan', 'jadwalKegiatan');
     setTimeout(() => applyFilterKelas('jadwalKegiatan'), 500);
   };
 
-  const originalLoadMateriKelas = window.loadMateriKelas;
+  if (typeof window.originalLoadMateriKelas === "undefined") window.originalLoadMateriKelas = window.loadMateriKelas;
   window.loadMateriKelas = function() {
     originalLoadMateriKelas();
     renderFilterKelas('filterKelasMateriKelas', 'materiKelas');
@@ -5596,7 +5596,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Rebuild fungsi loadSchedule agar gunakan filter baru
-  const originalLoadSchedule = window.loadSchedule;
+  if (typeof window.originalLoadSchedule === "undefined") window.originalLoadSchedule = window.loadSchedule;
   window.loadSchedule = function() {
     originalLoadSchedule();
     renderFilterKelasBelajar('filterKelasJadwalBelajar');
@@ -5652,7 +5652,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Perbarui fungsi loadSchedule agar identik dengan loadJadwalKegiatan
-  const originalLoadSchedule = window.loadSchedule;
+  if (typeof window.originalLoadSchedule === "undefined") window.originalLoadSchedule = window.loadSchedule;
   window.loadSchedule = function() {
     originalLoadSchedule();
     renderFilterKelasSchedule('filterKelasJadwalBelajar');
