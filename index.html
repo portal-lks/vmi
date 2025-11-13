@@ -95,8 +95,6 @@
         .super-admin-card-3 { background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%); } /* Blue */
     </style>
 <style>@view-transition { navigation: auto; }</style>
-<script src="/_sdk/data_sdk.js" type="text/javascript"></script>
-<script src="/_sdk/element_sdk.js" type="text/javascript"></script>
 <script type="module">
   import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
   const SUPABASE_URL = 'https://zuvrwmjxwpazacxcniyv.supabase.co'
@@ -6268,6 +6266,16 @@ async function saveAllDataFixed() {
 window.saveAllData = saveAllDataFixed;
 </script>
 <!-- === END AUTO-INJECTED FIX === -->
+
+
+<script type="module">
+  import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+
+  const SUPABASE_URL = "https://zuvrwmjxwpazacxcniyv.supabase.co";
+  const SUPABASE_ANON_KEY = "<MASUKKAN_ANON_KEY_DISINI>";
+
+  window.supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+</script>
 
 </body>
 </html>
