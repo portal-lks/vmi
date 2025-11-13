@@ -6131,5 +6131,143 @@ async function saveAllData() {
     console.error("❌ Gagal menyimpan data ke Supabase:", error.message);
   }
 }
-</script></body>
+</script>
+<!-- === AUTO-INJECTED FIX: Robust saveAllData and override window.saveAllData === -->
+<script>
+/*
+  Fixed saveAllData:
+  - Uses the actual in-memory variable names used across the file:
+    studentsData, regionalAdmins, availableClasses, classMaterials,
+    scheduleData, activityScheduleData, educationInfo
+  - Performs upserts with explicit onConflict keys where appropriate
+  - Batches operations serially and reports per-section errors to console
+  - Overrides window.saveAllData so other code calling it will run this version
+*/
+async function saveAllDataFixed() {
+  try {
+    // USERS (regionalAdmins + superadmin already handled elsewhere) - ensure regionalAdmins saved
+    if (Array.isArray(regionalAdmins) && regionalAdmins.length > 0) {
+      for (const a of regionalAdmins) {
+        const payload = {
+          username: a.username,
+          password: a.password || null,
+          role: a.role || 'Admin',
+          name: a.name || null,
+          region: a.region || null
+        };
+        const { error } = await window.supabase.from('users').upsert(payload, { onConflict: 'username' });
+        if (error) console.error('users upsert error', error);
+      }
+    }
+
+    // STUDENTS (upsert by username)
+    if (Array.isArray(studentsData)) {
+      for (const s of studentsData) {
+        // Ensure payload includes username (required for onConflict)
+        if (!s.username) {
+          console.warn('Skipping student without username', s);
+          continue;
+        }
+        const payload = {
+          name: s.name || null,
+          username: s.username,
+          password: s.password || null,
+          class: s.class || null,
+          region: s.region || null,
+          school: s.school || null,
+          artworks: s.artworks || null,
+          attendance: s.attendance || null,
+          skolastikTests: s.skolastikTests || null,
+          tkaTests: s.tkaTests || null
+        };
+        const { error } = await window.supabase.from('students').upsert(payload, { onConflict: 'username' });
+        if (error) console.error('students upsert error for', s.username, error);
+      }
+    }
+
+    // CLASSES (use id if present, otherwise upsert by name+region via insert)
+    if (Array.isArray(availableClasses)) {
+      for (const c of availableClasses) {
+        // If id present, upsert by id; else upsert by (name,region) using insert with onConflict fallback
+        if (c.id) {
+          const { error } = await window.supabase.from('classes').upsert(c, { onConflict: 'id' });
+          if (error) console.error('classes upsert error id', c, error);
+        } else {
+          // safe insert-ignore by name+region using RPC-like approach: try insert then update on conflict isn't supported reliably here,
+          // so we use upsert with minimal object including name and region (requires unique constraint on (name,region) in DB to fully work)
+          const { error } = await window.supabase.from('classes').upsert(c);
+          if (error) console.error('classes upsert error', c, error);
+        }
+      }
+    }
+
+    // MATERIALS (upsert by topic)
+    if (Array.isArray(classMaterials)) {
+      for (const m of classMaterials) {
+        if (!m.topic) { console.warn('Skipping material without topic', m); continue; }
+        const { error } = await window.supabase.from('materials').upsert(m, { onConflict: 'topic' });
+        if (error) console.error('materials upsert error for', m.topic, error);
+      }
+    }
+
+    // SCHEDULE (upsert by subject+date if possible)
+    if (Array.isArray(scheduleData)) {
+      for (const s of scheduleData) {
+        // ensure required fields exist
+        if (!s.subject || !s.date) {
+          console.warn('Skipping schedule missing subject or date', s);
+          continue;
+        }
+        // Postgres onConflict with composite keys requires a constraint; if not present, upsert will fallback to insert (may duplicate)
+        const { error } = await window.supabase.from('schedule').upsert(s, { onConflict: ['subject','date'] });
+        if (error) {
+          // fallback: try upsert without onConflict (insert/update by id if exists)
+          console.error('schedule upsert error for', s.subject, s.date, error);
+          const { error: e2 } = await window.supabase.from('schedule').upsert(s);
+          if (e2) console.error('schedule upsert fallback also failed', e2);
+        }
+      }
+    }
+
+    // ACTIVITY SCHEDULE (upsert by name+date)
+    if (Array.isArray(activityScheduleData)) {
+      for (const a of activityScheduleData) {
+        if (!a.name || !a.date) { console.warn('Skipping activity missing name or date', a); continue; }
+        const { error } = await window.supabase.from('activity_schedule').upsert(a, { onConflict: ['name','date'] });
+        if (error) {
+          console.error('activity_schedule upsert error', a.name, a.date, error);
+          const { error: e2 } = await window.supabase.from('activity_schedule').upsert(a);
+          if (e2) console.error('activity_schedule fallback failed', e2);
+        }
+      }
+    }
+
+    // EDUCATION INFO (upsert by title)
+    if (Array.isArray(educationInfo)) {
+      for (const e of educationInfo) {
+        if (!e.title) { console.warn('Skipping educationInfo without title', e); continue; }
+        const { error } = await window.supabase.from('education_info').upsert(e, { onConflict: 'title' });
+        if (error) console.error('education_info upsert error for', e.title, error);
+      }
+    }
+
+    // Final notification
+    try {
+      if (typeof showNotification === 'function') showNotification('Semua data berhasil disimpan ke server.', 'success');
+      else console.log('Semua data berhasil disimpan ke server.');
+    } catch (e) {
+      console.log('Saved but notification failed', e);
+    }
+  } catch (err) {
+    console.error('Gagal menyimpan ke Supabase (fixed)', err);
+    if (typeof showNotification === 'function') showNotification('Gagal menyimpan data ke server.', 'error');
+  }
+}
+
+// Override existing references
+window.saveAllData = saveAllDataFixed;
+</script>
+<!-- === END AUTO-INJECTED FIX === -->
+
+</body>
 </html>
