@@ -6091,51 +6091,44 @@ document.addEventListener('DOMContentLoaded', function(){
 </script><script>
 async function saveAllData() {
   try {
-    console.log("🚀 Sinkronisasi penuh ke Supabase (versi ID)...");
-
-    // Ambil semua data lokal (fallback ke localStorage kalau variabel hilang)
-    const usersData = JSON.parse(localStorage.getItem('usersData') || '[]');
-    const studentsData = JSON.parse(localStorage.getItem('studentsData') || '[]');
-    const classesData = JSON.parse(localStorage.getItem('classesData') || '[]');
-    const materialsData = JSON.parse(localStorage.getItem('materialsData') || '[]');
-    const scheduleData = JSON.parse(localStorage.getItem('scheduleData') || '[]');
-    const activityScheduleData = JSON.parse(localStorage.getItem('activityScheduleData') || '[]');
-    const educationInfoData = JSON.parse(localStorage.getItem('educationInfoData') || '[]');
-
     // ===== USERS =====
-    const { data: oldUsers, error: errOldU } = await window.supabase.from('users').select('id');
-    if (errOldU) console.error('❌ Gagal ambil users lama:', errOldU.message);
-    const localUserIds = (usersData || []).map(u => u.id).filter(Boolean);
-    const toDeleteUsers = (oldUsers || []).filter(u => !localUserIds.includes(u.id));
+    const { data: usersOld } = await window.supabase.from('users').select('username');
+    const localUsers = usersData.map(u => u.username);
+    const toDeleteUsers = usersOld.filter(u => !localUsers.includes(u.username));
     if (toDeleteUsers.length > 0) {
-      const { error: errDelU } = await window.supabase.from('users').delete().in('id', toDeleteUsers.map(u => u.id));
-      if (errDelU) console.error('❌ Gagal hapus users:', errDelU.message);
-      else console.log('🗑️ Users dihapus dari Supabase:', toDeleteUsers.map(u => u.id));
+      await window.supabase.from('users').delete().in('username', toDeleteUsers.map(u => u.username));
+      console.log('🗑️ Users deleted from Supabase:', toDeleteUsers.map(u => u.username));
     }
     await window.supabase.from('users').upsert(usersData);
 
     // ===== STUDENTS =====
-    const { data: oldStudents, error: errOldS } = await window.supabase.from('students').select('id');
-    if (errOldS) console.error('❌ Gagal ambil students lama:', errOldS.message);
-    const localStudentIds = (studentsData || []).map(s => s.id).filter(Boolean);
-    const toDeleteStudents = (oldStudents || []).filter(s => !localStudentIds.includes(s.id));
-    if (toDeleteStudents.length > 0) {
-      const { error: errDelS } = await window.supabase.from('students').delete().in('id', toDeleteStudents.map(s => s.id));
-      if (errDelS) console.error('❌ Gagal hapus siswa:', errDelS.message);
-      else console.log('🗑️ Siswa dihapus dari Supabase:', toDeleteStudents.map(s => s.id));
+    const { data: oldStudents } = await window.supabase.from('students').select('username');
+    const localStudents = studentsData.map(s => s.username);
+    const toDelete = oldStudents.filter(s => !localStudents.includes(s.username));
+    if (toDelete.length > 0) {
+      await window.supabase.from('students').delete().in('username', toDelete.map(s => s.username));
+      console.log('🗑️ Students deleted from Supabase:', toDelete.map(s => s.username));
     }
     await window.supabase.from('students').upsert(studentsData);
 
-    // ===== SISANYA (update biasa) =====
+    // ===== CLASSES =====
     await window.supabase.from('classes').upsert(classesData);
+
+    // ===== MATERIALS =====
     await window.supabase.from('materials').upsert(materialsData);
+
+    // ===== SCHEDULE =====
     await window.supabase.from('schedule').upsert(scheduleData);
+
+    // ===== ACTIVITY SCHEDULE =====
     await window.supabase.from('activity_schedule').upsert(activityScheduleData);
+
+    // ===== EDUCATION INFO =====
     await window.supabase.from('education_info').upsert(educationInfoData);
 
-    console.log("✅ Semua data berhasil disimpan & disinkron ke Supabase (pakai ID)!");
+    console.log("✅ Semua data berhasil disimpan & disinkron dengan Supabase!");
   } catch (error) {
-    console.error("❌ Error saveAllData:", error.message);
+    console.error("❌ Gagal menyimpan data ke Supabase:", error.message);
   }
 }
 </script></body>
