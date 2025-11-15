@@ -7,9 +7,6 @@
 <title>Sistem Informasi Laporan Kemajuan Siswa - Bimbel Gambar Villa Merah</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-<!-- Supabase JS SDK (added by assistant) -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-
 <style>
         body {
             box-sizing: border-box;
@@ -98,44 +95,10 @@
         .super-admin-card-3 { background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%); } /* Blue */
     </style>
 <style>@view-transition { navigation: auto; }</style>
+<script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+<script src="/_sdk/element_sdk.js" type="text/javascript"></script>
 </head>
-<body class="bg-white"><!-- Assistant-inserted: robust Supabase init (ensures createClient runs after CDN) -->
-<script>
-(function(){
-  try{
-    if(!window.SUPABASE_URL) window.SUPABASE_URL = "https://zdyxkdghexhnmvklucfa.supabase.co";
-    if(!window.SUPABASE_ANON_KEY) window.SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpkeXhrZGdoZXhobm12a2x1Y2ZhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxNzEyNjgsImV4cCI6MjA3ODc0NzI2OH0.rMpEn7koPPWAu3jQxRUGEPP3lO9TsLAklvYC9giP1Bg";
-    // If the UMD bundle exposed `supabase` as a factory, use it to create the client
-    if (typeof supabase !== 'undefined' && typeof supabase.createClient === 'function') {
-      window.supabase = supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
-      console.log('Supabase client initialized (supabase global).');
-    } else if (typeof window.supabase !== 'undefined' && typeof window.supabase.createClient === 'function') {
-      // already present as window.supabase factory
-      window.supabase = window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
-      console.log('Supabase client initialized (window.supabase factory).');
-    } else {
-      console.warn('Supabase SDK not found yet. Waiting briefly for CDN to load...');
-      // wait up to 3 seconds for the SDK to load
-      var attempts = 0;
-      var interval = setInterval(function(){
-        attempts++;
-        if (typeof supabase !== 'undefined' && typeof supabase.createClient === 'function') {
-          window.supabase = supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
-          console.log('Supabase client initialized after delay.');
-          clearInterval(interval);
-        } else if (attempts > 30) { // ~3 seconds
-          clearInterval(interval);
-          console.error('Supabase SDK failed to load within timeout. Please check the CDN or network.');
-        }
-      }, 100);
-    }
-  }catch(e){
-    console.warn('robust supabase init failed', e);
-  }
-})();
-</script>
-<!-- End robust init -->
-
+<body class="bg-white">
 <style>
 .login-bg {
   background: url('FSRD.jpeg') no-repeat center center fixed;
@@ -304,7 +267,7 @@ logout = function() {
 window.saveAllData = saveAllData;
 
         // Data Storage
-        if(typeof window['currentUser'] === 'undefined'){ window['currentUser'] = null; } else { /* duplicate currentUser skipped */ };
+        let currentUser = null;
         let currentModule = 'home';
         let selectedClass = 'all'; 
         let selectedClassMaterial = 'all'; // Filter untuk Materi (TAMBAHAN BARU)
@@ -312,11 +275,11 @@ window.saveAllData = saveAllData;
         let selectedAdminRegion = 'all'; // NEW: Filter Global Admin
         
         // Data Admin Regional yang terpisah - MODIFIED REGIONAL NAMES
-        if(typeof window['regionalAdmins'] === 'undefined'){ window['regionalAdmins'] = [
+        let regionalAdmins = [
             { username: 'admin_jaksel', password: 'admin123', role: 'Admin', name: 'Admin Jakarta Selatan', region: 'Cabang Jakarta Selatan' },
             { username: 'admin_jaktim', password: 'admin123', role: 'Admin', name: 'Admin Jakarta Timur', region: 'Cabang Jakarta Timur' },
             { username: 'admin_bandung', password: 'admin123', role: 'Admin', name: 'Admin Bandung', region: 'Pusat Bandung' }
-        ]; } else { /* duplicate regionalAdmins skipped */ };
+        ];
 
         // Gabungan semua users, termasuk Super Admin
         const superAdminUser = { username: 'superadmin', password: 'super123', role: 'Super Admin', name: 'Super Admin Utama', region: 'Pusat' };
@@ -354,15 +317,15 @@ window.saveAllData = saveAllData;
 
         // Data Sekolah Baru
         // MODIFIED: availableClasses kini memiliki properti region
-        if(typeof window['availableClasses'] === 'undefined'){ window['availableClasses'] = [
+        let availableClasses = [
             { id: 1, name: 'Gold', description: 'Kelas dasar intensif.', region: 'Cabang Jakarta Selatan' },
             { id: 2, name: 'Advance', description: 'Kelas lanjutan untuk persiapan kompetisi.', region: 'Cabang Jakarta Selatan' },
             { id: 3, name: 'Minat Seni', description: 'Kelas santai untuk hobi.', region: 'Cabang Jakarta Timur' },
             { id: 4, name: 'Arsitek', description: 'Kelas khusus persiapan masuk jurusan Arsitektur.', region: 'Pusat Bandung' }
-        ]; } else { /* duplicate availableClasses skipped */ };
+        ];
 
         // MODIFIED REGIONAL NAMES IN STUDENTS DATA (MENAMBAH USERNAME DAN PASSWORD)
-        if(typeof window['studentsData'] === 'undefined'){ window['studentsData'] = [
+        let studentsData = [
             {
                 id: 1,
                 name: 'Budi Santoso',
@@ -571,9 +534,9 @@ window.saveAllData = saveAllData;
                     { date: '2024-01-24', subject: 'Pengetahuan Kuantitatif', score: 82, comment: 'Konsisten dalam mengerjakan soal' }
                 ]
             }
-        ]; } else { /* duplicate studentsData skipped */ };
+        ];
 
-        if(typeof window['educationInfo'] === 'undefined'){ window['educationInfo'] = [
+        let educationInfo = [
             {
                 id: 1,
                 title: 'Sistem Ujian SNBP 2026',
@@ -592,10 +555,10 @@ window.saveAllData = saveAllData;
                 content: 'Ujian mandiri perguruan tinggi 2026 memiliki format yang beragam. Beberapa PT menggunakan tes tertulis, wawancara, atau portofolio sesuai program studi. Jadwal ujian mandiri umumnya dilaksanakan setelah pengumuman SNBT.',
                 date: '2024-01-25'
             }
-        ]; } else { /* duplicate educationInfo skipped */ };
+        ];
 
         // MODIFIED: properti 'region' ditambahkan ke setiap materi
-        if(typeof window['classMaterials'] === 'undefined'){ window['classMaterials'] = [
+        let classMaterials = [
             { id: 1, topic: 'Pengenalan Alat Gambar', description: 'Mengenal berbagai jenis pensil (2H, HB, 2B, 4B, 6B), kertas gambar, penghapus, dan alat gambar dasar lainnya untuk memulai belajar menggambar dengan benar', classes: ['Gold', 'Advance'], region: 'Cabang Jakarta Selatan' },
             { id: 2, topic: 'Teknik Garis Dasar', description: 'Belajar membuat garis lurus, lengkung, dan berbagai jenis garis sebagai dasar menggambar. Latihan kontrol tangan dan tekanan pensil', classes: ['Advance', 'Minat Seni'], region: 'Cabang Jakarta Timur' },
             { id: 3, topic: 'Bentuk Geometri Dasar', description: 'Menggambar lingkaran, persegi, segitiga, dan bentuk geometri dasar lainnya dengan proporsi yang tepat', classes: ['Gold', 'Advance'], region: 'Cabang Jakarta Selatan' },
@@ -605,20 +568,20 @@ window.saveAllData = saveAllData;
             { id: 7, topic: 'Anatomi Manusia', description: 'Mempelajari proporsi dan anatomi tubuh manusia untuk menggambar figur yang akurat dan realistis', classes: ['Gold'], region: 'Cabang Jakarta Selatan' },
             { id: 8, topic: 'Komposisi Lanjutan', description: 'Teknik komposisi untuk karya yang lebih kompleks dengan multiple objek dan elemen. Prinsip rule of thirds dan golden ratio', classes: ['Minat Seni', 'Advance'], region: 'Cabang Jakarta Timur' },
             { id: 9, topic: 'Teknik Rendering', description: 'Teknik finishing dan rendering untuk menghasilkan karya gambar yang profesional dan detail', classes: ['Advance', 'Arsitek'], region: 'Pusat Bandung' }
-        ]; } else { /* duplicate classMaterials skipped */ };
+        ];
 
         // MODIFIED: Data jadwal diisi dengan properti 'region'
-        if(typeof window['scheduleData'] === 'undefined'){ window['scheduleData'] = [
+        let scheduleData = [
             { id: 1, date: '2025-11-05', day: 'Selasa', subject: 'Pengenalan Alat Gambar', classes: ['Gold', 'Advance'], region: 'Cabang Jakarta Selatan' },
             { id: 2, date: '2025-11-06', day: 'Rabu', subject: 'Perspektif 1 Titik', classes: ['Minat Seni'], region: 'Cabang Jakarta Timur' },
             { id: 3, date: '2025-11-07', day: 'Kamis', subject: 'Anatomi Manusia', classes: ['Arsitek', 'Advance'], region: 'Pusat Bandung' }
-        ]; } else { /* duplicate scheduleData skipped */ };
+        ];
 
 // === Data Jadwal Kegiatan (Baru) ===
-if(typeof window['activityScheduleData'] === 'undefined'){ window['activityScheduleData'] = [
+let activityScheduleData = [
   { id: 1, date: '2025-11-10', name: 'Workshop Arsitektur', goal: 'Melatih kemampuan menggambar bangunan', classes: ['Arsitek'], region: 'Pusat Bandung' },
   { id: 2, date: '2025-11-12', name: 'Pameran Seni', goal: 'Menampilkan hasil karya siswa', classes: ['Gold', 'Advance'], region: 'Cabang Jakarta Selatan' }
-]; } else { /* duplicate activityScheduleData skipped */ };
+];
 
         // Login Handler
         document.getElementById('loginForm').addEventListener('submit', function(e) {
@@ -1058,6 +1021,7 @@ else if (role === 'Admin') {
     const studentData = studentsData.find(s => s.name === currentUser.name);
     if (!studentData) {
         content.innerHTML = '<div class="text-center text-gray-500">Data siswa tidak ditemukan</div>';
+        return;
     }
 
     // realtime calculations
@@ -1150,6 +1114,7 @@ else if (role === 'Admin') {
             const content = document.getElementById('contentArea');
             if (currentUser.role !== 'Super Admin') {
                 content.innerHTML = '<div class="fade-in text-center text-red-600 text-xl font-bold p-10">Akses Ditolak. Hanya Super Admin yang dapat mengakses modul ini.</div>';
+                return;
             }
 
         // === NEW MODULE: LOG ACTIVITY ===
@@ -1157,6 +1122,7 @@ else if (role === 'Admin') {
             const content = document.getElementById('contentArea');
             if (currentUser.role !== 'Super Admin') {
                 content.innerHTML = '<div class="fade-in text-center text-red-600 text-xl font-bold p-10">Akses Ditolak. Hanya Super Admin yang dapat mengakses modul ini.</div>';
+                return;
             }
 
             let logs = JSON.parse(localStorage.getItem('loginActivityLogs') || '[]');
@@ -1304,15 +1270,18 @@ else if (role === 'Admin') {
                 
                 if (!region) {
                     showNotification('Silakan pilih atau masukkan Regional!', 'error');
+                    return;
                 }
 
                 if (getAllUsers()[username]) {
                     showNotification('Username sudah digunakan!', 'error');
+                    return;
                 }
                 
                 // Cek konflik regional
                 if (regionalAdmins.some(admin => admin.region.toLowerCase() === region.toLowerCase())) {
                      showNotification('Regional ini sudah memiliki Admin. Harap gunakan nama Regional yang berbeda.', 'error');
+                    return;
                 }
 
                 const newAdmin = { username, password, role: 'Admin', name, region };
@@ -1358,6 +1327,7 @@ else if (role === 'Admin') {
                 // Check if new region conflicts with other regions
                 if (regionalAdmins.some(a => a.username !== username && a.region.toLowerCase() === newRegion.toLowerCase())) {
                      showNotification('Regional ini sudah memiliki Admin. Harap gunakan nama Regional yang berbeda.', 'error');
+                    return;
                 }
 
                 admin.name = newName;
@@ -1426,6 +1396,7 @@ function confirmDeleteRegionalAdmin(username) {
             
             if (!element) {
                 showNotification('Area konten tidak ditemukan!', 'error');
+                return;
             }
 
             // Konfigurasi untuk html2pdf (untuk hasil A4 portrait yang optimal)
@@ -2477,6 +2448,7 @@ function loadAddStudent() {
   const content = document.getElementById('contentArea');
   if (currentUser.role !== 'Admin' && currentUser.role !== 'Super Admin') {
     content.innerHTML = `<div class="fade-in text-center text-red-600 text-xl font-bold p-10">Akses ditolak. Hanya Admin dan Super Admin yang dapat mengakses modul ini.</div>`;
+    return;
   }
 
   // Determine class options based on role/region
@@ -2593,10 +2565,12 @@ function loadAddStudent() {
 
       if (!name || !username || !kelas) {
         showNotification('Nama, username, dan kelas wajib diisi!', 'error');
+        return;
       }
       // prevent duplicate username
       if (studentsData.some(s => s.username === username)) {
         showNotification('Username sudah terdaftar!', 'error');
+        return;
       }
 
       const newId = studentsData.reduce((m,c)=> c.id>m?c.id:m, 0) + 1;
@@ -2657,6 +2631,7 @@ function openAddStudentModal() {
             const user = allUsers[username];
             if (!user || user.role !== 'Siswa') {
                 showNotification('Pengguna siswa tidak ditemukan!', 'error');
+                return;
             }
             // Cari data siswa berdasarkan username
             const studentData = studentsData.find(s => s.username === username);
@@ -2723,6 +2698,7 @@ function openAddStudentModal() {
                         const selectedClassRegion = availableClasses.find(c => c.name === newClass)?.region;
                         if (selectedClassRegion !== newRegion) {
                             showNotification(`Kelas ${newClass} hanya tersedia di regional ${selectedClassRegion}. Silakan pilih kelas atau regional yang sesuai.`, 'error');
+                            return;
                         }
                     }
                     
@@ -2751,6 +2727,7 @@ function openAddStudentModal() {
             const user = allUsers[username];
              if (!user || user.role !== 'Siswa') {
                 showNotification('Pengguna siswa tidak ditemukan!', 'error');
+                return;
             }
             openModal('Konfirmasi Hapus Siswa', `
                 <div class="text-center">
@@ -2810,6 +2787,7 @@ function openAddStudentModal() {
             
             if (filterableStudents.length === 0) {
                 showNotification('Tidak ada siswa di regional ini untuk ditambahkan karya.', 'error');
+                return;
             }
 
             // Jika studentId diberikan, jadikan siswa tersebut yang terpilih secara default
@@ -2988,6 +2966,7 @@ function openAddStudentModal() {
             
             if (filterableStudents.length === 0) {
                 showNotification('Tidak ada siswa di regional ini untuk ditambahkan kehadiran.', 'error');
+                return;
             }
 
             // Jika studentId diberikan, jadikan siswa tersebut yang terpilih secara default
@@ -3111,6 +3090,7 @@ function openAddStudentModal() {
             
             if (filterableStudents.length === 0) {
                 showNotification('Tidak ada siswa di regional ini untuk ditambahkan tes.', 'error');
+                return;
             }
 
             // Jika studentId diberikan, jadikan siswa tersebut yang terpilih secara default
@@ -3232,6 +3212,7 @@ function openAddStudentModal() {
             
             if (filterableStudents.length === 0) {
                 showNotification('Tidak ada siswa di regional ini untuk ditambahkan tes.', 'error');
+                return;
             }
 
             // Jika studentId diberikan, jadikan siswa tersebut yang terpilih secara default
@@ -3467,6 +3448,7 @@ function openAddStudentModal() {
                 `;
             } else if (regionalClassesForForm.length === 0) {
                  showNotification('Tambahkan Kelas terlebih dahulu di regional Anda sebelum menambah materi.', 'error');
+                 return;
             }
 
             openModal('Tambah Materi', `
@@ -3502,6 +3484,7 @@ function openAddStudentModal() {
 
                 if (selectedClasses.length === 0) {
                     showNotification('Pilih minimal satu kelas untuk materi ini!', 'error');
+                    return;
                 }
                 
                 // Tentukan regional berdasarkan role
@@ -3510,6 +3493,7 @@ function openAddStudentModal() {
                     targetRegion = document.getElementById('materialRegion').value;
                     if (!targetRegion) {
                         showNotification('Super Admin harus memilih Regional Target!', 'error');
+                        return;
                     }
                 } else {
                     targetRegion = currentUser.region;
@@ -3571,6 +3555,7 @@ function openAddStudentModal() {
 
                 if (updatedClasses.length === 0) {
                     showNotification('Pilih minimal satu kelas untuk materi ini!', 'error');
+                    return;
                 }
 
                 material.topic = document.getElementById('editMaterialTopic').value;
@@ -3635,6 +3620,7 @@ function openAddStudentModal() {
                 `;
             } else if (regionalClassesForForm.length === 0) {
                  showNotification('Tambahkan Kelas terlebih dahulu di regional Anda sebelum menambah jadwal.', 'error');
+                 return;
             }
 
             openModal('Tambah Jadwal', `
@@ -3682,6 +3668,7 @@ function openAddStudentModal() {
 
                 if (selectedClasses.length === 0) {
                     showNotification('Pilih minimal satu kelas untuk jadwal ini!', 'error');
+                    return;
                 }
                 
                 // Tentukan regional berdasarkan role
@@ -3690,6 +3677,7 @@ function openAddStudentModal() {
                     targetRegion = document.getElementById('scheduleRegion').value;
                     if (!targetRegion) {
                         showNotification('Super Admin harus memilih Regional Target!', 'error');
+                        return;
                     }
                 } else {
                     targetRegion = currentUser.region;
@@ -3764,6 +3752,7 @@ function openAddStudentModal() {
 
                 if (updatedClasses.length === 0) {
                     showNotification('Pilih minimal satu kelas untuk jadwal ini!', 'error');
+                    return;
                 }
                 
                 schedule.date = document.getElementById('editScheduleDate').value;
@@ -3875,6 +3864,7 @@ function openAddStudentModal() {
                 
                 if (availableSchools.some(s => s.id !== schoolId && s.name.toLowerCase() === newName.toLowerCase())) {
                     showNotification('Nama sekolah sudah ada!', 'error');
+                    return;
                 }
 
                 const oldName = school.name;
@@ -3909,6 +3899,7 @@ function openAddStudentModal() {
                         <button onclick="closeModal()" class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Mengerti</button>
                     </div>
                 `);
+                return;
             }
 
             openModal('Konfirmasi Hapus Sekolah', `
@@ -3947,6 +3938,7 @@ function loadManageClasses() {
       <div class="fade-in text-center text-red-600 text-xl font-bold p-10">
         Akses ditolak. Hanya Admin dan Super Admin yang dapat mengakses modul ini.
       </div>`;
+    return;
   }
 
   // Filter kelas berdasarkan region user (jika bukan Super Admin)
@@ -4089,11 +4081,13 @@ function filterClasses() {
 
                 if (!targetRegion) {
                     showNotification('Silakan pilih Regional Target.', 'error');
+                    return;
                 }
 
                 // Check if class name already exists in the target region
                 if (availableClasses.some(c => c.name.toLowerCase() === name.toLowerCase() && c.region === targetRegion)) {
                     showNotification(`Nama kelas "${name}" sudah ada di regional ${targetRegion}!`, 'error');
+                    return;
                 }
 
                 const maxId = availableClasses.reduce((max, c) => (c.id > max ? c.id : max), 0);
@@ -4140,6 +4134,7 @@ function filterClasses() {
                 // Check if new name conflicts with other classes IN THE SAME REGION
                 if (availableClasses.some(c => c.id !== classId && c.name.toLowerCase() === newName.toLowerCase() && c.region === classItem.region)) {
                     showNotification(`Nama kelas "${newName}" sudah ada di regional ${classItem.region}!`, 'error');
+                    return;
                 }
 
                 const oldName = classItem.name;
@@ -4202,6 +4197,7 @@ function filterClasses() {
                         <button onclick="closeModal()" class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Mengerti</button>
                     </div>
                 `);
+                return;
             }
 
             openModal('Konfirmasi Hapus Kelas', `
@@ -5287,7 +5283,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <!-- === FITUR FILTER KELAS & BATASAN VISIBILITAS SISWA === -->
 <script>
   // Daftar kelas contoh (bisa diganti dari database nanti)
-  if(typeof window['daftarKelas'] === 'undefined'){ window['daftarKelas'] = ['SR GOLD A', 'SR GOLD B', 'SR SILVER', 'SR PLATINUM']; } else { /* duplicate daftarKelas skipped */ };
+  const daftarKelas = ['SR GOLD A', 'SR GOLD B', 'SR SILVER', 'SR PLATINUM'];
 
   // Utility render dropdown kelas
   function renderDropdownKelas(targetId) {
@@ -5323,21 +5319,21 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Injek filter ke 3 modul target
-  if(typeof window['originalLoadJadwalBelajar'] === 'undefined'){ window['originalLoadJadwalBelajar'] = window.loadJadwalBelajar; } else { /* duplicate originalLoadJadwalBelajar skipped */ };
+  const originalLoadJadwalBelajar = window.loadJadwalBelajar;
   window.loadJadwalBelajar = function() {
     originalLoadJadwalBelajar();
     renderDropdownKelas('filterKelasJadwalBelajar');
     setTimeout(applyKelasFilter, 500);
   };
 
-  if(typeof window['originalLoadJadwalKegiatan'] === 'undefined'){ window['originalLoadJadwalKegiatan'] = window.loadJadwalKegiatan; } else { /* duplicate originalLoadJadwalKegiatan skipped */ };
+  const originalLoadJadwalKegiatan = window.loadJadwalKegiatan;
   window.loadJadwalKegiatan = function() {
     originalLoadJadwalKegiatan();
     renderDropdownKelas('filterKelasJadwalKegiatan');
     setTimeout(applyKelasFilter, 500);
   };
 
-  if(typeof window['originalLoadMateriKelas'] === 'undefined'){ window['originalLoadMateriKelas'] = window.loadMateriKelas; } else { /* duplicate originalLoadMateriKelas skipped */ };
+  const originalLoadMateriKelas = window.loadMateriKelas;
   window.loadMateriKelas = function() {
     originalLoadMateriKelas();
     renderDropdownKelas('filterKelasMateriKelas');
@@ -5349,7 +5345,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 <!-- === PENYEMPURNAAN FILTER KELAS UNTUK SEMUA MODUL === -->
 <script>
-  if(typeof window['daftarKelas'] === 'undefined'){ window['daftarKelas'] = ['SR GOLD A', 'SR GOLD B', 'SR SILVER', 'SR PLATINUM']; } else { /* duplicate daftarKelas skipped */ };
+  const daftarKelas = ['SR GOLD A', 'SR GOLD B', 'SR SILVER', 'SR PLATINUM'];
 
   function renderDropdownKelas(targetId, modulName) {
     const container = document.getElementById(targetId);
@@ -5384,21 +5380,21 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Integrasi ke tiga modul dengan gaya Materi Kelas
-  if(typeof window['originalLoadJadwalBelajar'] === 'undefined'){ window['originalLoadJadwalBelajar'] = window.loadJadwalBelajar; } else { /* duplicate originalLoadJadwalBelajar skipped */ };
+  const originalLoadJadwalBelajar = window.loadJadwalBelajar;
   window.loadJadwalBelajar = function() {
     originalLoadJadwalBelajar();
     renderDropdownKelas('filterKelasJadwalBelajar', 'jadwalBelajar');
     setTimeout(() => applyKelasFilter('jadwalBelajar'), 500);
   };
 
-  if(typeof window['originalLoadJadwalKegiatan'] === 'undefined'){ window['originalLoadJadwalKegiatan'] = window.loadJadwalKegiatan; } else { /* duplicate originalLoadJadwalKegiatan skipped */ };
+  const originalLoadJadwalKegiatan = window.loadJadwalKegiatan;
   window.loadJadwalKegiatan = function() {
     originalLoadJadwalKegiatan();
     renderDropdownKelas('filterKelasJadwalKegiatan', 'jadwalKegiatan');
     setTimeout(() => applyKelasFilter('jadwalKegiatan'), 500);
   };
 
-  if(typeof window['originalLoadMateriKelas'] === 'undefined'){ window['originalLoadMateriKelas'] = window.loadMateriKelas; } else { /* duplicate originalLoadMateriKelas skipped */ };
+  const originalLoadMateriKelas = window.loadMateriKelas;
   window.loadMateriKelas = function() {
     originalLoadMateriKelas();
     renderDropdownKelas('filterKelasMateriKelas', 'materiKelas');
@@ -5410,12 +5406,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
 <!-- === FINAL FILTER DROPDOWN + CHECKLIST UNTUK SEMUA MODUL === -->
 <script>
-  if(typeof window['daftarKelas'] === 'undefined'){ window['daftarKelas'] = [
+  const daftarKelas = [
     'Kelas SR GOLD A (Cabang Jakarta Selatan)',
     'Kelas SR GOLD B (Cabang Jakarta Selatan)',
     'Kelas SR SILVER (Cabang Bandung)',
     'Kelas SR PLATINUM (Cabang Surabaya)'
-  ]; } else { /* duplicate daftarKelas skipped */ };
+  ];
 
   function renderFilterKelas(containerId, modulName) {
     const container = document.getElementById(containerId);
@@ -5452,21 +5448,21 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Integrasi ke tiga modul: belajar, kegiatan, materi
-  if(typeof window['originalLoadJadwalBelajar'] === 'undefined'){ window['originalLoadJadwalBelajar'] = window.loadJadwalBelajar; } else { /* duplicate originalLoadJadwalBelajar skipped */ };
+  const originalLoadJadwalBelajar = window.loadJadwalBelajar;
   window.loadJadwalBelajar = function() {
     originalLoadJadwalBelajar();
     renderFilterKelas('filterKelasJadwalBelajar', 'jadwalBelajar');
     setTimeout(() => applyFilterKelas('jadwalBelajar'), 500);
   };
 
-  if(typeof window['originalLoadJadwalKegiatan'] === 'undefined'){ window['originalLoadJadwalKegiatan'] = window.loadJadwalKegiatan; } else { /* duplicate originalLoadJadwalKegiatan skipped */ };
+  const originalLoadJadwalKegiatan = window.loadJadwalKegiatan;
   window.loadJadwalKegiatan = function() {
     originalLoadJadwalKegiatan();
     renderFilterKelas('filterKelasJadwalKegiatan', 'jadwalKegiatan');
     setTimeout(() => applyFilterKelas('jadwalKegiatan'), 500);
   };
 
-  if(typeof window['originalLoadMateriKelas'] === 'undefined'){ window['originalLoadMateriKelas'] = window.loadMateriKelas; } else { /* duplicate originalLoadMateriKelas skipped */ };
+  const originalLoadMateriKelas = window.loadMateriKelas;
   window.loadMateriKelas = function() {
     originalLoadMateriKelas();
     renderFilterKelas('filterKelasMateriKelas', 'materiKelas');
@@ -5518,7 +5514,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Rebuild fungsi loadSchedule agar gunakan filter baru
-  if(typeof window['originalLoadSchedule'] === 'undefined'){ window['originalLoadSchedule'] = window.loadSchedule; } else { /* duplicate originalLoadSchedule skipped */ };
+  const originalLoadSchedule = window.loadSchedule;
   window.loadSchedule = function() {
     originalLoadSchedule();
     renderFilterKelasBelajar('filterKelasJadwalBelajar');
@@ -5574,7 +5570,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Perbarui fungsi loadSchedule agar identik dengan loadJadwalKegiatan
-  if(typeof window['originalLoadSchedule'] === 'undefined'){ window['originalLoadSchedule'] = window.loadSchedule; } else { /* duplicate originalLoadSchedule skipped */ };
+  const originalLoadSchedule = window.loadSchedule;
   window.loadSchedule = function() {
     originalLoadSchedule();
     renderFilterKelasSchedule('filterKelasJadwalBelajar');
@@ -5769,6 +5765,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const s = scheduleData[idx];
     if (currentUser && currentUser.role === 'Admin' && s.region !== currentUser.region) {
       notify('Akses ditolak: Anda hanya dapat mengedit jadwal di regional Anda sendiri','error');
+      return;
     }
 
     const classesForRegion = (availableClasses || []).filter(c => !currentUser || currentUser.role === 'Super Admin' || c.region === s.region).map(c => c.name);
@@ -5831,6 +5828,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const s = scheduleData[idx];
     if (currentUser && currentUser.role === 'Admin' && s.region !== currentUser.region) {
       notify('Akses ditolak: Anda hanya dapat menghapus jadwal di regional Anda sendiri','error');
+      return;
     }
     if (!confirm('Apakah Anda yakin ingin menghapus jadwal ini?')) return;
     scheduleData.splice(idx,1);
@@ -5922,6 +5920,7 @@ function addClass() {
     
     if (!name || !description || !region) {
       showNotification('Semua field wajib diisi', 'error');
+      return;
     }
 
     const newClass = { id: Date.now(), name, description, region };
@@ -6290,651 +6289,6 @@ window.loadActivitySchedule = function() {
 </script>
 <!-- END: Injected date-formatting helper -->
 
-
-<!-- Supabase client (injected by assistant) -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js/dist/umd/supabase.min.js"></script>
-<script>
-  // Supabase initialization
-  // SUPABASE_URL handled by assistant safe init; removed.
-// SUPABASE_ANON_KEY handled by assistant safe init; removed.
-// supabase client initialization moved to assistant safe init; removed.
-// Keys (must match app state keys used by the app)
-  const KEYS = ["studentsData","regionalAdmins","availableClasses","educationInfo","scheduleData","activityScheduleData","classMaterials","availableSchools","currentUser","loginActivityLogs"];
-
-  // Save entire app state to supabase table 'app_state' as JSON object (upsert)
-  async function supabaseSaveAllData(state) {
-    try {
-      const payload = { key: "app_state", value: state };
-      // using upsert based on key
-      const { data, error } = await supabase
-        .from('app_state')
-        .upsert(payload, { onConflict: ['key'] });
-      if (error) throw error;
-      return data;
-    } catch (err) {
-      console.error('supabaseSaveAllData error', err);
-      throw err;
-    }
-  }
-
-  // Load app state from supabase 'app_state' table
-  async function supabaseLoadAllData() {
-    try {
-      const { data, error } = await supabase
-        .from('app_state')
-        .select('value')
-        .eq('key', 'app_state')
-        .limit(1)
-        .single();
-      if (error) {
-        // if not found return empty object
-        if (error.code === 'PGRST116' || error.message?.includes('No rows')) return {};
-        console.warn('supabaseLoadAllData error', error);
-        return {};
-      }
-      return data?.value || {};
-    } catch (err) {
-      console.warn('supabaseLoadAllData failed', err);
-      return {};
-    }
-  }
-
-  // One-time migrator: if Supabase has no keys, push localStorage into Supabase
-  async function migrateLocalToSupabaseIfEmpty() {
-    try {
-      const { data, error } = await supabase.from('app_state').select('key').limit(1);
-      if (error) {
-        console.warn('app_state table probably missing or access denied', error);
-      }
-      if (data && data.length > 0) {
-        console.log('Supabase app_state already has data; skipping auto-migrate.');
-      }
-      // gather localStorage payload
-      const payload = {};
-      KEYS.forEach(k => {
-        try {
-          const s = localStorage.getItem(k);
-          payload[k] = s ? JSON.parse(s) : null;
-        } catch (e) {
-          payload[k] = null;
-        }
-      });
-      const anyData = Object.values(payload).some(v => v && (Array.isArray(v) ? v.length > 0 : Object.keys(v || {}).length > 0));
-      if (!anyData) return;
-      // perform migration automatically
-      console.log('Migrating local data to Supabase (first-time).');
-      await supabaseSaveAllData(payload);
-      console.log('Migrasi selesai — data sekarang disimpan di Supabase.');
-    } catch (err) {
-      console.warn('Migration check failed', err);
-    }
-  }
-
-  // Replace saveAllData/loadAllData while keeping original as fallback
-  (function() {
-    const originalSaveAllData = window.saveAllData || function(){ console.warn('original saveAllData missing'); };
-    window.saveAllData = async function() {
-      // collect current in-memory state (best-effort)
-      const state = {};
-      KEYS.forEach(k => {
-        try { state[k] = window[k]; } catch(e) { state[k] = null; }
-      });
-      // always keep localStorage update for offline/legacy support
-      try { originalSaveAllData(); } catch(e){ console.warn('originalSaveAllData failed', e); }
-      // attempt Supabase save
-      try {
-        await supabaseSaveAllData(state);
-        console.log('Data berhasil disimpan ke Supabase.');
-      } catch (err) {
-        console.warn('Gagal menyimpan ke Supabase — tetap menggunakan localStorage.', err);
-      }
-    };
-
-    const originalLoadAllData = window.loadAllData || function(){ console.warn('original loadAllData missing'); };
-    window.loadAllData = async function() {
-      try {
-        const remote = await supabaseLoadAllData();
-        let anyRemote = false;
-        KEYS.forEach(k => {
-          if (remote[k] !== null && typeof remote[k] !== 'undefined') {
-            try {
-              window[k] = remote[k];
-              localStorage.setItem(k, JSON.stringify(remote[k]));
-            } catch(e) { console.warn('set remote to localStorage failed', e); }
-            anyRemote = true;
-          }
-        });
-        if (anyRemote) {
-          console.log('Loaded app state from Supabase.');
-          // call functions that refresh UI
-          if (typeof loadHome === 'function') loadHome();
-          if (typeof loadAddStudent === 'function') loadAddStudent();
-        }
-        // fallback to original loader (localStorage)
-        try { originalLoadAllData(); } catch(e){ console.warn('originalLoadAllData failed', e); }
-      } catch (err) {
-        console.warn('loadAllData supabase branch failed', err);
-        try { originalLoadAllData(); } catch(e){ console.warn('originalLoadAllData failed', e); }
-      }
-    };
-
-    // run migrator after DOM ready
-    document.addEventListener('DOMContentLoaded', () => {
-      migrateLocalToSupabaseIfEmpty().catch(e => console.warn(e));
-    });
-  })();
-</script>
-<!-- End injected Supabase client -->
-
-
-<!-- BEGIN: Supabase Full-Online Integration (injected) -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
-<script>
-// --- Supabase config (injected) ---
-// SUPABASE_URL handled by assistant safe init; removed.
-// SUPABASE_ANON_KEY handled by assistant safe init; removed.
-// supabase client initialization moved to assistant safe init; removed.
-// --- Helpers ---
-function log(...args){ console.log('[SUPABASE-INTEGRATION]', ...args); }
-async function supabaseInsert(table, obj){ const { data, error } = await supabase.from(table).insert([obj]); if(error) throw error; return data; }
-async function supabaseUpdate(table, id, obj){ const { data, error } = await supabase.from(table).update(obj).eq('id', id); if(error) throw error; return data; }
-async function supabaseDelete(table, id){ const { data, error } = await supabase.from(table).delete().eq('id', id); if(error) throw error; return data; }
-async function supabaseSelectAll(table){ const { data, error } = await supabase.from(table).select('*'); if(error) throw error; return data || []; }
-
-// --- Core loadAllData: fetch main tables and set window globals ---
-async function loadAllDataFromSupabase(){
-  try{
-    log('loading core tables from Supabase...');
-    const [
-      users, students, classes, schedule, activity_schedule, materials, education_info, app_state_rows
-    ] = await Promise.all([
-      supabaseSelectAll('users').catch(e=>{ log('users fetch error', e); return []; }),
-      supabaseSelectAll('students').catch(e=>{ log('students fetch error', e); return []; }),
-      supabaseSelectAll('classes').catch(e=>{ log('classes fetch error', e); return []; }),
-      supabaseSelectAll('schedule').catch(e=>{ log('schedule fetch error', e); return []; }),
-      supabaseSelectAll('activity_schedule').catch(e=>{ log('activity_schedule fetch error', e); return []; }),
-      supabaseSelectAll('materials').catch(e=>{ log('materials fetch error', e); return []; }),
-      supabaseSelectAll('education_info').catch(e=>{ log('education_info fetch error', e); return []; }),
-      supabaseSelectAll('app_state').catch(e=>{ log('app_state fetch error', e); return []; })
-    ]);
-
-    // assign to window globals expected by app
-    window.users = users;
-    window.students = students;
-    window.classes = classes;
-    window.schedule = schedule;
-    window.activity_schedule = activity_schedule;
-    window.materials = materials;
-    window.education_info = education_info;
-    // convert app_state rows to map
-    const appState = {};
-    (app_state_rows || []).forEach(r => { try { appState[r.key] = r.value; } catch(e){ appState[r.key] = r.value; } });
-    window.app_state = appState;
-
-    log('loaded: users, students, classes, schedule, activity_schedule, materials, education_info, app_state');
-
-    // call app-specific rendering hooks if present
-    if(typeof renderAll === 'function'){ try{ renderAll(); }catch(e){ log('renderAll error', e); } }
-    if(typeof initApp === 'function'){ try{ initApp(); }catch(e){ /* initApp may require login first */ } }
-    if(typeof loadHome === 'function'){ try{ loadHome(); }catch(e){} }
-    return true;
-  }catch(err){
-    console.error('[SUPABASE] loadAllDataFromSupabase failed', err);
-    return false;
-  }
-}
-
-// --- Override legacy loadAllData/saveAllData to use Supabase (FULL ONLINE) ---
-// duplicate window.loadAllData = async function(){
-  return await loadAllDataFromSupabase();
-};
-
-// duplicate window.saveAllData = async function(){ 
-  // Very generic: save app_state map into app_state table (key = 'app_state', value = whole state)
-  try{
-    const payload = { key: 'app_state', value: window.app_state || {} };
-    const { data, error } = await supabase.from('app_state').upsert(payload, { onConflict: ['key'] });
-    if(error) throw error;
-    log('app_state upserted');
-    return data;
-  }catch(err){
-    console.error('[SUPABASE] saveAllData failed', err);
-    throw err;
-  }
-};
-
-// Quick convenience: refresh specific table into window global
-window.refreshTable = async function(tableName){
-  try{
-    const rows = await supabaseSelectAll(tableName);
-    window[tableName] = rows;
-    if(typeof renderAll === 'function'){ renderAll(); }
-    return rows;
-  }catch(e){ console.error('refreshTable failed', e); throw e; }
-};
-
-// Manual refresh exposed
-window.refreshFromSupabase = async function(){ return await loadAllDataFromSupabase(); };
-
-// Auto-run after DOM loaded
-document.addEventListener('DOMContentLoaded', function(){
-  // attempt to load data immediately (app may require login first; loadAllData will still populate globals)
-  loadAllDataFromSupabase().then(ok=>{ if(ok) log('Initial supabase loadOK'); else log('Initial load failed'); });
-});
-
-</script>
-<!-- END: Supabase Full-Online Integration (injected) -->
-
-
-<!-- BEGIN: Assistant-injected FULL-ONLINE Supabase override (replaces localStorage with Supabase app_state) -->
-<script>
-(function(){
-  // Safety checks
-  if (!window.supabase) {
-    console.warn('Supabase client not found - full-online override will not run.');
-  }
-
-  const KEYS = ["studentsData","regionalAdmins","availableClasses","educationInfo","scheduleData","activityScheduleData","classMaterials","availableSchools","currentUser","loginActivityLogs"];
-
-  // Upsert full app state to app_state table under key 'app_state'
-  async function supabaseSaveAppState(state) {
-    try {
-      const payload = { key: "app_state", value: state };
-      const { data, error } = await supabase
-        .from('app_state')
-        .upsert(payload, { onConflict: ['key'] });
-      if (error) throw error;
-      return data;
-    } catch (err) {
-      console.error('supabaseSaveAppState error', err);
-      throw err;
-    }
-  }
-
-  // Load the JSON blob from app_state
-  async function supabaseLoadAppState() {
-    try {
-      const { data, error } = await supabase
-        .from('app_state')
-        .select('value')
-        .eq('key', 'app_state')
-        .limit(1)
-        .single();
-      if (error) {
-        // not found -> return empty object
-        if (error.code === 'PGRST116' || (error.message && error.message.includes('No rows'))) return {};
-        console.warn('supabaseLoadAppState error', error);
-        return {};
-      }
-      return data?.value || {};
-    } catch (err) {
-      console.warn('supabaseLoadAppState failed', err);
-      return {};
-    }
-  }
-
-  // Override saveAllData: write current in-memory state to Supabase app_state (no localStorage)
-  window.saveAllData = async function() {
-    try {
-      const state = {};
-      KEYS.forEach(k => {
-        try { state[k] = window[k]; } catch(e) { state[k] = null; }
-      });
-      await supabaseSaveAppState(state);
-      console.log('saveAllData: persisted to Supabase app_state.');
-      // Optionally refresh UI in-place (call loadHome if present)
-      if (typeof loadHome === 'function' && currentModule === 'home') loadHome();
-    } catch (err) {
-      console.warn('saveAllData supabase failed', err);
-      // fallback: keep in-memory but do not write to localStorage to avoid mixed sources
-    }
-  };
-
-  // Override loadAllData: load from Supabase app_state and populate globals; fall back to existing originalLoadAllData if empty
-  (function() {
-    const originalLoadAllData = window.loadAllData || function(){ console.warn('original loadAllData missing'); };
-    window.loadAllData = async function() {
-      try {
-        const remote = await supabaseLoadAppState();
-        let anyRemote = false;
-        KEYS.forEach(k => {
-          if (remote[k] !== null && typeof remote[k] !== 'undefined') {
-            try {
-              window[k] = remote[k];
-            } catch(e) { console.warn('set remote to window failed', e); }
-            anyRemote = true;
-          }
-        });
-        if (anyRemote) {
-          console.log('Loaded app state from Supabase.');
-          // Call a few UI refresh functions if present
-          if (typeof loadHome === 'function') loadHome();
-          if (typeof loadAddStudent === 'function') loadAddStudent();
-        }
-        // fallback to original loader (which may use localStorage)
-        try { originalLoadAllData(); } catch(e){ console.warn('originalLoadAllData failed', e); }
-      } catch (err) {
-        console.warn('loadAllData supabase branch failed', err);
-        try { originalLoadAllData(); } catch(e){ console.warn('originalLoadAllData failed', e); }
-      }
-    };
-  })();
-
-  // Override session storage functions to avoid localStorage persistence — session kept in-memory and in app_state via saveAllData
-  window.saveSession = async function() {
-    try {
-      // session (currentUser) will be saved together with saveAllData; here we still call saveAllData
-      await window.saveAllData();
-      console.log('saveSession: saved via saveAllData');
-    } catch(e){ console.warn('saveSession failed', e); }
-  };
-  window.loadSession = async function() {
-    try {
-      // ensure app state is loaded (which may contain currentUser)
-      await window.loadAllData();
-      if (window.currentUser) {
-        showDashboard();
-      }
-    } catch(e){ console.warn('loadSession failed', e); }
-  };
-
-  // One-time migrator: if Supabase app_state empty, push localStorage -> Supabase then clear localStorage to make app fully online
-  async function migrateLocalToSupabaseIfEmpty() {
-    try {
-      const { data, error } = await supabase.from('app_state').select('key').limit(1);
-      if (error) {
-        console.warn('app_state table probably missing or access denied', error);
-      }
-      if (data && data.length > 0) {
-        console.log('Supabase app_state already has data; skipping auto-migrate.');
-      }
-      // gather localStorage payload
-      const payload = {};
-      KEYS.forEach(k => {
-        try {
-          const s = localStorage.getItem(k);
-          payload[k] = s ? JSON.parse(s) : null;
-        } catch (e) {
-          payload[k] = null;
-        }
-      });
-      const anyData = Object.values(payload).some(v => v && (Array.isArray(v) ? v.length > 0 : Object.keys(v || {}).length > 0));
-      if (!anyData) return;
-      // perform migration automatically
-      console.log('Migrating local data to Supabase (first-time).');
-      await supabaseSaveAppState(payload);
-      console.log('Migrasi selesai — data sekarang disimpan di Supabase.');
-      // Optional: clear localStorage to enforce full-online behavior (commented out; enable if you want to force removal)
-      // KEYS.forEach(k => localStorage.removeItem(k));
-    } catch (err) {
-      console.warn('Migration check failed', err);
-    }
-  }
-
-  // Run migrator and load after DOM ready
-  document.addEventListener('DOMContentLoaded', () => {
-    migrateLocalToSupabaseIfEmpty().catch(e => console.warn(e));
-    // small delay to allow previous scripts to initialize, then load app state from Supabase
-    setTimeout(() => {
-      window.loadAllData().catch(e => console.warn('initial loadAllData failed', e));
-    }, 600);
-  });
-
-  console.log('Assistant-injected Supabase FULL-ONLINE override installed.');
-})();
-</script>
-<!-- END: Assistant-injected FULL-ONLINE Supabase override -->
-
-
-<!-- BEGIN: FULL ONLINE INTEGRATION (auto-save proxies + supabase app_state) -->
-<script>
-(async function(){
-  if (!window.supabase) {
-    console.warn('Supabase client not found. FULL ONLINE integration requires supabase client to be initialized earlier in the HTML.');
-  }
-
-  const TABLE_KEY = 'app_state';
-
-  async function supabaseSaveAppState(obj) {
-    try {
-      const payload = { key: TABLE_KEY, value: obj };
-      const { data, error } = await supabase
-        .from('app_state')
-        .upsert(payload, { onConflict: ['key'] });
-      if (error) throw error;
-      console.log('app_state upsert OK');
-      return data;
-    } catch (err) {
-      console.error('supabaseSaveAppState error', err);
-      throw err;
-    }
-  }
-
-  async function supabaseLoadAppState() {
-    try {
-      const { data, error } = await supabase
-        .from('app_state')
-        .select('value')
-        .eq('key', TABLE_KEY)
-        .limit(1)
-        .single();
-      if (error) {
-        // If no rows or other non-fatal error, return null so caller knows nothing to load
-        console.warn('supabaseLoadAppState warning', error.message || error);
-        return null;
-      }
-      return data?.value || null;
-    } catch (err) {
-      console.warn('supabaseLoadAppState failed', err);
-      return null;
-    }
-  }
-
-  // New saveAllData that writes to Supabase app_state (jsonb)
-  window.saveAllData = async function() {
-    try {
-      const state = {
-        studentsData: window.studentsData || [],
-        regionalAdmins: window.regionalAdmins || [],
-        availableClasses: window.availableClasses || [],
-        educationInfo: window.educationInfo || [],
-        scheduleData: window.scheduleData || [],
-        activityScheduleData: window.activityScheduleData || [],
-        classMaterials: window.classMaterials || [],
-        availableSchools: window.availableSchools || [],
-        currentUser: window.currentUser || null,
-        loginActivityLogs: window.loginActivityLogs || []
-      };
-      await supabaseSaveAppState(state);
-      console.log('saveAllData: persisted to Supabase app_state.');
-      return true;
-    } catch (err) {
-      console.error('saveAllData failed', err);
-      return false;
-    }
-  };
-
-  // New loadAllData that loads from Supabase app_state and populates globals
-  window.loadAllData = async function() {
-    try {
-      const remote = await supabaseLoadAppState();
-      if (!remote) {
-        console.log('loadAllData: no remote app_state found.');
-        return false;
-      }
-      // populate globals if present
-      const map = {
-        studentsData: 'studentsData',
-        regionalAdmins: 'regionalAdmins',
-        availableClasses: 'availableClasses',
-        educationInfo: 'educationInfo',
-        scheduleData: 'scheduleData',
-        activityScheduleData: 'activityScheduleData',
-        classMaterials: 'classMaterials',
-        availableSchools: 'availableSchools',
-        currentUser: 'currentUser',
-        loginActivityLogs: 'loginActivityLogs'
-      };
-      Object.keys(map).forEach(k => {
-        if (typeof remote[k] !== 'undefined' && remote[k] !== null) {
-          window[k] = remote[k];
-        }
-      });
-      console.log('loadAllData: loaded state from Supabase app_state.');
-      // After loading, re-wrap proxies so further edits auto-save
-      setupAutoSaveProxies();
-      return true;
-    } catch (err) {
-      console.warn('loadAllData failed', err);
-      return false;
-    }
-  };
-
-  // Helper: try migrate localStorage -> Supabase if app_state empty
-  async function migrateLocalToSupabaseIfEmpty() {
-    try {
-      const existing = await supabaseLoadAppState();
-      if (existing && Object.keys(existing).length > 0) {
-        console.log('migrate: app_state already has data, skipping migration.');
-      }
-      // Build payload from localStorage keys commonly used in the app
-      const keys = ["studentsData","regionalAdmins","availableClasses","educationInfo","scheduleData","activityScheduleData","classMaterials","availableSchools","currentUser","loginActivityLogs"];
-      const payload = {};
-      let any = false;
-      keys.forEach(k => {
-        try {
-          const v = localStorage.getItem(k);
-          if (v !== null) {
-            payload[k] = JSON.parse(v);
-            any = true;
-          }
-        } catch(e) {
-          payload[k] = null;
-        }
-      });
-      if (!any) {
-        console.log('migrate: no localStorage data to migrate.');
-      }
-      await supabaseSaveAppState(payload);
-      console.log('migrate: migrated localStorage -> Supabase app_state.');
-      // optional: do not clear localStorage automatically (safer for user)
-    } catch (err) {
-      console.warn('migrateLocalToSupabaseIfEmpty failed', err);
-    }
-  }
-
-  // Auto-save proxy wrapper for arrays/objects to trigger saveAllData when mutated
-  function createAutoSaveProxy(obj, pathName) {
-    if (!obj || (typeof obj !== 'object')) return obj;
-    // For arrays, intercept mutating methods
-    if (Array.isArray(obj)) {
-      const array = obj;
-      const mutating = ['push','pop','shift','unshift','splice','sort','reverse','fill','copyWithin'];
-      mutating.forEach(m => {
-        const orig = array[m];
-        Object.defineProperty(array, m, {
-          configurable: true,
-          enumerable: false,
-          writable: true,
-          value: function(...args) {
-            const res = Array.prototype[m].apply(this, args);
-            // eslint-disable-next-line no-unused-expressions
-            window.saveAllData && window.saveAllData();
-            return res;
-          }
-        });
-      });
-    }
-    // Proxy for objects/arrays to catch property sets
-    const handler = {
-      set(target, prop, value) {
-        target[prop] = value;
-        try { window.saveAllData && window.saveAllData(); } catch(e){}
-        return true;
-      },
-      deleteProperty(target, prop) {
-        delete target[prop];
-        try { window.saveAllData && window.saveAllData(); } catch(e){}
-        return true;
-      }
-    };
-    // Recursively wrap nested objects/arrays
-    Object.keys(obj).forEach(k => {
-      if (obj[k] && typeof obj[k] === 'object') obj[k] = createAutoSaveProxy(obj[k], pathName + '.' + k);
-    });
-    return new Proxy(obj, handler);
-  }
-
-  // Replace globals with proxied versions so changes auto-save
-  function setupAutoSaveProxies() {
-    const names = ['studentsData','regionalAdmins','availableClasses','educationInfo','scheduleData','activityScheduleData','classMaterials','availableSchools','loginActivityLogs'];
-    names.forEach(name => {
-      try {
-        if (typeof window[name] === 'undefined' || window[name] === null) {
-          window[name] = Array.isArray(window[name]) ? [] : [];
-        }
-        // Only wrap if not already a proxy (quick check)
-        if (!window[name] || window[name].__isProxied) {
-          // mark if already proxied
-        }
-        const prox = createAutoSaveProxy(window[name], name);
-        // tag for idempotency
-        try { Object.defineProperty(prox, '__isProxied', { value: true }); } catch(e){}
-        window[name] = prox;
-      } catch (e) {
-        console.warn('setupAutoSaveProxies failed for', name, e);
-      }
-    });
-    // wrap currentUser as well (non-array)
-    if (typeof window.currentUser === 'undefined') window.currentUser = null;
-    if (window.currentUser && typeof window.currentUser === 'object') {
-      window.currentUser = createAutoSaveProxy(window.currentUser, 'currentUser');
-    }
-  }
-
-  // Ensure saveSession/loadSession use Supabase-backed state
-  window.saveSession = async function() {
-    try {
-      await window.saveAllData();
-      console.log('saveSession: saved via saveAllData');
-    } catch(e){ console.warn('saveSession failed', e); }
-  };
-  window.loadSession = async function() {
-    try {
-      await window.loadAllData();
-      if (window.currentUser) {
-        try { showDashboard(); } catch(e) {}
-      }
-    } catch(e){ console.warn('loadSession failed', e); }
-  };
-
-  // On DOM ready: migrate (if needed), load state, setup proxies
-  document.addEventListener('DOMContentLoaded', async () => {
-    try {
-      await migrateLocalToSupabaseIfEmpty();
-      // initial load
-      await window.loadAllData();
-      // setup proxies so any in-app mutation saves automatically
-      setupAutoSaveProxies();
-      // For safety: after loading, ensure some UI refresh functions are called
-      try { if (typeof loadSidebar === 'function') loadSidebar(); } catch(e){}
-      try { if (typeof loadHome === 'function') loadHome(); } catch(e){}
-      console.log('FULL ONLINE integration ready.');
-    } catch(err) {
-      console.warn('FULL ONLINE init error', err);
-    }
-  });
-
-  // Expose helpers for debugging
-  window._supabaseAppStateHelpers = {
-    save: supabaseSaveAppState,
-    load: supabaseLoadAppState,
-    migrate: migrateLocalToSupabaseIfEmpty
-  };
-})();
-</script>
-<!-- END: FULL ONLINE INTEGRATION -->
-
 </body>
 </html>
 <!-- === Materi Kelas UI Override (FINAL FIX) 
@@ -7171,10 +6525,12 @@ function addRegionalAdmin() {
 
         if (!region) {
             showNotification('Silakan pilih atau masukkan Regional!', 'error');
+            return;
         }
 
         if (getAllUsers()[username]) {
             showNotification('Username sudah digunakan!', 'error');
+            return;
         }
 
         // 🔧 Tidak ada lagi pembatasan 1 admin per regional
@@ -7194,6 +6550,7 @@ function loadManageAdmins() {
     const content = document.getElementById('contentArea');
     if (currentUser.role !== 'Super Admin') {
         content.innerHTML = '<div class="fade-in text-center text-red-600 text-xl font-bold p-10">Akses Ditolak. Hanya Super Admin yang dapat mengakses modul ini.</div>';
+        return;
     }
 
         // === NEW MODULE: LOG ACTIVITY ===
@@ -7201,6 +6558,7 @@ function loadManageAdmins() {
             const content = document.getElementById('contentArea');
             if (currentUser.role !== 'Super Admin') {
                 content.innerHTML = '<div class="fade-in text-center text-red-600 text-xl font-bold p-10">Akses Ditolak. Hanya Super Admin yang dapat mengakses modul ini.</div>';
+                return;
             }
 
             let logs = JSON.parse(localStorage.getItem('loginActivityLogs') || '[]');
