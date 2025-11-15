@@ -113,7 +113,30 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-async function saveAllData() {}
+async 
+function saveAllData() {
+  try {
+    const payload = { studentsData, regionalAdmins, availableClasses, educationInfo, scheduleData, activityScheduleData, classMaterials, availableSchools };
+    if (SUPABASE_CONFIGURED && supabase) {
+      (async()=>{
+        for(const k of Object.keys(payload)){
+          try{ await supabaseSetKey(k, payload[k]); }catch(e){ console.error('setKey',k,e); }
+        }
+      })();
+      showNotification('Data disimpan ke Supabase.','success');
+    } else {
+      localStorage.setItem('studentsData', JSON.stringify(studentsData));
+      localStorage.setItem('regionalAdmins', JSON.stringify(regionalAdmins));
+      localStorage.setItem('availableClasses', JSON.stringify(availableClasses));
+      localStorage.setItem('educationInfo', JSON.stringify(educationInfo));
+      localStorage.setItem('scheduleData', JSON.stringify(scheduleData));
+      localStorage.setItem('activityScheduleData', JSON.stringify(activityScheduleData));
+      localStorage.setItem('classMaterials', JSON.stringify(classMaterials));
+      localStorage.setItem('availableSchools', JSON.stringify(availableSchools));
+      showNotification('Data disimpan di localStorage (fallback).','success');
+    }
+  } catch(err){ console.error(err); showNotification('Gagal menyimpan data.','error'); }
+}
 );
     return Promise.all(promises);
   }
@@ -133,7 +156,39 @@ async function saveAllData() {}
   }
 }
 
-async function loadAllData() {}
+async 
+async function loadAllData() {
+  try {
+    if (SUPABASE_CONFIGURED && supabase) {
+      const keys = ['studentsData','regionalAdmins','availableClasses','educationInfo','scheduleData','activityScheduleData','classMaterials','availableSchools'];
+      for(const k of keys){
+        try{
+          const val = await supabaseGetKey(k);
+          if (val !== null && val !== undefined) window[k] = val;
+        }catch(e){ console.error('getKey',k,e); }
+      }
+      showNotification('Data dimuat dari Supabase.','success');
+    } else {
+      const sd = localStorage.getItem('studentsData');
+      if(sd) studentsData = JSON.parse(sd);
+      const ra = localStorage.getItem('regionalAdmins');
+      if(ra) regionalAdmins = JSON.parse(ra);
+      const ac = localStorage.getItem('availableClasses');
+      if(ac) availableClasses = JSON.parse(ac);
+      const ei = localStorage.getItem('educationInfo');
+      if(ei) educationInfo = JSON.parse(ei);
+      const sch = localStorage.getItem('scheduleData');
+      if(sch) scheduleData = JSON.parse(sch);
+      const act = localStorage.getItem('activityScheduleData');
+      if(act) activityScheduleData = JSON.parse(act);
+      const cm = localStorage.getItem('classMaterials');
+      if(cm) classMaterials = JSON.parse(cm);
+      const sc = localStorage.getItem('availableSchools');
+      if(sc) availableSchools = JSON.parse(sc);
+      showNotification('Data dimuat dari localStorage (fallback).','success');
+    }
+  } catch(err){ console.error(err); showNotification('Gagal memuat data.','error'); }
+}
 try {
     studentsData = await readCollection('studentsData');
     regionalAdmins = await readCollection('regionalAdmins');
@@ -179,6 +234,43 @@ db.collection('availableSchools').onSnapshot(snap => {
 
 // expose for console/debug
 window.db = db;
+</script>
+
+
+<!-- SUPABASE INTEGRATION - AUTO-INJECTED -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
+<script>
+const SUPABASE_URL = "https://zdyxkdghexhnmvklucfa.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpkeXhrZGdoZXhobm12a2x1Y2ZhIiwicm9sIjoiYW5vbiIsImlhdCI6MTc2MzE3MTI2OCwiZXhwIjoyMDc4NzQ3MjY4fQ.rMpEn7koPPWAu3jQxRUGEPP3lO9TsLAklvYC9giP1Bg";
+const SUPABASE_CONFIGURED = SUPABASE_URL && SUPABASE_ANON_KEY && !SUPABASE_URL.includes("REPLACE");
+let supabase = null;
+if (SUPABASE_CONFIGURED && typeof supabaseJs !== 'undefined') {
+  try {
+    supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { persistSession: true } });
+    console.log('Supabase ready');
+  } catch(e) { console.warn(e); }
+}
+
+async function supabaseSetKey(key, value) {
+  if(!supabase) throw new Error('Supabase not configured');
+  const payload = { key: key, value: value };
+  const { data, error } = await supabase.from('app_state').upsert(payload, { onConflict: 'key' }).select();
+  if(error) throw error;
+  return data;
+}
+async function supabaseGetKey(key) {
+  if(!supabase) throw new Error('Supabase not configured');
+  const { data, error } = await supabase.from('app_state').select('value').eq('key', key).limit(1).maybeSingle();
+  if(error) throw error;
+  return data ? data.value : null;
+}
+function showNotification(msg, type='success') {
+  const n = document.createElement('div');
+  n.className = 'notification ' + (type === 'success' ? 'success' : 'error');
+  n.textContent = msg;
+  document.body.appendChild(n);
+  setTimeout(()=> n.remove(), 3500);
+}
 </script>
 
 </head>
@@ -640,20 +732,36 @@ let activityScheduleData = [
 
 
         // Login Handler
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            
-            const users = getAllUsers();
+        
+document.getElementById('loginForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const username = document.getElementById('username').value.trim();
+  const password = document.getElementById('password').value;
+  if (SUPABASE_CONFIGURED && supabase) {
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({ email: username, password });
+      if (!error && data?.user) {
+        currentUser = { username: data.user.email, name: data.user.email, role: (data.user.user_metadata && data.user.user_metadata.role) || 'Siswa', region: (data.user.user_metadata && data.user.user_metadata.region) || null };
+        try { await loadAllData(); } catch(e){}
+        showDashboard();
+        saveSession();
+        return;
+      } else {
+        console.warn('Supabase auth failed, falling back to local auth.', error);
+      }
+    } catch (err) { console.error('supabase signIn error', err); }
+  }
+  // local fallback
+  const users = getAllUsers();
+  if (users[username] && users[username].password === password) {
+    currentUser = { username, ...users[username] };
+    saveSession();
+    showDashboard();
+  } else {
+    showNotification('Username atau password salah!', 'error');
+  }
+});
 
-            if (users[username] && users[username].password === password) {
-                currentUser = { username, ...users[username] };
-                showDashboard();
-            } else {
-                showNotification('Username atau password salah!', 'error');
-            }
-        });
 
         function showDashboard() {
             document.getElementById('loginPage').classList.add('hidden');
