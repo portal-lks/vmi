@@ -185,42 +185,124 @@
 </div>
 <script>
 
-function saveAllData() {
-  localStorage.setItem("studentsData", JSON.stringify(studentsData));
-  localStorage.setItem("regionalAdmins", JSON.stringify(regionalAdmins));
-  localStorage.setItem("availableClasses", JSON.stringify(availableClasses));
-  localStorage.setItem("educationInfo", JSON.stringify(educationInfo));
-  localStorage.setItem("scheduleData", JSON.stringify(scheduleData));
-  localStorage.setItem("activityScheduleData", JSON.stringify(activityScheduleData));
-  localStorage.setItem("classMaterials", JSON.stringify(classMaterials));
-  localStorage.setItem("availableSchools", JSON.stringify(availableSchools));
 
-  // 🔁 Auto Refresh Dashboard jika di halaman Home (Super Admin / Admin)
-  if (currentUser && currentModule === 'home' && (currentUser.role === 'Admin' || currentUser.role === 'Super Admin')) {
-      loadHome();
+async function saveAllData() {
+  try {
+    const state = {
+      studentsData: window.studentsData || [],
+      regionalAdmins: window.regionalAdmins || [],
+      availableClasses: window.availableClasses || [],
+      educationInfo: window.educationInfo || [],
+      scheduleData: window.scheduleData || [],
+      activityScheduleData: window.activityScheduleData || [],
+      classMaterials: window.classMaterials || [],
+      availableSchools: window.availableSchools || null,
+      loginActivityLogs: window.loginActivityLogs || []
+    };
+    if (window.supabaseHelpers && typeof window.supabaseHelpers.saveAllToSupabase === 'function') {
+      await window.supabaseHelpers.saveAllToSupabase(state);
+      notify('Data berhasil disimpan ke Supabase.');
+    } else {
+      console.warn('supabaseHelpers.saveAllToSupabase not available, skipping remote save.');
+    }
+  } catch (err) {
+    console.error('saveAllData failed', err);
+    notify('Gagal menyimpan ke Supabase.', 'error');
   }
 }
-
-function loadAllData() {
-  const sd = localStorage.getItem("studentsData");
-  const ra = localStorage.getItem("regionalAdmins");
-  const ac = localStorage.getItem("availableClasses");
-  const ei = localStorage.getItem("educationInfo");
-  const sch = localStorage.getItem("scheduleData");
-  if (sd) studentsData = JSON.parse(sd);
-  if (ra) regionalAdmins = JSON.parse(ra);
-  if (ac) availableClasses = JSON.parse(ac);
-  if (ei) educationInfo = JSON.parse(ei);
-  if (sch) scheduleData = JSON.parse(sch);
-  const act = localStorage.getItem("activityScheduleData");
-  if (act) activityScheduleData = JSON.parse(act);
-  const cm = localStorage.getItem('classMaterials');
-  const sc = localStorage.getItem('availableSchools');
-  if (cm) classMaterials = JSON.parse(cm);
-  if (sc) availableSchools = JSON.parse(sc);
+window.saveAllData = saveAllData;
 }
+
+
+async function loadAllData() {
+  // Try load everything from Supabase app_state via helper
+  try {
+    if (window.supabaseHelpers && typeof window.supabaseHelpers.loadAllFromSupabase === 'function') {
+      const remote = await window.supabaseHelpers.loadAllFromSupabase();
+      // set globals if available, fall back to existing defaults
+      if (remote) {
+        if (remote.studentsData !== null && typeof remote.studentsData !== 'undefined') window.studentsData = remote.studentsData;
+        if (remote.regionalAdmins !== null && typeof remote.regionalAdmins !== 'undefined') window.regionalAdmins = remote.regionalAdmins;
+        if (remote.availableClasses !== null && typeof remote.availableClasses !== 'undefined') window.availableClasses = remote.availableClasses;
+        if (remote.educationInfo !== null && typeof remote.educationInfo !== 'undefined') window.educationInfo = remote.educationInfo;
+        if (remote.scheduleData !== null && typeof remote.scheduleData !== 'undefined') window.scheduleData = remote.scheduleData;
+        if (remote.activityScheduleData !== null && typeof remote.activityScheduleData !== 'undefined') window.activityScheduleData = remote.activityScheduleData;
+        if (remote.classMaterials !== null && typeof remote.classMaterials !== 'undefined') window.classMaterials = remote.classMaterials;
+        if (remote.availableSchools !== null && typeof remote.availableSchools !== 'undefined') window.availableSchools = remote.availableSchools;
+        if (remote.loginActivityLogs !== null && typeof remote.loginActivityLogs !== 'undefined') window.loginActivityLogs = remote.loginActivityLogs;
+        console.log('Loaded state from Supabase app_state');
+        return;
+      }
+    }
+  } catch (err) {
+    console.warn('Failed to load from Supabase, will keep in-memory defaults', err);
+  }
+  // If remote load fails, keep current in-memory defaults (do NOT read localStorage)
+  console.log('Using in-memory defaults; no localStorage read performed.');
+}
+window.loadAllData = loadAllData;
+
 function saveSession() {
-  localStorage.setItem("currentUser", JSON.stringify(currentUser));
+  try {
+    sessionStorage.setItem("currentUser", JSON.stringify(currentUser));
+  } catch (e) { console.warn('saveSession failed', e); }
+}
+
+function saveSession() {
+  try {
+    sessionStorage.setItem("currentUser", JSON.stringify(currentUser));
+  } catch (e) { console.warn('saveSession failed', e); }
+}
+function loadSession() {
+  try {
+    const cu = sessionStorage.getItem("currentUser");
+    if (cu) {
+      currentUser = JSON.parse(cu);
+      showDashboard();
+      // Record login activity into in-memory array and persist to Supabase app_state
+      try {
+        window.loginActivityLogs = window.loginActivityLogs || [];
+        const now = new Date().toLocaleString('id-ID', { hour12: false });
+        const allUsers = getAllUsers();
+        const username = currentUser && currentUser.username;
+        if (username && allUsers[username] && allUsers[username].role !== 'Super Admin') {
+          window.loginActivityLogs.unshift({
+            name: allUsers[username].name || username,
+            role: allUsers[username].role || '-',
+            region: allUsers[username].region || '-',
+            time: now
+          });
+          // keep last 100
+          window.loginActivityLogs = window.loginActivityLogs.slice(0,100);
+          // persist to Supabase
+          if (window.supabaseHelpers && typeof window.supabaseHelpers.saveAllToSupabase === 'function') {
+            window.supabaseHelpers.saveAllToSupabase({ loginActivityLogs: window.loginActivityLogs }).catch(()=>{});
+          }
+        }
+      } catch (err) { console.error('Gagal menyimpan log aktivitas:', err); }
+    }
+  } catch (e) { console.warn('loadSession failed', e); }
+}
+);
+        const allUsers = getAllUsers();
+        const username = currentUser && currentUser.username;
+        if (username && allUsers[username] && allUsers[username].role !== 'Super Admin') {
+          window.loginActivityLogs.unshift({
+            name: allUsers[username].name || username,
+            role: allUsers[username].role || '-',
+            region: allUsers[username].region || '-',
+            time: now
+          });
+          // keep last 100
+          window.loginActivityLogs = window.loginActivityLogs.slice(0,100);
+          // persist to Supabase
+          if (window.supabaseHelpers && typeof window.supabaseHelpers.saveAllToSupabase === 'function') {
+            window.supabaseHelpers.saveAllToSupabase({ loginActivityLogs: window.loginActivityLogs }).catch(()=>{});
+          }
+        }
+      } catch (err) { console.error('Gagal menyimpan log aktivitas:', err); }
+    }
+  } catch (e) { console.warn('loadSession failed', e); }
 }
 function loadSession() {
   const cu = localStorage.getItem("currentUser");
@@ -229,7 +311,7 @@ function loadSession() {
     showDashboard();
                 // 🔥 Record login activity (except Super Admin itself)
                 try {
-                    let logs = JSON.parse(localStorage.getItem('loginActivityLogs') || '[]');
+                    let logs = JSON.parse(JSON.stringify(window.loginActivityLogs || []));
                     const now = new Date().toLocaleString('id-ID', { hour12: false });
                     const allUsers = getAllUsers();
                     if (allUsers[username] && allUsers[username].role !== 'Super Admin') {
@@ -244,20 +326,8 @@ function loadSession() {
                 } catch (err) { console.error('Gagal menyimpan log aktivitas:', err); }
   }
 }
-window.addEventListener("DOMContentLoaded", () => {
-  loadAllData();
-  loadSession();
-});
-document.addEventListener("DOMContentLoaded", () => {
-  const loginForm = document.getElementById('loginForm');
-  if (loginForm) {
-    loginForm.addEventListener('submit', function(e) {
-      setTimeout(() => {
-        if (currentUser) saveSession();
-      }, 200);
-    });
-  }
-});
+window.addEventListener('DOMContentLoaded', async () => { await loadAllData(); loadSession(); });
+document.addEventListener('DOMContentLoaded', () => { const loginForm = document.getElementById('loginForm'); if (loginForm) { loginForm.addEventListener('submit', function(e) { setTimeout(() => { if (currentUser) saveSession(); }, 200); }); } });
 const originalLogout = logout;
 logout = function() {
   saveAllData();
@@ -596,7 +666,7 @@ let activityScheduleData = [
                 showDashboard();
                 // 🔥 Record login activity (except Super Admin itself)
                 try {
-                    let logs = JSON.parse(localStorage.getItem('loginActivityLogs') || '[]');
+                    let logs = JSON.parse(JSON.stringify(window.loginActivityLogs || []));
                     const now = new Date().toLocaleString('id-ID', { hour12: false });
                     const allUsers = getAllUsers();
                     if (allUsers[username] && allUsers[username].role !== 'Super Admin') {
@@ -1125,7 +1195,7 @@ else if (role === 'Admin') {
                 return;
             }
 
-            let logs = JSON.parse(localStorage.getItem('loginActivityLogs') || '[]');
+            let logs = JSON.parse(JSON.stringify(window.loginActivityLogs || []));
 
             content.innerHTML = `
                 <div class='fade-in'>
@@ -6776,7 +6846,7 @@ function loadManageAdmins() {
                 return;
             }
 
-            let logs = JSON.parse(localStorage.getItem('loginActivityLogs') || '[]');
+            let logs = JSON.parse(JSON.stringify(window.loginActivityLogs || []));
 
             content.innerHTML = `
                 <div class='fade-in'>
