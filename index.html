@@ -6165,6 +6165,130 @@ window.loadActivitySchedule = function() {
 };
 </script>
 
+
+<!-- BEGIN: Injected date-formatting helper (converts visible YYYY-MM-DD -> DD/MM/YYYY) -->
+<script>
+(function(){
+  // Format a single ISO date string (YYYY-MM-DD) to DD/MM/YYYY
+  function formatDateDDMMYYYY(dateString) {
+    if (!dateString) return dateString;
+    // already in DD/MM/YYYY
+    if (/^\d{2}\/\d{2}\/\d{4}$/.test(dateString)) return dateString;
+    // iso yyyy-mm-dd (may include time)
+    const m = dateString.match(/^(\d{4})-(\d{2})-(\d{2})(?:[T\s].*)?$/);
+    if (m) {
+      return m[3] + '/' + m[2] + '/' + m[1];
+    }
+    return dateString;
+  }
+
+  // Replace ISO dates inside text nodes under root element
+  function replaceDatesInTextNode(node) {
+    if (!node || node.nodeType !== Node.TEXT_NODE) return;
+    const text = node.nodeValue;
+    // find iso dates like 2025-11-10 maybe with time portion removed
+    const newText = text.replace(/\b(\d{4}-\d{2}-\d{2})(?:\b|(?=\s|,|\.))/g, function(_, iso){
+      return formatDateDDMMYYYY(iso);
+    });
+    if (newText !== text) node.nodeValue = newText;
+  }
+
+  // Walk the DOM under root and update text nodes (skip script, style, textarea, pre, code, input)
+  function traverseAndFormat(root) {
+    if (!root) return;
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode: function(node) {
+        // ignore empty/whitespace nodes
+        if (!node.nodeValue || !node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+        const parent = node.parentElement;
+        if (!parent) return NodeFilter.FILTER_REJECT;
+        const tag = parent.tagName.toLowerCase();
+        const ignoreTags = ['script','style','textarea','code','pre','option'];
+        if (ignoreTags.includes(tag)) return NodeFilter.FILTER_REJECT;
+        // skip if inside an element with data-no-format attribute
+        if (parent.closest && parent.closest('[data-no-format]')) return NodeFilter.FILTER_REJECT;
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    }, false);
+    let node;
+    const nodesToProcess = [];
+    while(node = walker.nextNode()) nodesToProcess.push(node);
+    nodesToProcess.forEach(replaceDatesInTextNode);
+  }
+
+  // Observe DOM changes and format newly added text nodes
+  const observer = new MutationObserver(function(mutations) {
+    mutations.forEach(m => {
+      m.addedNodes.forEach(n => {
+        // If an element node is added, traverse it
+        if (n.nodeType === Node.ELEMENT_NODE) {
+          // small delay to allow templating engines to populate text
+          setTimeout(() => traverseAndFormat(n), 20);
+        } else if (n.nodeType === Node.TEXT_NODE) {
+          replaceDatesInTextNode(n);
+        }
+      });
+      // also handle characterData changes
+      if (m.type === 'characterData' && m.target) replaceDatesInTextNode(m.target);
+    });
+  });
+
+  // Start observing the whole body for subtree changes
+  function startObserver() {
+    try {
+      observer.observe(document.body, { childList: true, subtree: true, characterData: true });
+    } catch (e) {
+      // ignore on pages that block MutationObserver
+      console.warn('Date format observer failed', e);
+    }
+  }
+
+  // Wrap existing openModal to format modal content after opening (if present)
+  function wrapOpenModal() {
+    if (typeof window.openModal === 'function' && !window.openModal._wrappedForDateFormat) {
+      const orig = window.openModal;
+      window.openModal = function(title, contentHtml) {
+        orig(title, contentHtml);
+        const modal = document.getElementById('modal');
+        if (modal) setTimeout(() => traverseAndFormat(modal), 50);
+      };
+      window.openModal._wrappedForDateFormat = true;
+    }
+  }
+
+  // Initial run after DOMContentLoaded
+  function init() {
+    traverseAndFormat(document.body);
+    startObserver();
+    wrapOpenModal();
+    // also wrap any known module renderers to ensure format after rendering
+    const hooks = ['loadHome','loadSchedule','loadActivitySchedule','loadArtProgress','loadSkolastikProgress','loadTkaProgress','loadMaterials','loadEducationInfo','loadManageAdmins','loadLogActivity','loadLearningSchedule'];
+    hooks.forEach(fnName => {
+      if (typeof window[fnName] === 'function' && !window[fnName]._wrappedForDateFormat) {
+        const orig = window[fnName];
+        window[fnName] = function() {
+          const res = orig.apply(this, arguments);
+          setTimeout(() => traverseAndFormat(document.body), 40);
+          return res;
+        };
+        window[fnName]._wrappedForDateFormat = true;
+      }
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+
+  // expose util for manual use
+  window.formatDateDDMMYYYY = formatDateDDMMYYYY;
+  window.applyDateFormatting = function(root){ traverseAndFormat(root || document.body); };
+})();
+</script>
+<!-- END: Injected date-formatting helper -->
+
 </body>
 </html>
 <!-- === Materi Kelas UI Override (FINAL FIX) 
