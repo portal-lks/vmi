@@ -6289,6 +6289,221 @@ window.loadActivitySchedule = function() {
 </script>
 <!-- END: Injected date-formatting helper -->
 
+
+<!-- BEGIN: Supabase Online Sync Injection (keeps local UI/UX, Option A: username/password in DB) -->
+<!-- Supabase JS SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+(function(){
+  // CONFIG - Supabase project info (provided)
+  const SUPABASE_URL = "https://zdyxkdghexhnmvklucfa.supabase.co";
+  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpkeXhrZGdoZXhobm12a2x1Y2ZhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxNzEyNjgsImV4cCI6MjA3ODc0NzI2OH0.rMpEn7koPPWAu3jQxRUGEPP3lO9TsLAklvYC9giP1Bg";
+  // Initialize client
+  try {
+    window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  } catch (e) {
+    console.error('Supabase init failed', e);
+    return;
+  }
+
+  // Helper notification (use existing showNotification if exists)
+  function notify(msg, type='success') {
+    if (typeof showNotification === 'function') return showNotification(msg, type);
+    // simple toast fallback
+    const id = 'sb_notify';
+    let el = document.getElementById(id);
+    if (!el) {
+      el = document.createElement('div');
+      el.id = id;
+      el.style.position = 'fixed';
+      el.style.right = '20px';
+      el.style.top = '20px';
+      el.style.zIndex = 99999;
+      document.body.appendChild(el);
+    }
+    const msgEl = document.createElement('div');
+    msgEl.textContent = msg;
+    msgEl.style.background = type==='error' ? '#ef4444' : '#10b981';
+    msgEl.style.color = 'white';
+    msgEl.style.padding = '10px 14px';
+    msgEl.style.borderRadius = '8px';
+    msgEl.style.marginTop = '8px';
+    el.appendChild(msgEl);
+    setTimeout(()=> msgEl.remove(), 4000);
+  }
+
+  // Key list we'll sync
+  const KEYS = ["studentsData","regionalAdmins","availableClasses","educationInfo","scheduleData","activityScheduleData","classMaterials","availableSchools","loginActivityLogs"];
+
+  // Supabase storage strategy: try to use table 'app_state' with columns (key text primary key, value jsonb)
+  // This is a simple single-row-per-key approach so we don't need to design many tables.
+  async function supabaseUpsertKey(key, value) {
+    try {
+      const payload = { key: key, value: value };
+      const { data, error } = await supabase.from('app_state').upsert(payload, { onConflict: 'key' });
+      if (error) throw error;
+      return data;
+    } catch (err) {
+      console.warn('Upsert failed for', key, err);
+      throw err;
+    }
+  }
+
+  async function supabaseGetKey(key) {
+    try {
+      const { data, error } = await supabase.from('app_state').select('value').eq('key', key).limit(1).single();
+      if (error) {
+        // if not found, return null but ignore 'PGRST116' or similar PostgREST errors about missing table
+        console.warn('supabaseGetKey error', key, error);
+        return null;
+      }
+      return data?.value ?? null;
+    } catch (err) {
+      console.warn('supabaseGetKey exception', key, err);
+      return null;
+    }
+  }
+
+  async function supabaseLoadAllData() {
+    // Attempt to fetch each KEYS from app_state; if any fails we'll fallback to localStorage values
+    const result = {};
+    for (const k of KEYS) {
+      try {
+        const val = await supabaseGetKey(k);
+        if (val !== null && typeof val !== 'undefined') {
+          result[k] = val;
+        } else {
+          // leave undefined so caller may fallback to localStorage
+          result[k] = null;
+        }
+      } catch (err) {
+        result[k] = null;
+      }
+    }
+    return result;
+  }
+
+  async function supabaseSaveAllData(stateObj) {
+    // stateObj: { studentsData, regionalAdmins, ... }
+    const responses = {};
+    for (const k of KEYS) {
+      try {
+        const v = stateObj[k] !== undefined ? stateObj[k] : null;
+        await supabaseUpsertKey(k, v);
+        responses[k] = true;
+      } catch (err) {
+        responses[k] = false;
+      }
+    }
+    return responses;
+  }
+
+  // One-time migrator: if Supabase has no keys, push localStorage into Supabase after confirmation
+  async function migrateLocalToSupabaseIfEmpty() {
+    try {
+      // check any existing key
+      const { data, error } = await supabase.from('app_state').select('key').limit(1);
+      if (error) {
+        console.warn('app_state table probably missing or access denied', error);
+        return; // can't migrate
+      }
+      if (data && data.length > 0) {
+        console.log('Supabase app_state already has data; skipping auto-migrate.');
+        return;
+      }
+      // gather localStorage payload
+      const payload = {};
+      KEYS.forEach(k => {
+        try {
+          const s = localStorage.getItem(k);
+          payload[k] = s ? JSON.parse(s) : null;
+        } catch (e) {
+          payload[k] = null;
+        }
+      });
+      // if there's at least one non-null, ask to migrate
+      const anyData = Object.values(payload).some(v => v && (Array.isArray(v) ? v.length > 0 : Object.keys(v || {}).length > 0));
+      if (!anyData) return;
+      // perform migration automatically but inform user
+      notify('Migrating local data to Supabase (first-time). Ini satu kali saja.');
+      await supabaseSaveAllData(payload);
+      notify('Migrasi selesai — data sekarang disimpan di Supabase.');
+    } catch (err) {
+      console.warn('Migration check failed', err);
+    }
+  }
+
+  // Override existing saveAllData and loadAllData to use Supabase, with fallback to localStorage
+  const originalSaveAllData = window.saveAllData || function(){console.warn('original saveAllData missing');};
+  window.saveAllData = async function() {
+    // collect current in-memory state (best-effort)
+    const state = {};
+    KEYS.forEach(k => {
+      try { state[k] = window[k]; } catch(e) { state[k] = null; }
+    });
+    // always keep localStorage update for offline/legacy support
+    try { originalSaveAllData(); } catch(e){ console.warn('originalSaveAllData failed', e); }
+    // attempt Supabase save
+    try {
+      await supabaseSaveAllData(state);
+      notify('Data berhasil disimpan ke Supabase.');
+    } catch (err) {
+      notify('Gagal menyimpan ke Supabase — tetap menggunakan localStorage.', 'error');
+      console.warn(err);
+    }
+  };
+
+  const originalLoadAllData = window.loadAllData || function(){console.warn('original loadAllData missing');};
+  window.loadAllData = async function() {
+    // First attempt to load from Supabase app_state
+    try {
+      const remote = await supabaseLoadAllData();
+      let anyRemote = false;
+      KEYS.forEach(k => {
+        if (remote[k] !== null && typeof remote[k] !== 'undefined') {
+          // set global var and localStorage for compatibility with existing code
+          try {
+            window[k] = remote[k];
+            localStorage.setItem(k, JSON.stringify(remote[k]));
+          } catch(e) { console.warn('set remote to localStorage failed', e); }
+          anyRemote = true;
+        }
+      });
+      if (anyRemote) {
+        // if we loaded at least one thing from remote, don't call original loader which would overwrite with localStorage
+        console.log('Loaded app state from Supabase.');
+        return;
+      }
+    } catch (err) {
+      console.warn('Supabase load failed, falling back to original loadAllData', err);
+    }
+    // fallback: original localStorage-based loader
+    try { originalLoadAllData(); } catch(e){ console.warn('originalLoadAllData failed', e); }
+  };
+
+  // Also wrap initial DOMContentLoaded usage: after original DOMContentLoaded handlers run, call migrate check
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function(){
+      // small delay so original inits run
+      setTimeout(()=> {
+        // try migrate
+        migrateLocalToSupabaseIfEmpty().catch(()=>{});
+      }, 600);
+    });
+  } else {
+    setTimeout(()=> { migrateLocalToSupabaseIfEmpty().catch(()=>{}); }, 600);
+  }
+
+  // Expose simple helpers for manual operations (developer can call from console)
+  window.supabaseHelpers = {
+    loadAllFromSupabase: supabaseLoadAllData,
+    saveAllToSupabase: supabaseSaveAllData,
+    migrateLocalToSupabase: async function(){ await supabaseSaveAllData(KEYS.reduce((acc,k)=>{ try{ acc[k]= JSON.parse(localStorage.getItem(k)); }catch(e){ acc[k]=null } return acc; },{})); notify('Manual migration done'); }
+  };
+})();
+</script>
+<!-- END: Supabase Online Sync Injection -->
+
 </body>
 </html>
 <!-- === Materi Kelas UI Override (FINAL FIX) 
