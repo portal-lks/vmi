@@ -6429,6 +6429,106 @@ window.loadActivitySchedule = function() {
 </script>
 <!-- End injected Supabase client -->
 
+
+<!-- BEGIN: Supabase Full-Online Integration (injected) -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
+<script>
+// --- Supabase config (injected) ---
+const SUPABASE_URL = "https://zdyxkdghexhnmvklucfa.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpkeXhrZGdoZXhobm12a2x1Y2ZhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxNzEyNjgsImV4cCI6MjA3ODc0NzI2OH0.rMpEn7koPPWAu3jQxRUGEPP3lO9TsLAklvYC9giP1Bg";
+const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// --- Helpers ---
+function log(...args){ console.log('[SUPABASE-INTEGRATION]', ...args); }
+async function supabaseInsert(table, obj){ const { data, error } = await supabase.from(table).insert([obj]); if(error) throw error; return data; }
+async function supabaseUpdate(table, id, obj){ const { data, error } = await supabase.from(table).update(obj).eq('id', id); if(error) throw error; return data; }
+async function supabaseDelete(table, id){ const { data, error } = await supabase.from(table).delete().eq('id', id); if(error) throw error; return data; }
+async function supabaseSelectAll(table){ const { data, error } = await supabase.from(table).select('*'); if(error) throw error; return data || []; }
+
+// --- Core loadAllData: fetch main tables and set window globals ---
+async function loadAllDataFromSupabase(){
+  try{
+    log('loading core tables from Supabase...');
+    const [
+      users, students, classes, schedule, activity_schedule, materials, education_info, app_state_rows
+    ] = await Promise.all([
+      supabaseSelectAll('users').catch(e=>{ log('users fetch error', e); return []; }),
+      supabaseSelectAll('students').catch(e=>{ log('students fetch error', e); return []; }),
+      supabaseSelectAll('classes').catch(e=>{ log('classes fetch error', e); return []; }),
+      supabaseSelectAll('schedule').catch(e=>{ log('schedule fetch error', e); return []; }),
+      supabaseSelectAll('activity_schedule').catch(e=>{ log('activity_schedule fetch error', e); return []; }),
+      supabaseSelectAll('materials').catch(e=>{ log('materials fetch error', e); return []; }),
+      supabaseSelectAll('education_info').catch(e=>{ log('education_info fetch error', e); return []; }),
+      supabaseSelectAll('app_state').catch(e=>{ log('app_state fetch error', e); return []; })
+    ]);
+
+    // assign to window globals expected by app
+    window.users = users;
+    window.students = students;
+    window.classes = classes;
+    window.schedule = schedule;
+    window.activity_schedule = activity_schedule;
+    window.materials = materials;
+    window.education_info = education_info;
+    // convert app_state rows to map
+    const appState = {};
+    (app_state_rows || []).forEach(r => { try { appState[r.key] = r.value; } catch(e){ appState[r.key] = r.value; } });
+    window.app_state = appState;
+
+    log('loaded: users, students, classes, schedule, activity_schedule, materials, education_info, app_state');
+
+    // call app-specific rendering hooks if present
+    if(typeof renderAll === 'function'){ try{ renderAll(); }catch(e){ log('renderAll error', e); } }
+    if(typeof initApp === 'function'){ try{ initApp(); }catch(e){ /* initApp may require login first */ } }
+    if(typeof loadHome === 'function'){ try{ loadHome(); }catch(e){} }
+    return true;
+  }catch(err){
+    console.error('[SUPABASE] loadAllDataFromSupabase failed', err);
+    return false;
+  }
+}
+
+// --- Override legacy loadAllData/saveAllData to use Supabase (FULL ONLINE) ---
+window.loadAllData = async function(){
+  return await loadAllDataFromSupabase();
+};
+
+window.saveAllData = async function(){ 
+  // Very generic: save app_state map into app_state table (key = 'app_state', value = whole state)
+  try{
+    const payload = { key: 'app_state', value: window.app_state || {} };
+    const { data, error } = await supabase.from('app_state').upsert(payload, { onConflict: ['key'] });
+    if(error) throw error;
+    log('app_state upserted');
+    return data;
+  }catch(err){
+    console.error('[SUPABASE] saveAllData failed', err);
+    throw err;
+  }
+};
+
+// Quick convenience: refresh specific table into window global
+window.refreshTable = async function(tableName){
+  try{
+    const rows = await supabaseSelectAll(tableName);
+    window[tableName] = rows;
+    if(typeof renderAll === 'function'){ renderAll(); }
+    return rows;
+  }catch(e){ console.error('refreshTable failed', e); throw e; }
+};
+
+// Manual refresh exposed
+window.refreshFromSupabase = async function(){ return await loadAllDataFromSupabase(); };
+
+// Auto-run after DOM loaded
+document.addEventListener('DOMContentLoaded', function(){
+  // attempt to load data immediately (app may require login first; loadAllData will still populate globals)
+  loadAllDataFromSupabase().then(ok=>{ if(ok) log('Initial supabase loadOK'); else log('Initial load failed'); });
+});
+
+</script>
+<!-- END: Supabase Full-Online Integration (injected) -->
+
 </body>
 </html>
 <!-- === Materi Kelas UI Override (FINAL FIX) 
