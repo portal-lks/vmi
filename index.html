@@ -183,12 +183,202 @@
 </div>
 </div>
 </div>
+
+
+<!-- BEGIN: Injected by assistant — Activity & Schedule modules upgrade -->
+
+<!-- END: Injected by assistant -->
+
+
+
+<!-- === FITUR ZOOM INTERAKTIF PRO (KHUSUS SISWA) 
+<style>
+  #zoomModal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.3s ease;
+  }
+  #zoomModal img {
+    max-width: 90%;
+    max-height: 90%;
+    border-radius: 12px;
+    box-shadow: 0 0 25px rgba(255,255,255,0.4);
+    transition: transform 0.3s ease;
+  }
+  #zoomPrev, #zoomNext {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    color: white;
+    font-size: 3rem;
+    cursor: pointer;
+    user-select: none;
+    padding: 0 20px;
+    transition: opacity 0.2s;
+  }
+  #zoomPrev:hover, #zoomNext:hover {
+    opacity: 0.7;
+  }
+  #zoomPrev { left: 20px; }
+  #zoomNext { right: 20px; }
+</style>
+
+<div id="zoomModal" onclick="closeZoom(event)">
+  <span id="zoomPrev" onclick="prevZoom(event)">&#10094;</span>
+  <img id="zoomImage" src="" alt="Zoomed Artwork" />
+  <span id="zoomNext" onclick="nextZoom(event)">&#10095;</span>
+</div>
+
+
+<!-- === AKHIR FITUR ZOOM INTERAKTIF PRO 
+  
+<style>
+  #zoomModal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    justify-content: center;
+    align-items: center;
+  }
+  #zoomModal img {
+    max-width: 90%;
+    max-height: 90%;
+    border-radius: 10px;
+    box-shadow: 0 0 25px rgba(255,255,255,0.3);
+  }
+</style>
+
+<div id="zoomModal" onclick="closeZoom()">
+  <img id="zoomImage" src="" alt="Zoomed Artwork" />
+</div>
+
+
+<!-- === AKHIR FITUR ZOOM KHUSUS SISWA 
+
+
+<!-- === FITUR ZOOM INTERAKTIF PRO (KHUSUS SISWA) === -->
+<style>
+  #zoomModal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.3s ease;
+  }
+  #zoomModal img {
+    max-width: 90%;
+    max-height: 90%;
+    border-radius: 12px;
+    box-shadow: 0 0 25px rgba(255,255,255,0.4);
+    transition: transform 0.3s ease;
+  }
+  #zoomPrev, #zoomNext {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    color: white;
+    font-size: 3rem;
+    cursor: pointer;
+    user-select: none;
+    padding: 0 20px;
+    transition: opacity 0.2s;
+  }
+  #zoomPrev:hover, #zoomNext:hover { opacity: 0.7; }
+  #zoomPrev { left: 20px; }
+  #zoomNext { right: 20px; }
+</style>
+
+<div id="zoomModal" onclick="closeZoom(event)">
+  <span id="zoomPrev" onclick="prevZoom(event)">&#10094;</span>
+  <img id="zoomImage" src="" alt="Zoomed Artwork" />
+  <span id="zoomNext" onclick="nextZoom(event)">&#10095;</span>
+</div>
+
+
+<!-- === AKHIR FITUR ZOOM INTERAKTIF PRO === -->
+
+
+<!-- === FITUR FILTER KELAS & BATASAN VISIBILITAS SISWA === -->
+
+<!-- === AKHIR FITUR FILTER KELAS === -->
+
+
+<!-- === PENYEMPURNAAN FILTER KELAS UNTUK SEMUA MODUL === -->
+
+<!-- === AKHIR PENYEMPURNAAN FILTER KELAS === -->
+
+
+<!-- === FINAL FILTER DROPDOWN + CHECKLIST UNTUK SEMUA MODUL === -->
+
+<!-- === AKHIR FILTER DROPDOWN + CHECKLIST FINAL === -->
+
+
+<!-- === PERBAIKAN FINAL MODUL JADWAL BELAJAR (FILTER KELAS AKTIF) === -->
+
+<!-- === AKHIR PERBAIKAN MODUL JADWAL BELAJAR === -->
+
+
+<!-- === PERBAIKAN AKHIR MODUL JADWAL BELAJAR (SAMA DENGAN JADWAL KEGIATAN) === -->
+
+<!-- === AKHIR PERBAIKAN MODUL JADWAL BELAJAR === -->
+
+
+<!-- BEGIN: Injected Fix — Regionalize Jadwal Belajar (LKS_141_ScheduleFix) -->
+
+<!-- END: Injected Fix — Regionalize Jadwal Belajar -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- BEGIN: Injected date-formatting helper (converts visible YYYY-MM-DD -> DD/MM/YYYY) -->
+
+<!-- END: Injected date-formatting helper -->
+
+
+<!-- BEGIN: Supabase Online Sync Injection (keeps local UI/UX, Option A: username/password in DB) -->
+<!-- Supabase JS SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
+<!-- END: Supabase Online Sync Injection -->
+
 <script>
+(function(){
+try{
+
 
 
 async function saveAllData() {
   try {
-    const state = {
+    var state = {
       studentsData: window.studentsData || [],
       regionalAdmins: window.regionalAdmins || [],
       availableClasses: window.availableClasses || [],
@@ -218,7 +408,7 @@ async function loadAllData() {
   // Try load everything from Supabase app_state via helper
   try {
     if (window.supabaseHelpers && typeof window.supabaseHelpers.loadAllFromSupabase === 'function') {
-      const remote = await window.supabaseHelpers.loadAllFromSupabase();
+      var remote = await window.supabaseHelpers.loadAllFromSupabase();
       // set globals if available, fall back to existing defaults
       if (remote) {
         if (remote.studentsData !== null && typeof remote.studentsData !== 'undefined') window.studentsData = remote.studentsData;
@@ -248,23 +438,23 @@ function saveSession() {
   } catch (e) { console.warn('saveSession failed', e); }
 }
 
-function saveSession() {
+function saveSession_dup1() {
   try {
     sessionStorage.setItem("currentUser", JSON.stringify(currentUser));
   } catch (e) { console.warn('saveSession failed', e); }
 }
 function loadSession() {
   try {
-    const cu = sessionStorage.getItem("currentUser");
+    var cu = sessionStorage.getItem("currentUser");
     if (cu) {
       currentUser = JSON.parse(cu);
       showDashboard();
       // Record login activity into in-memory array and persist to Supabase app_state
       try {
         window.loginActivityLogs = window.loginActivityLogs || [];
-        const now = new Date().toLocaleString('id-ID', { hour12: false });
-        const allUsers = getAllUsers();
-        const username = currentUser && currentUser.username;
+        var now = new Date().toLocaleString('id-ID', { hour12: false });
+        var allUsers = getAllUsers();
+        var username = currentUser && currentUser.username;
         if (username && allUsers[username] && allUsers[username].role !== 'Super Admin') {
           window.loginActivityLogs.unshift({
             name: allUsers[username].name || username,
@@ -284,8 +474,8 @@ function loadSession() {
   } catch (e) { console.warn('loadSession failed', e); }
 }
 );
-        const allUsers = getAllUsers();
-        const username = currentUser && currentUser.username;
+        var allUsers = getAllUsers();
+        var username = currentUser && currentUser.username;
         if (username && allUsers[username] && allUsers[username].role !== 'Super Admin') {
           window.loginActivityLogs.unshift({
             name: allUsers[username].name || username,
@@ -304,16 +494,16 @@ function loadSession() {
     }
   } catch (e) { console.warn('loadSession failed', e); }
 }
-function loadSession() {
+function loadSession_dup1() {
   const cu = localStorage.getItem("currentUser");
   if (cu) {
     currentUser = JSON.parse(cu);
     showDashboard();
                 // 🔥 Record login activity (except Super Admin itself)
                 try {
-                    let logs = JSON.parse(JSON.stringify(window.loginActivityLogs || []));
-                    const now = new Date().toLocaleString('id-ID', { hour12: false });
-                    const allUsers = getAllUsers();
+                    var logs = JSON.parse(JSON.stringify(window.loginActivityLogs || []));
+                    var now = new Date().toLocaleString('id-ID', { hour12: false });
+                    var allUsers = getAllUsers();
                     if (allUsers[username] && allUsers[username].role !== 'Super Admin') {
                         logs.unshift({
                             name: users[username].name,
@@ -359,7 +549,7 @@ window.saveAllData = saveAllData;
          * Akun Siswa sekarang sepenuhnya diurus oleh studentsData.
          */
         function getAllUsers() {
-            const users = {};
+            var users = {};
             
             // Tambahkan Super Admin
             users[superAdminUser.username] = superAdminUser;
@@ -656,8 +846,8 @@ let activityScheduleData = [
         // Login Handler
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
+            var username = document.getElementById('username').value;
+            var password = document.getElementById('password').value;
             
             const users = getAllUsers();
 
@@ -666,9 +856,9 @@ let activityScheduleData = [
                 showDashboard();
                 // 🔥 Record login activity (except Super Admin itself)
                 try {
-                    let logs = JSON.parse(JSON.stringify(window.loginActivityLogs || []));
+                    var logs = JSON.parse(JSON.stringify(window.loginActivityLogs || []));
                     const now = new Date().toLocaleString('id-ID', { hour12: false });
-                    const allUsers = getAllUsers();
+                    var allUsers = getAllUsers();
                     if (allUsers[username] && allUsers[username].role !== 'Super Admin') {
                         logs.unshift({
                             name: users[username].name,
@@ -814,7 +1004,7 @@ let activityScheduleData = [
         }
 
         function loadHome() {
-            const content = document.getElementById('contentArea');
+            var content = document.getElementById('contentArea');
             const role = currentUser.role;
 
             
@@ -826,7 +1016,7 @@ let activityScheduleData = [
 
 
 if (role === 'Super Admin') {
-    const regions = [...new Set(studentsData.map(s => s.region))];
+    var regions = [...new Set(studentsData.map(s => s.region))];
 
     // Daftar kelas utama default
     const baseClasses = ['SR GOLD', 'SR ADVANCE', 'MINAT SENI', 'ARSITEKTUR', 'MINAT ARSITEKTUR'];
@@ -839,12 +1029,12 @@ if (role === 'Super Admin') {
 
     const allClasses = [...baseClasses, ...dynamicClasses];
 
-    const totalStudents = studentsData.length;
-    const seniRupaCount = studentsData.filter(s => /sr|minat seni/i.test(s.class)).length;
-    const arsitekturCount = studentsData.filter(s => /arsitektur|minat arsitektur/i.test(s.class)).length;
+    var totalStudents = studentsData.length;
+    var seniRupaCount = studentsData.filter(s => /sr|minat seni/i.test(s.class)).length;
+    var arsitekturCount = studentsData.filter(s => /arsitektur|minat arsitektur/i.test(s.class)).length;
 
     // Sekolah dengan siswa terbanyak di seluruh regional
-    const schoolCount = {};
+    var schoolCount = {};
     studentsData.forEach(st => {
         if (st.school) {
             if (!schoolCount[st.school]) schoolCount[st.school] = { count: 0, region: st.region };
@@ -927,16 +1117,16 @@ if (role === 'Super Admin') {
             classList = [...new Set([...baseClasses, ...localClasses])];
         }
 
-        const tbody = document.getElementById('superAdminClassesBody');
+        var tbody = document.getElementById('superAdminClassesBody');
         tbody.innerHTML = '';
-        let idx = 1;
+        var idx = 1;
 
         classList.forEach(clsName => {
             // Cocokkan juga kelas turunan (SR GOLD A -> SR GOLD)
             const pattern = new RegExp('^' + clsName.replace(/ /g, '.*'), 'i');
             const list = filteredStudents.filter(s => pattern.test(s.class || ''));
-            const jumlah = list.length;
-            let sekolahTerbanyak = '-';
+            var jumlah = list.length;
+            var sekolahTerbanyak = '-';
             if (jumlah > 0) {
                 const scount = {};
                 list.forEach(st => {
@@ -944,7 +1134,7 @@ if (role === 'Super Admin') {
                 });
                 sekolahTerbanyak = Object.entries(scount).sort((a,b)=>b[1]-a[1])[0]?.[0] || '-';
             }
-            const status = jumlah > 0 ? 'Aktif' : 'Tidak Aktif';
+            var status = jumlah > 0 ? 'Aktif' : 'Tidak Aktif';
             const color = status === 'Aktif' ? 'text-green-600' : 'text-red-500';
             const icon = status === 'Aktif' ? '🟢' : '🔴';
 
@@ -981,7 +1171,7 @@ else if (role === 'Admin') {
     let remainingClassNames = new Set(classNamesInRegion);
 
     adminStudents.forEach(s => {
-        const className = (s.class || '').toString();
+        var className = (s.class || '').toString();
         let assigned = false;
         for (const g of groupsDef) {
             if (g.match(className)) {
@@ -999,13 +1189,13 @@ else if (role === 'Admin') {
     });
 
     let tableRows = [];
-    let idx = 1;
+    var idx = 1;
     Object.keys(grouped).forEach(key => {
         const studentsInGroup = grouped[key] || [];
         const jumlah = studentsInGroup.length;
         let sekolahTerbanyak = '-';
         if (jumlah > 0) {
-            const schoolCount = {};
+            var schoolCount = {};
             studentsInGroup.forEach(st => {
                 if (st.school) schoolCount[st.school] = (schoolCount[st.school] || 0) + 1;
             });
@@ -1026,7 +1216,7 @@ else if (role === 'Admin') {
         idx++;
     });
 
-    const totalStudents = adminStudents.length;
+    var totalStudents = adminStudents.length;
     const schoolCount = {};
     adminStudents.forEach(s => {
         if (s.school) schoolCount[s.school] = (schoolCount[s.school] || 0) + 1;
@@ -1035,7 +1225,7 @@ else if (role === 'Admin') {
     const seniRupaCount = adminStudents.filter(s => /sr|minat seni/i.test(s.class)).length;
     const arsitekturCount = adminStudents.filter(s => /arsitektur|minat arsitektur/i.test(s.class)).length;
 
-    const content = document.getElementById('contentArea');
+    var content = document.getElementById('contentArea');
     content.innerHTML = `
       <main class='max-w-8xl mx-auto py-4 px-8 fade-in ml-1 mr-8'>
         <div class='bg-gradient-to-r from-blue-600 to-blue-800 rounded-xl p-8 mb-5 text-white shadow-lg'>
@@ -1088,14 +1278,14 @@ else if (role === 'Admin') {
 }
  else {
     // Student Home (Fixed UI) - UPDATED with 3 realtime statistic cards above the original 3 cards
-    const studentData = studentsData.find(s => s.name === currentUser.name);
+    var studentData = studentsData.find(s => s.name === currentUser.name);
     if (!studentData) {
         content.innerHTML = '<div class="text-center text-gray-500">Data siswa tidak ditemukan</div>';
         return;
     }
 
     // realtime calculations
-    const totalAttendance = (studentData.attendance || []).length;
+    var totalAttendance = (studentData.attendance || []).length;
     const hadirCount = (studentData.attendance || []).filter(a => a.status === 'Hadir').length;
     const hadirPercent = totalAttendance > 0 ? Math.round((hadirCount / totalAttendance) * 100) : 0;
 
@@ -1181,7 +1371,7 @@ else if (role === 'Admin') {
 
         // --- FUNGSI BARU: MODUL KELOLA ADMIN REGIONAL ---
         function loadManageAdmins() {
-            const content = document.getElementById('contentArea');
+            var content = document.getElementById('contentArea');
             if (currentUser.role !== 'Super Admin') {
                 content.innerHTML = '<div class="fade-in text-center text-red-600 text-xl font-bold p-10">Akses Ditolak. Hanya Super Admin yang dapat mengakses modul ini.</div>';
                 return;
@@ -1189,13 +1379,13 @@ else if (role === 'Admin') {
 
         // === NEW MODULE: LOG ACTIVITY ===
         window.loadLogActivity = function() {
-            const content = document.getElementById('contentArea');
+            var content = document.getElementById('contentArea');
             if (currentUser.role !== 'Super Admin') {
                 content.innerHTML = '<div class="fade-in text-center text-red-600 text-xl font-bold p-10">Akses Ditolak. Hanya Super Admin yang dapat mengakses modul ini.</div>';
                 return;
             }
 
-            let logs = JSON.parse(JSON.stringify(window.loginActivityLogs || []));
+            var logs = JSON.parse(JSON.stringify(window.loginActivityLogs || []));
 
             content.innerHTML = `
                 <div class='fade-in'>
@@ -1261,7 +1451,7 @@ else if (role === 'Admin') {
                                 </thead>
                                 <tbody class="bg-white">
                                     ${regionalAdmins.map(admin => {
-                                        const studentsInRegion = studentsData.filter(s => s.region === admin.region).length;
+                                        var studentsInRegion = studentsData.filter(s => s.region === admin.region).length;
                                         return `
                                             <tr class="border-t border-gray-200 hover:bg-red-50">
                                                 <td class="px-4 py-3 text-sm font-medium text-gray-900">${admin.name}</td>
@@ -1285,9 +1475,9 @@ else if (role === 'Admin') {
 
         function addRegionalAdmin() {
             // Dapatkan daftar regional yang sudah ada dan unik
-            const studentRegions = studentsData.map(s => s.region).filter(r => r);
-            const adminRegions = regionalAdmins.map(a => a.region).filter(r => r);
-            const existingRegions = [...new Set([...studentRegions, ...adminRegions])];
+            var studentRegions = studentsData.map(s => s.region).filter(r => r);
+            var adminRegions = regionalAdmins.map(a => a.region).filter(r => r);
+            var existingRegions = [...new Set([...studentRegions, ...adminRegions])];
 
             openModal('Tambah Admin Regional Baru', `
                 <form id="addAdminForm" class="space-y-4">
@@ -1325,12 +1515,12 @@ else if (role === 'Admin') {
 
             document.getElementById('addAdminForm').addEventListener('submit', function(e) {
                 e.preventDefault();
-                const username = document.getElementById('adminUsername').value;
-                const name = document.getElementById('adminName').value;
-                const password = document.getElementById('adminPassword').value;
+                var username = document.getElementById('adminUsername').value;
+                var name = document.getElementById('adminName').value;
+                var password = document.getElementById('adminPassword').value;
 
-                const selectedRegion = document.getElementById('adminRegionSelect').value;
-                let region = '';
+                var selectedRegion = document.getElementById('adminRegionSelect').value;
+                var region = '';
 
                 if (selectedRegion === 'NEW_REGION') {
                     region = document.getElementById('adminRegionInput').value.trim();
@@ -1354,7 +1544,7 @@ else if (role === 'Admin') {
                     return;
                 }
 
-                const newAdmin = { username, password, role: 'Admin', name, region };
+                var newAdmin = { username, password, role: 'Admin', name, region };
                 regionalAdmins.push(newAdmin);
 
                 showNotification('Admin Regional berhasil ditambahkan!');
@@ -1365,7 +1555,7 @@ else if (role === 'Admin') {
         }
 
         function editRegionalAdmin(username) {
-            const admin = regionalAdmins.find(a => a.username === username);
+            var admin = regionalAdmins.find(a => a.username === username);
             
             openModal('Edit Admin Regional', `
                 <form id="editAdminForm" class="space-y-4">
@@ -1388,9 +1578,9 @@ else if (role === 'Admin') {
 
             document.getElementById('editAdminForm').addEventListener('submit', function(e) {
                 e.preventDefault();
-                const newName = document.getElementById('editAdminName').value;
-                const newRegion = document.getElementById('editAdminRegion').value;
-                const newPassword = document.getElementById('editAdminPassword').value;
+                var newName = document.getElementById('editAdminName').value;
+                var newRegion = document.getElementById('editAdminRegion').value;
+                var newPassword = document.getElementById('editAdminPassword').value;
 
                 const oldRegion = admin.region;
 
@@ -1485,7 +1675,7 @@ function confirmDeleteRegionalAdmin(username) {
 
         // --- NEW: Helper function to render Region Dropdown for Super Admin ---
         function renderRegionDropdown(currentRegionFilter, filterFunctionName) {
-            const regions = [...new Set([
+            var regions = [...new Set([
     ...availableClasses.map(c => c.region),
     ...studentsData.map(s => s.region),
     ...regionalAdmins.map(a => a.region)
@@ -1514,11 +1704,11 @@ function confirmDeleteRegionalAdmin(username) {
         // --- NEW: Detail Modal Render Functions ---
 
         function showStudentArtDetail(studentId) {
-            const student = studentsData.find(s => s.id === studentId);
+            var student = studentsData.find(s => s.id === studentId);
             if (!student) return;
 
             // Re-use existing render logic for clarity, stripping outer div from renderArtProgressStudent
-            const detailContent = renderArtProgressStudent([student], currentUser.role === 'Admin' || currentUser.role === 'Super Admin')
+            var detailContent = renderArtProgressStudent([student], currentUser.role === 'Admin' || currentUser.role === 'Super Admin')
                 .replace(/<div class="mb-6">/, '')
                 .replace(/<\/div>$/, '');
 
@@ -1526,18 +1716,18 @@ function confirmDeleteRegionalAdmin(username) {
         }
 
         function showStudentSkolastikDetail(studentId) {
-            const student = studentsData.find(s => s.id === studentId);
+            var student = studentsData.find(s => s.id === studentId);
             if (!student) return;
 
-            const isAdminOrSuperAdmin = currentUser.role === 'Admin' || currentUser.role === 'Super Admin';
+            var isAdminOrSuperAdmin = currentUser.role === 'Admin' || currentUser.role === 'Super Admin';
             
             // Re-use existing render logic, stripping outer div from renderSkolastikProgressStudent
-            const detailContent = renderSkolastikProgressStudent([student], isAdminOrSuperAdmin)
+            var detailContent = renderSkolastikProgressStudent([student], isAdminOrSuperAdmin)
                 .replace(/<div class="mb-4">/, '') 
                 .replace(/<\/div>$/, '');
             
             // Tambahkan judul dan tombol Add Test (yang sudah ada di dalam render function, tapi kita rapikan)
-            const finalContent = `
+            var finalContent = `
                 <div class="mb-4">
                     <h4 class="text-xl font-bold text-gray-900 mb-4">Hasil Tes Skolastik: ${student.name}</h4>
                     <p class="text-sm text-blue-600 font-medium mb-4">Sekolah: ${student.school || 'Belum ditentukan'} ${isAdminOrSuperAdmin ? `| Regional: ${student.region}` : ''}</p>
@@ -1548,10 +1738,10 @@ function confirmDeleteRegionalAdmin(username) {
         }
 
         function showStudentTkaDetail(studentId) {
-            const student = studentsData.find(s => s.id === studentId);
+            var student = studentsData.find(s => s.id === studentId);
             if (!student) return;
 
-            const isAdminOrSuperAdmin = currentUser.role === 'Admin' || currentUser.role === 'Super Admin';
+            var isAdminOrSuperAdmin = currentUser.role === 'Admin' || currentUser.role === 'Super Admin';
 
             // Re-use existing render logic, stripping outer div from renderTkaProgressStudent
             const detailContent = renderTkaProgressStudent([student], isAdminOrSuperAdmin)
@@ -1576,7 +1766,7 @@ function confirmDeleteRegionalAdmin(username) {
             }
 
             // Get available classes for the current region
-            const regionalClasses = availableClasses.filter(c => 
+            var regionalClasses = availableClasses.filter(c => 
                 currentUser.role === 'Super Admin' ? (selectedAdminRegion === 'all' || c.region === selectedAdminRegion) : c.region === currentUser.region
             );
 
@@ -1601,24 +1791,24 @@ function confirmDeleteRegionalAdmin(username) {
                 ? 'showStudentSkolastikDetail' 
                 : 'showStudentTkaDetail';
 
-            for (const className in groupedStudents) {
-                const studentsInClass = groupedStudents[className];
+            for (var className in groupedStudents) {
+                var studentsInClass = groupedStudents[className];
                 
                 // Get overall class stats for the module (if relevant)
                 let classStatHtml = '';
                 if (currentModule === 'artProgress') {
-                    const totalArtworks = studentsInClass.reduce((total, student) => total + student.artworks.length, 0);
-                    const totalAttendance = studentsInClass.reduce((total, student) => total + student.attendance.length, 0);
-                    const totalHadir = studentsInClass.reduce((total, student) => total + student.attendance.filter(a => a.status === 'Hadir').length, 0);
+                    var totalArtworks = studentsInClass.reduce((total, student) => total + student.artworks.length, 0);
+                    var totalAttendance = studentsInClass.reduce((total, student) => total + student.attendance.length, 0);
+                    var totalHadir = studentsInClass.reduce((total, student) => total + student.attendance.filter(a => a.status === 'Hadir').length, 0);
                     const avgAttendance = totalAttendance > 0 ? ((totalHadir / totalAttendance) * 100).toFixed(1) : 0;
                     classStatHtml = `<p class="text-sm text-gray-600 mt-2">Total Karya: ${totalArtworks} | Rata-rata Kehadiran: ${avgAttendance}%</p>`;
                 } else if (currentModule === 'skolastikProgress') {
-                    const allScores = studentsInClass.flatMap(s => s.skolastikTests.map(t => t.score));
-                    const avgScore = allScores.length > 0 ? (allScores.reduce((sum, score) => sum + score, 0) / allScores.length).toFixed(1) : 0;
+                    var allScores = studentsInClass.flatMap(s => s.skolastikTests.map(t => t.score));
+                    var avgScore = allScores.length > 0 ? (allScores.reduce((sum, score) => sum + score, 0) / allScores.length).toFixed(1) : 0;
                     classStatHtml = `<p class="text-sm text-gray-600 mt-2">Total Tes Skolastik: ${allScores.length} | Rata-rata Nilai: <span class="font-bold text-blue-600">${avgScore}</span></p>`;
                 } else if (currentModule === 'tkaProgress') {
                      const allScores = studentsInClass.flatMap(s => s.tkaTests.map(t => t.score));
-                    const avgScore = allScores.length > 0 ? (allScores.reduce((sum, score) => sum + score, 0) / allScores.length).toFixed(1) : 0;
+                    var avgScore = allScores.length > 0 ? (allScores.reduce((sum, score) => sum + score, 0) / allScores.length).toFixed(1) : 0;
                     classStatHtml = `<p class="text-sm text-gray-600 mt-2">Total Tes TKA: ${allScores.length} | Rata-rata Nilai: <span class="font-bold text-purple-600">${avgScore}</span></p>`;
                 }
 
@@ -1859,11 +2049,11 @@ function confirmDeleteRegionalAdmin(username) {
         
         // --- MODIFIED FUNCTION 1: Kemajuan Gambar (Super Admin shows Summary, Admin Regional shows Grouped by Class) ---
         function loadArtProgress() {
-            const content = document.getElementById('contentArea');
-            const isAdminOrSuperAdmin = currentUser.role === 'Admin' || currentUser.role === 'Super Admin';
+            var content = document.getElementById('contentArea');
+            var isAdminOrSuperAdmin = currentUser.role === 'Admin' || currentUser.role === 'Super Admin';
             
-            let displayData = studentsData;
-            let displayTitle = 'Global';
+            var displayData = studentsData;
+            var displayTitle = 'Global';
             
             if (currentUser.role === 'Siswa') {
                 displayData = studentsData.filter(s => s.name === currentUser.name);
@@ -1886,15 +2076,15 @@ function confirmDeleteRegionalAdmin(username) {
             }
              
             // Calculate Global/Regional Stats
-            const totalStudents = displayData.length;
+            var totalStudents = displayData.length;
             const totalArtworks = displayData.reduce((total, student) => total + student.artworks.length, 0);
             const totalAttendance = displayData.reduce((total, student) => total + student.attendance.length, 0);
             const totalHadir = displayData.reduce((total, student) => total + student.attendance.filter(a => a.status === 'Hadir').length, 0);
             const avgAttendanceRate = totalAttendance > 0 ? ((totalHadir / totalAttendance) * 100).toFixed(1) : 0;
 
-            const pdfFilename = `Kemajuan_Gambar_${currentUser.name.replace(/\s/g, '_')}.pdf`;
+            var pdfFilename = `Kemajuan_Gambar_${currentUser.name.replace(/\s/g, '_')}.pdf`;
             
-            let moduleContent;
+            var moduleContent;
 
             if (currentUser.role === 'Super Admin') {
                 // --- SUPER ADMIN VIEW: SUMMARY ONLY ---
@@ -1935,7 +2125,7 @@ function confirmDeleteRegionalAdmin(username) {
                 `;
             } else if (currentUser.role === 'Admin') {
                 // Get available classes for the current region
-                const regionalClasses = availableClasses.filter(c => c.region === currentUser.region);
+                var regionalClasses = availableClasses.filter(c => c.region === currentUser.region);
 
                 // --- ADMIN REGIONAL VIEW: GROUPED BY CLASS ---
                 moduleContent = `
@@ -1988,11 +2178,11 @@ function confirmDeleteRegionalAdmin(username) {
 
         // --- MODIFIED FUNCTION 2: Kemajuan Tes Skolastik (Super Admin shows Summary, Admin Regional shows Grouped by Class) ---
         function loadSkolastikProgress() {
-            const content = document.getElementById('contentArea');
-            const isAdminOrSuperAdmin = currentUser.role === 'Admin' || currentUser.role === 'Super Admin';
+            var content = document.getElementById('contentArea');
+            var isAdminOrSuperAdmin = currentUser.role === 'Admin' || currentUser.role === 'Super Admin';
             
-            let displayData = studentsData;
-            let displayTitle = 'Global';
+            var displayData = studentsData;
+            var displayTitle = 'Global';
             
             if (currentUser.role === 'Siswa') {
                 displayData = studentsData.filter(s => s.name === currentUser.name);
@@ -2015,15 +2205,15 @@ function confirmDeleteRegionalAdmin(username) {
             }
             
             // Calculate Global/Regional Stats
-            const totalStudents = displayData.length;
+            var totalStudents = displayData.length;
             const allSkolastikScores = displayData.flatMap(s => s.skolastikTests.map(t => t.score));
-            const totalTests = allSkolastikScores.length;
-            const avgScore = totalTests > 0 ? (allSkolastikScores.reduce((sum, score) => sum + score, 0) / totalTests).toFixed(1) : 0;
-            const latestTestDate = displayData.flatMap(s => s.skolastikTests.map(t => t.date)).sort().pop() || 'N/A';
+            var totalTests = allSkolastikScores.length;
+            var avgScore = totalTests > 0 ? (allSkolastikScores.reduce((sum, score) => sum + score, 0) / totalTests).toFixed(1) : 0;
+            var latestTestDate = displayData.flatMap(s => s.skolastikTests.map(t => t.date)).sort().pop() || 'N/A';
 
-            const pdfFilename = `Kemajuan_Skolastik_${currentUser.name.replace(/\s/g, '_')}.pdf`;
+            var pdfFilename = `Kemajuan_Skolastik_${currentUser.name.replace(/\s/g, '_')}.pdf`;
 
-            let moduleContent;
+            var moduleContent;
 
             if (currentUser.role === 'Super Admin') {
                 // --- SUPER ADMIN VIEW: SUMMARY ONLY ---
@@ -2065,7 +2255,7 @@ function confirmDeleteRegionalAdmin(username) {
                 `;
             } else if (currentUser.role === 'Admin') {
                 // Get available classes for the current region
-                const regionalClasses = availableClasses.filter(c => c.region === currentUser.region);
+                var regionalClasses = availableClasses.filter(c => c.region === currentUser.region);
 
                  // --- ADMIN REGIONAL VIEW: GROUPED BY CLASS ---
                  moduleContent = `
@@ -2115,8 +2305,8 @@ function confirmDeleteRegionalAdmin(username) {
 
         // --- MODIFIED FUNCTION 3: Kemajuan Tes TKA (Super Admin shows Summary, Admin Regional shows Grouped by Class) ---
         function loadTkaProgress() {
-            const content = document.getElementById('contentArea');
-            const isAdminOrSuperAdmin = currentUser.role === 'Admin' || currentUser.role === 'Super Admin';
+            var content = document.getElementById('contentArea');
+            var isAdminOrSuperAdmin = currentUser.role === 'Admin' || currentUser.role === 'Super Admin';
             
             let displayData = studentsData;
             let displayTitle = 'Global';
@@ -2241,8 +2431,8 @@ function confirmDeleteRegionalAdmin(username) {
         }
 
         function loadEducationInfo() {
-            const content = document.getElementById('contentArea');
-            const isAdminOrSuperAdmin = currentUser.role === 'Admin' || currentUser.role === 'Super Admin';
+            var content = document.getElementById('contentArea');
+            var isAdminOrSuperAdmin = currentUser.role === 'Admin' || currentUser.role === 'Super Admin';
             
             let infoTitle = currentUser.role === 'Super Admin' ? 'Global' : currentUser.role === 'Admin' ? `Regional ${currentUser.region}` : 'Anda';
 
@@ -2278,17 +2468,17 @@ function confirmDeleteRegionalAdmin(username) {
 
         // --- MODIFIED FUNCTION 4: Materi Kelas (Ditambahkan Filter Berbasis Kelas dan Regional) ---
         function loadMaterials() {
-            const content = document.getElementById('contentArea');
-            const isAdminOrSuperAdmin = currentUser.role === 'Admin' || currentUser.role === 'Super Admin';
+            var content = document.getElementById('contentArea');
+            var isAdminOrSuperAdmin = currentUser.role === 'Admin' || currentUser.role === 'Super Admin';
             
             // Filter kelas yang tersedia di regional Admin saat ini
-            const regionalAvailableClasses = availableClasses.filter(c => 
+            var regionalAvailableClasses = availableClasses.filter(c => 
                 currentUser.role === 'Super Admin' ? (selectedAdminRegion === 'all' || c.region === selectedAdminRegion) : c.region === currentUser.region
             );
 
             // START: MODIFIKASI REGIONALISASI DATA
-            let regionalMaterials = classMaterials;
-            let regionFilterTitle = '';
+            var regionalMaterials = classMaterials;
+            var regionFilterTitle = '';
 
             if (currentUser.role === 'Admin') {
                 regionalMaterials = classMaterials.filter(m => m.region === currentUser.region);
@@ -2303,10 +2493,10 @@ function confirmDeleteRegionalAdmin(username) {
             // END: MODIFIKASI REGIONALISASI DATA
             
             let filteredMaterials = regionalMaterials; // Gunakan data yang sudah difilter regional
-            const studentClass = studentsData.find(s => s.name === currentUser.name)?.class;
+            var studentClass = studentsData.find(s => s.name === currentUser.name)?.class;
             
             // Jika siswa, activeClassFilter adalah kelasnya. Jika admin, menggunakan filter yang dipilih (default 'all').
-            const activeClassFilter = isAdminOrSuperAdmin ? selectedClassMaterial : (studentClass || 'all');
+            var activeClassFilter = isAdminOrSuperAdmin ? selectedClassMaterial : (studentClass || 'all');
             
             if (activeClassFilter !== 'all') {
                 // Filter material yang memiliki nama kelas di dalam array 'classes' mereka
@@ -2394,8 +2584,8 @@ function confirmDeleteRegionalAdmin(username) {
 
         // --- MODIFIED FUNCTION 5: Jadwal Belajar (Ditambahkan Filter Berbasis Kelas dan Regional) ---
         function loadSchedule() {
-            const content = document.getElementById('contentArea');
-            const isAdminOrSuperAdmin = currentUser.role === 'Admin' || currentUser.role === 'Super Admin';
+            var content = document.getElementById('contentArea');
+            var isAdminOrSuperAdmin = currentUser.role === 'Admin' || currentUser.role === 'Super Admin';
             
             // Filter kelas yang tersedia di regional Admin saat ini
             const regionalAvailableClasses = availableClasses.filter(c => 
@@ -2403,7 +2593,7 @@ function confirmDeleteRegionalAdmin(username) {
             );
 
             // START: MODIFIKASI REGIONALISASI DATA
-            let regionalSchedule = scheduleData;
+            var regionalSchedule = scheduleData;
             let regionFilterTitle = '';
 
             if (currentUser.role === 'Admin') {
@@ -2419,7 +2609,7 @@ function confirmDeleteRegionalAdmin(username) {
             // END: MODIFIKASI REGIONALISASI DATA
 
             let filteredSchedule = regionalSchedule; // Gunakan data yang sudah difilter regional
-            const studentClass = studentsData.find(s => s.name === currentUser.name)?.class;
+            var studentClass = studentsData.find(s => s.name === currentUser.name)?.class;
             // Jika siswa, activeClassFilter adalah kelasnya. Jika admin, menggunakan filter yang dipilih (default 'all').
             const activeClassFilter = isAdminOrSuperAdmin ? selectedClassSchedule : (studentClass || 'all');
 
@@ -2515,14 +2705,14 @@ function confirmDeleteRegionalAdmin(username) {
         // MODIFIED FUNCTION: loadAddStudent - Menambahkan Kelola Sekolah. Sekarang bisa diakses Admin dan Super Admin.
         
 function loadAddStudent() {
-  const content = document.getElementById('contentArea');
+  var content = document.getElementById('contentArea');
   if (currentUser.role !== 'Admin' && currentUser.role !== 'Super Admin') {
     content.innerHTML = `<div class="fade-in text-center text-red-600 text-xl font-bold p-10">Akses ditolak. Hanya Admin dan Super Admin yang dapat mengakses modul ini.</div>`;
     return;
   }
 
   // Determine class options based on role/region
-  const classOptions = (currentUser.role === 'Super Admin')
+  var classOptions = (currentUser.role === 'Super Admin')
     ? availableClasses
     : availableClasses.filter(c => c.region === currentUser.region);
 
@@ -2626,12 +2816,12 @@ function loadAddStudent() {
   if (form) {
     form.addEventListener('submit', function(e) {
       e.preventDefault();
-      const name = document.getElementById('studentName').value.trim();
-      const username = document.getElementById('studentUsername').value.trim();
-      const password = document.getElementById('studentPassword').value || 'siswa123';
-      const school = document.getElementById('studentSchool').value || '';
-      const region = document.getElementById('studentRegion').value || currentUser.region;
-      const kelas = document.getElementById('studentClass').value;
+      var name = document.getElementById('studentName').value.trim();
+      var username = document.getElementById('studentUsername').value.trim();
+      var password = document.getElementById('studentPassword').value || 'siswa123';
+      var school = document.getElementById('studentSchool').value || '';
+      var region = document.getElementById('studentRegion').value || currentUser.region;
+      var kelas = document.getElementById('studentClass').value;
 
       if (!name || !username || !kelas) {
         showNotification('Nama, username, dan kelas wajib diisi!', 'error');
@@ -2643,7 +2833,7 @@ function loadAddStudent() {
         return;
       }
 
-      const newId = studentsData.reduce((m,c)=> c.id>m?c.id:m, 0) + 1;
+      var newId = studentsData.reduce((m,c)=> c.id>m?c.id:m, 0) + 1;
       const newStudent = { id: newId, name, username, password, class: kelas, region, school, artworks: [], attendance: [], skolastikTests: [], tkaTests: []};
       studentsData.push(newStudent);
       saveAllData();
@@ -2655,10 +2845,10 @@ function loadAddStudent() {
 
 // Filter function for students
 function filterStudentByClass() {
-  const sel = document.getElementById('filterStudentClass');
+  var sel = document.getElementById('filterStudentClass');
   if (!sel) return;
-  const selected = sel.value;
-  const rows = document.querySelectorAll('#studentTableBody tr');
+  var selected = sel.value;
+  var rows = document.querySelectorAll('#studentTableBody tr');
   rows.forEach(r => {
     const studentClass = r.getAttribute('data-class');
     r.style.display = (selected === 'all' || studentClass === selected) ? '' : 'none';
@@ -2677,9 +2867,9 @@ function openAddStudentModal() {
   `);
   document.getElementById('addStudentQuickForm').addEventListener('submit', function(e){
     e.preventDefault();
-    const name = document.getElementById('qsName').value.trim();
-    const username = document.getElementById('qsUsername').value.trim();
-    const kelas = document.getElementById('qsClass').value;
+    var name = document.getElementById('qsName').value.trim();
+    var username = document.getElementById('qsUsername').value.trim();
+    var kelas = document.getElementById('qsClass').value;
     if (!name || !username || !kelas) { showNotification('Isi semua field!', 'error'); return; }
     if (studentsData.some(s=>s.username===username)){ showNotification('Username sudah ada','error'); return; }
     const newId = studentsData.reduce((m,c)=> c.id>m?c.id:m, 0) + 1;
@@ -2697,8 +2887,8 @@ function openAddStudentModal() {
          * Memastikan password dapat diubah.
          */
         function editStudent(username) {
-            const allUsers = getAllUsers();
-            const user = allUsers[username];
+            var allUsers = getAllUsers();
+            var user = allUsers[username];
             if (!user || user.role !== 'Siswa') {
                 showNotification('Pengguna siswa tidak ditemukan!', 'error');
                 return;
@@ -2707,7 +2897,7 @@ function openAddStudentModal() {
             const studentData = studentsData.find(s => s.username === username);
             
             // Filter available classes for the Edit Student form
-            const regionalClassesForForm = availableClasses.filter(c => 
+            var regionalClassesForForm = availableClasses.filter(c => 
                 currentUser.role === 'Super Admin' ? true : c.region === studentData.region
             );
 
@@ -2755,8 +2945,8 @@ function openAddStudentModal() {
 
             document.getElementById('editStudentForm').addEventListener('submit', function(e) {
                 e.preventDefault();
-                const newName = document.getElementById('editStudentName').value;
-                const newClass = document.getElementById('editStudentClass').value;
+                var newName = document.getElementById('editStudentName').value;
+                var newClass = document.getElementById('editStudentClass').value;
                 const newSchool = document.getElementById('editStudentSchool').value; 
                 const newPassword = document.getElementById('editStudentPassword').value;
                 const newRegion = currentUser.role === 'Super Admin' ? document.getElementById('editStudentRegion').value : studentData.region;
@@ -2853,7 +3043,7 @@ function openAddStudentModal() {
         // Artwork Functions
         function addArtwork(studentId) {
             // Find students filterable by current user's role/region
-            const filterableStudents = currentUser.role === 'Super Admin' ? studentsData.filter(s => selectedAdminRegion === 'all' || s.region === selectedAdminRegion) : (currentUser.role === 'Admin' ? studentsData.filter(s => s.region === currentUser.region) : []);
+            var filterableStudents = currentUser.role === 'Super Admin' ? studentsData.filter(s => selectedAdminRegion === 'all' || s.region === selectedAdminRegion) : (currentUser.role === 'Admin' ? studentsData.filter(s => s.region === currentUser.region) : []);
             
             if (filterableStudents.length === 0) {
                 showNotification('Tidak ada siswa di regional ini untuk ditambahkan karya.', 'error');
@@ -2861,7 +3051,7 @@ function openAddStudentModal() {
             }
 
             // Jika studentId diberikan, jadikan siswa tersebut yang terpilih secara default
-            let defaultSelectedId = studentId;
+            var defaultSelectedId = studentId;
             if (defaultSelectedId === null) {
                 // Ambil id siswa pertama di daftar filterable jika tidak ada yang dipilih
                 defaultSelectedId = filterableStudents[0]?.id;
@@ -2904,13 +3094,13 @@ function openAddStudentModal() {
 
             document.getElementById('artworkForm').addEventListener('submit', function(e) {
                 e.preventDefault();
-                const selectedStudentId = parseInt(document.getElementById('artworkStudentId').value);
-                const student = studentsData.find(s => s.id === selectedStudentId);
-                const fileInput = document.getElementById('artworkImage');
-                const file = fileInput.files[0];
+                var selectedStudentId = parseInt(document.getElementById('artworkStudentId').value);
+                var student = studentsData.find(s => s.id === selectedStudentId);
+                var fileInput = document.getElementById('artworkImage');
+                var file = fileInput.files[0];
 
                 if (file) {
-                    const reader = new FileReader();
+                    var reader = new FileReader();
                     reader.onload = function(event) {
                         const newArtwork = {
                             id: student.artworks.length + 1,
@@ -2931,8 +3121,8 @@ function openAddStudentModal() {
         }
 
         function editArtwork(studentId, artworkId) {
-            const student = studentsData.find(s => s.id === studentId);
-            const artwork = student.artworks.find(a => a.id === artworkId);
+            var student = studentsData.find(s => s.id === studentId);
+            var artwork = student.artworks.find(a => a.id === artworkId);
             
             openModal('Edit Karya Siswa', `
                 <form id="editArtworkForm" class="space-y-4">
@@ -2969,7 +3159,7 @@ function openAddStudentModal() {
         }
 
         function editArtworkImage(studentId, artworkId) {
-            const student = studentsData.find(s => s.id === studentId);
+            var student = studentsData.find(s => s.id === studentId);
             const artwork = student.artworks.find(a => a.id === artworkId);
             
             openModal('Edit Gambar Karya', `
@@ -3023,7 +3213,7 @@ function openAddStudentModal() {
         }
 
         function confirmDeleteArtwork(studentId, artworkId) {
-            const student = studentsData.find(s => s.id === studentId);
+            var student = studentsData.find(s => s.id === studentId);
             student.artworks = student.artworks.filter(a => a.id !== artworkId);
             closeModal();
             loadArtProgress();
@@ -3032,7 +3222,7 @@ function openAddStudentModal() {
 
         // Attendance Functions
         function addAttendance(studentId) {
-            const filterableStudents = currentUser.role === 'Super Admin' ? studentsData.filter(s => selectedAdminRegion === 'all' || s.region === selectedAdminRegion) : (currentUser.role === 'Admin' ? studentsData.filter(s => s.region === currentUser.region) : []);
+            var filterableStudents = currentUser.role === 'Super Admin' ? studentsData.filter(s => selectedAdminRegion === 'all' || s.region === selectedAdminRegion) : (currentUser.role === 'Admin' ? studentsData.filter(s => s.region === currentUser.region) : []);
             
             if (filterableStudents.length === 0) {
                 showNotification('Tidak ada siswa di regional ini untuk ditambahkan kehadiran.', 'error');
@@ -3040,7 +3230,7 @@ function openAddStudentModal() {
             }
 
             // Jika studentId diberikan, jadikan siswa tersebut yang terpilih secara default
-            let defaultSelectedId = studentId;
+            var defaultSelectedId = studentId;
             if (defaultSelectedId === null) {
                 // Ambil id siswa pertama di daftar filterable jika tidak ada yang dipilih
                 defaultSelectedId = filterableStudents[0]?.id;
@@ -3075,8 +3265,8 @@ function openAddStudentModal() {
 
             document.getElementById('attendanceForm').addEventListener('submit', function(e) {
                 e.preventDefault();
-                const selectedStudentId = parseInt(document.getElementById('attendanceStudentId').value);
-                const student = studentsData.find(s => s.id === selectedStudentId);
+                var selectedStudentId = parseInt(document.getElementById('attendanceStudentId').value);
+                var student = studentsData.find(s => s.id === selectedStudentId);
                 const newAttendance = {
                     date: document.getElementById('attendanceDate').value,
                     status: document.getElementById('attendanceStatus').value
@@ -3089,7 +3279,7 @@ function openAddStudentModal() {
         }
 
         function editAttendance(studentId, attendanceIndex) {
-            const student = studentsData.find(s => s.id === studentId);
+            var student = studentsData.find(s => s.id === studentId);
             const attendance = student.attendance[attendanceIndex];
             
             openModal('Edit Kehadiran', `
@@ -3124,7 +3314,7 @@ function openAddStudentModal() {
         // --- NEW: Delete Attendance Functions ---
 
         function deleteAttendance(studentId, attendanceIndex) {
-            const student = studentsData.find(s => s.id === studentId);
+            var student = studentsData.find(s => s.id === studentId);
             const attendanceDate = student.attendance[attendanceIndex].date;
 
             openModal('Konfirmasi Hapus Kehadiran', `
@@ -3142,7 +3332,7 @@ function openAddStudentModal() {
         }
 
         function confirmDeleteAttendance(studentId, attendanceIndex) {
-            const student = studentsData.find(s => s.id === studentId);
+            var student = studentsData.find(s => s.id === studentId);
             
             // Remove the attendance record at the specified index
             student.attendance.splice(attendanceIndex, 1);
@@ -3156,7 +3346,7 @@ function openAddStudentModal() {
 
         // Test Functions
         function addSkolastikTest(studentId) {
-            const filterableStudents = currentUser.role === 'Super Admin' ? studentsData.filter(s => selectedAdminRegion === 'all' || s.region === selectedAdminRegion) : (currentUser.role === 'Admin' ? studentsData.filter(s => s.region === currentUser.region) : []);
+            var filterableStudents = currentUser.role === 'Super Admin' ? studentsData.filter(s => selectedAdminRegion === 'all' || s.region === selectedAdminRegion) : (currentUser.role === 'Admin' ? studentsData.filter(s => s.region === currentUser.region) : []);
             
             if (filterableStudents.length === 0) {
                 showNotification('Tidak ada siswa di regional ini untuk ditambahkan tes.', 'error');
@@ -3164,7 +3354,7 @@ function openAddStudentModal() {
             }
 
             // Jika studentId diberikan, jadikan siswa tersebut yang terpilih secara default
-            let defaultSelectedId = studentId;
+            var defaultSelectedId = studentId;
             if (defaultSelectedId === null) {
                 defaultSelectedId = filterableStudents[0]?.id;
             }
@@ -3201,9 +3391,9 @@ function openAddStudentModal() {
 
             document.getElementById('skolastikTestForm').addEventListener('submit', function(e) {
                 e.preventDefault();
-                const selectedStudentId = parseInt(document.getElementById('skolastikTestStudentId').value);
-                const student = studentsData.find(s => s.id === selectedStudentId);
-                const newTest = {
+                var selectedStudentId = parseInt(document.getElementById('skolastikTestStudentId').value);
+                var student = studentsData.find(s => s.id === selectedStudentId);
+                var newTest = {
                     date: document.getElementById('testDate').value,
                     subject: document.getElementById('testSubject').value,
                     score: parseInt(document.getElementById('testScore').value),
@@ -3217,8 +3407,8 @@ function openAddStudentModal() {
         }
 
         function editSkolastikTest(studentId, testIndex) {
-            const student = studentsData.find(s => s.id === studentId);
-            const test = student.skolastikTests[testIndex];
+            var student = studentsData.find(s => s.id === studentId);
+            var test = student.skolastikTests[testIndex];
             
             openModal('Edit Tes Skolastik', `
                 <form id="editSkolastikTestForm" class="space-y-4">
@@ -3270,7 +3460,7 @@ function openAddStudentModal() {
         }
 
         function confirmDeleteSkolastikTest(studentId, testIndex) {
-            const student = studentsData.find(s => s.id === studentId);
+            var student = studentsData.find(s => s.id === studentId);
             student.skolastikTests.splice(testIndex, 1);
             closeModal();
             loadSkolastikProgress();
@@ -3324,7 +3514,7 @@ function openAddStudentModal() {
             document.getElementById('tkaTestForm').addEventListener('submit', function(e) {
                 e.preventDefault();
                 const selectedStudentId = parseInt(document.getElementById('tkaTestStudentId').value);
-                const student = studentsData.find(s => s.id === selectedStudentId);
+                var student = studentsData.find(s => s.id === selectedStudentId);
                 const newTest = {
                     date: document.getElementById('tkaTestDate').value,
                     subject: document.getElementById('tkaTestSubject').value,
@@ -3339,7 +3529,7 @@ function openAddStudentModal() {
         }
 
         function editTkaTest(studentId, testIndex) {
-            const student = studentsData.find(s => s.id === studentId);
+            var student = studentsData.find(s => s.id === studentId);
             const test = student.tkaTests[testIndex];
             
             openModal('Edit Tes TKA', `
@@ -3491,15 +3681,15 @@ function openAddStudentModal() {
         function addMaterial() {
             
             // Tentukan regional untuk Super Admin
-            let regionSelectHtml = '';
+            var regionSelectHtml = '';
             
             // Filter kelas yang tersedia di regional Admin saat ini
-            const regionalClassesForForm = availableClasses.filter(c => 
+            var regionalClassesForForm = availableClasses.filter(c => 
                 currentUser.role === 'Super Admin' ? (selectedAdminRegion === 'all' || c.region === selectedAdminRegion) : c.region === currentUser.region
             );
 
             if (currentUser.role === 'Super Admin') {
-                const regions = [...new Set([
+                var regions = [...new Set([
     ...availableClasses.map(c => c.region),
     ...studentsData.map(s => s.region),
     ...regionalAdmins.map(a => a.region)
@@ -3550,7 +3740,7 @@ function openAddStudentModal() {
             document.getElementById('materialForm').addEventListener('submit', function(e) {
                 e.preventDefault();
                 
-                const selectedClasses = Array.from(document.querySelectorAll('input[name="materialClasses"]:checked')).map(cb => cb.value);
+                var selectedClasses = Array.from(document.querySelectorAll('input[name="materialClasses"]:checked')).map(cb => cb.value);
 
                 if (selectedClasses.length === 0) {
                     showNotification('Pilih minimal satu kelas untuk materi ini!', 'error');
@@ -3558,7 +3748,7 @@ function openAddStudentModal() {
                 }
                 
                 // Tentukan regional berdasarkan role
-                let targetRegion;
+                var targetRegion;
                 if (currentUser.role === 'Super Admin') {
                     targetRegion = document.getElementById('materialRegion').value;
                     if (!targetRegion) {
@@ -3587,7 +3777,7 @@ function openAddStudentModal() {
             const material = classMaterials.find(m => m.id === id);
             
             // Filter kelas yang tersedia di regional material
-            const regionalClassesForForm = availableClasses.filter(c => 
+            var regionalClassesForForm = availableClasses.filter(c => 
                 c.region === material.region
             );
 
@@ -3621,7 +3811,7 @@ function openAddStudentModal() {
             document.getElementById('editMaterialForm').addEventListener('submit', function(e) {
                 e.preventDefault();
                 
-                const updatedClasses = Array.from(document.querySelectorAll('input[name="editMaterialClasses"]:checked')).map(cb => cb.value);
+                var updatedClasses = Array.from(document.querySelectorAll('input[name="editMaterialClasses"]:checked')).map(cb => cb.value);
 
                 if (updatedClasses.length === 0) {
                     showNotification('Pilih minimal satu kelas untuk materi ini!', 'error');
@@ -3663,15 +3853,15 @@ function openAddStudentModal() {
         function addSchedule() {
 
              // Tentukan regional untuk Super Admin
-            let regionSelectHtml = '';
+            var regionSelectHtml = '';
             
             // Filter kelas yang tersedia di regional Admin saat ini
-            const regionalClassesForForm = availableClasses.filter(c => 
+            var regionalClassesForForm = availableClasses.filter(c => 
                 currentUser.role === 'Super Admin' ? (selectedAdminRegion === 'all' || c.region === selectedAdminRegion) : c.region === currentUser.region
             );
 
             if (currentUser.role === 'Super Admin') {
-                const regions = [...new Set([
+                var regions = [...new Set([
     ...availableClasses.map(c => c.region),
     ...studentsData.map(s => s.region),
     ...regionalAdmins.map(a => a.region)
@@ -3742,7 +3932,7 @@ function openAddStudentModal() {
                 }
                 
                 // Tentukan regional berdasarkan role
-                let targetRegion;
+                var targetRegion;
                 if (currentUser.role === 'Super Admin') {
                     targetRegion = document.getElementById('scheduleRegion').value;
                     if (!targetRegion) {
@@ -3916,7 +4106,7 @@ function openAddStudentModal() {
         // --- NEW SCHOOL MANAGEMENT FUNCTIONS ---
 
         function editSchool(schoolId) {
-            const school = availableSchools.find(s => s.id === schoolId);
+            var school = availableSchools.find(s => s.id === schoolId);
             
             openModal('Edit Sekolah', `
                 <form id="editSchoolForm" class="space-y-4">
@@ -3930,14 +4120,14 @@ function openAddStudentModal() {
 
             document.getElementById('editSchoolForm').addEventListener('submit', function(e) {
                 e.preventDefault();
-                const newName = document.getElementById('editSchoolName').value.trim();
+                var newName = document.getElementById('editSchoolName').value.trim();
                 
                 if (availableSchools.some(s => s.id !== schoolId && s.name.toLowerCase() === newName.toLowerCase())) {
                     showNotification('Nama sekolah sudah ada!', 'error');
                     return;
                 }
 
-                const oldName = school.name;
+                var oldName = school.name;
                 school.name = newName;
                 
                 // Update students who are currently registered with this school name
@@ -4000,7 +4190,7 @@ function openAddStudentModal() {
         // MODIFIED FUNCTION: loadManageClasses - Class management is now regional
         
 function loadManageClasses() {
-  const content = document.getElementById('contentArea');
+  var content = document.getElementById('contentArea');
 
   // Pastikan user punya akses
   if (currentUser.role !== 'Admin' && currentUser.role !== 'Super Admin') {
@@ -4012,7 +4202,7 @@ function loadManageClasses() {
   }
 
   // Filter kelas berdasarkan region user (jika bukan Super Admin)
-  const filteredClasses = currentUser.role === 'Super Admin'
+  var filteredClasses = currentUser.role === 'Super Admin'
     ? availableClasses
     : availableClasses.filter(c => c.region === currentUser.region);
 
@@ -4081,10 +4271,10 @@ function loadManageClasses() {
 
 // === 🔧 Fungsi Tambahan Filter ===
 function filterRegionChange() {
-  const region = document.getElementById('filterRegion').value;
+  var region = document.getElementById('filterRegion').value;
   const classDropdown = document.getElementById('filterClass');
 
-  const classes = region === 'all'
+  var classes = region === 'all'
     ? availableClasses
     : availableClasses.filter(c => c.region === region);
 
@@ -4097,13 +4287,13 @@ function filterRegionChange() {
 
 function filterClasses() {
   const regionSelect = document.getElementById('filterRegion');
-  const region = regionSelect ? regionSelect.value : currentUser.region;
+  var region = regionSelect ? regionSelect.value : currentUser.region;
   const kelas = document.getElementById('filterClass').value;
   const rows = document.querySelectorAll('#classTableBody tr');
 
   rows.forEach(row => {
     const classRegion = row.getAttribute('data-region');
-    const className = row.getAttribute('data-class');
+    var className = row.getAttribute('data-class');
     const matchRegion = region === 'all' || classRegion === region;
     const matchClass = kelas === 'all' || className === kelas;
     row.style.display = (matchRegion && matchClass) ? '' : 'none';
@@ -4145,9 +4335,9 @@ function filterClasses() {
 
             document.getElementById('addClassModalForm').addEventListener('submit', function(e) {
                 e.preventDefault();
-                const name = document.getElementById('modalClassName').value;
-                const description = document.getElementById('modalClassDescription').value;
-                const targetRegion = currentUser.role === 'Super Admin' ? document.getElementById('modalNewClassRegion').value : currentUser.region;
+                var name = document.getElementById('modalClassName').value;
+                var description = document.getElementById('modalClassDescription').value;
+                var targetRegion = currentUser.role === 'Super Admin' ? document.getElementById('modalNewClassRegion').value : currentUser.region;
 
                 if (!targetRegion) {
                     showNotification('Silakan pilih Regional Target.', 'error');
@@ -4161,7 +4351,7 @@ function filterClasses() {
                 }
 
                 const maxId = availableClasses.reduce((max, c) => (c.id > max ? c.id : max), 0);
-                const newClass = {
+                var newClass = {
                     id: maxId + 1,
                     name: name,
                     description: description,
@@ -4176,7 +4366,7 @@ function filterClasses() {
         }
 
         function editClass(classId) {
-            const classItem = availableClasses.find(c => c.id === classId);
+            var classItem = availableClasses.find(c => c.id === classId);
             
             openModal('Edit Kelas', `
                 <form id="editClassForm" class="space-y-4">
@@ -4208,7 +4398,7 @@ function filterClasses() {
                 }
 
                 const oldName = classItem.name;
-                const targetRegion = classItem.region;
+                var targetRegion = classItem.region;
 
                 classItem.name = newName;
                 classItem.description = newDescription;
@@ -4245,8 +4435,8 @@ function filterClasses() {
         }
 
         function deleteClass(classId) {
-            const classItem = availableClasses.find(c => c.id === classId);
-            const targetRegion = classItem.region;
+            var classItem = availableClasses.find(c => c.id === classId);
+            var targetRegion = classItem.region;
             const studentsInClass = studentsData.filter(s => s.class === classItem.name && s.region === targetRegion);
 
             if (studentsInClass.length > 0) {
@@ -4312,8 +4502,9 @@ function filterClasses() {
         }
 
         // Fungsi-fungsi lama editStudent dan deleteStudent sudah digantikan dengan editUser dan deleteUser
-    </script>
-<script>
+    
+
+
    (function() {
     function c() {
      var b = a.contentDocument || a.contentWindow.document;
@@ -4348,12 +4539,12 @@ function filterClasses() {
 // --- Added CRUD helpers for classMaterials and availableSchools (ensure persistence) ---
 function addSchool(name){
   if(!name) return;
-  const id = Date.now();
+  var id = Date.now();
   availableSchools.push({id, name});
   saveAllData();
 }
 function updateSchool(id, name){
-  const idx = availableSchools.findIndex(s=>s.id===id);
+  var idx = availableSchools.findIndex(s=>s.id===id);
   if(idx!==-1){ availableSchools[idx].name = name; saveAllData(); }
 }
 function deleteSchoolById(id){
@@ -4370,14 +4561,14 @@ function addMaterialObj(obj){
   saveAllData();
 }
 function updateMaterialObj(id, patch){
-  const idx = classMaterials.findIndex(m=>m.id===id);
+  var idx = classMaterials.findIndex(m=>m.id===id);
   if(idx===-1) return;
   if(currentUser.role === 'Admin' && classMaterials[idx].region !== currentUser.region){ showNotification('Akses ditolak: region lain','error'); return; }
   classMaterials[idx] = {...classMaterials[idx], ...patch};
   saveAllData();
 }
 function deleteMaterialById(id){
-  const idx = classMaterials.findIndex(m=>m.id===id);
+  var idx = classMaterials.findIndex(m=>m.id===id);
   if(idx===-1) return;
   if(currentUser.role === 'Admin' && classMaterials[idx].region !== currentUser.region){ showNotification('Akses ditolak: region lain','error'); return; }
   classMaterials.splice(idx,1);
@@ -4388,11 +4579,11 @@ window.addEventListener('beforeunload', saveAllData);
 
 // === MODUL JADWAL KEGIATAN (SAMA SEPERTI JADWAL BELAJAR) ===
 function loadActivitySchedule() {
-    const content = document.getElementById('contentArea');
-    const userRegion = currentUser.region;
+    var content = document.getElementById('contentArea');
+    var userRegion = currentUser.region;
     let regionActivities = currentUser.role === 'Super Admin' ? activityScheduleData : activityScheduleData.filter(a => a.region === userRegion);
 
-    let classOptions = availableClasses
+    var classOptions = availableClasses
         .filter(c => currentUser.role === 'Super Admin' || c.region === userRegion)
         .map(c => `<option value="${c.name}">${c.name}</option>`)
         .join('');
@@ -4465,7 +4656,7 @@ function openAddActivity() {
 
     document.getElementById('addActivityForm').addEventListener('submit', function(e) {
         e.preventDefault();
-        const newAct = {
+        var newAct = {
             id: Date.now(),
             date: document.getElementById('activityDate').value,
             name: document.getElementById('activityName').value,
@@ -4532,8 +4723,8 @@ function editActivity(id) {
 }
 
 function filterActivityByClass(className) {
-    const userRegion = currentUser.region;
-    let filtered = currentUser.role === 'Super Admin' ? activityScheduleData : activityScheduleData.filter(a => a.region === userRegion);
+    var userRegion = currentUser.region;
+    var filtered = currentUser.role === 'Super Admin' ? activityScheduleData : activityScheduleData.filter(a => a.region === userRegion);
     if (className !== 'all') filtered = filtered.filter(a => a.classes.includes(className));
     const tbody = document.getElementById('activityTableBody');
     tbody.innerHTML = filtered.map(a => `
@@ -4549,36 +4740,36 @@ function filterActivityByClass(className) {
             </td>
         </tr>`).join('');
 }
-</script>
-<!-- BEGIN: Injected by assistant — Activity & Schedule modules upgrade -->
-<script>
+
+
+
 // Ensure data arrays exist
 if (typeof activityScheduleData === 'undefined') activityScheduleData = [];
 if (typeof scheduleData === 'undefined') scheduleData = [];
 
 // Utility: compute day name from YYYY-MM-DD
 function getDayNameFromDate(isoDate) {
-  const d = new Date(isoDate);
+  var d = new Date(isoDate);
   if (isNaN(d)) return '';
-  const days = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
+  var days = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
   return days[d.getDay()];
 }
 
 // -------------------- Jadwal Kegiatan (table, filter, CRUD, auto-day) --------------------
-function loadActivitySchedule() {
-  const content = document.getElementById("contentArea");
-  const canEdit = currentUser && (currentUser.role === "Super Admin" || currentUser.role === "Admin");
-  const regionTitle = (currentUser && currentUser.role === "Super Admin") ? "(Semua Regional)" : (currentUser ? `(Regional ${currentUser.region})` : "");
+function loadActivitySchedule_dup1() {
+  var content = document.getElementById("contentArea");
+  var canEdit = currentUser && (currentUser.role === "Super Admin" || currentUser.role === "Admin");
+  var regionTitle = (currentUser && currentUser.role === "Super Admin") ? "(Semua Regional)" : (currentUser ? `(Regional ${currentUser.region})` : "");
 
   // class options - try to infer from availableClasses, fallback to defaults
-  const classOptions = (typeof availableClasses !== 'undefined' ? 
+  var classOptions = (typeof availableClasses !== 'undefined' ? 
     (Array.from(new Set(availableClasses.filter(c => currentUser.role === 'Super Admin' || c.region === currentUser.region).map(c=>c.name))).map(n=>n)) : ["Kelas GOLD","Kelas SILVER","Kelas BRONZE"]);
   classOptions.unshift("Semua Kelas");
 
-  const currentFilter = localStorage.getItem("selectedClassFilter_activity") || "Semua Kelas";
+  var currentFilter = localStorage.getItem("selectedClassFilter_activity") || "Semua Kelas";
 
   // Normalize items for rendering (support older shapes)
-  const normalized = activityScheduleData.map(item => {
+  var normalized = activityScheduleData.map(item => {
     return {
       id: item.id || item.date + Math.random(),
       date: item.date || item.tanggal || '',
@@ -4594,7 +4785,7 @@ function loadActivitySchedule() {
   // Filter by region for non-superadmin
   let filteredData = normalized;
   if (!currentUser || currentUser.role !== "Super Admin") {
-    const userRegion = currentUser ? currentUser.region : '';
+    var userRegion = currentUser ? currentUser.region : '';
     filteredData = filteredData.filter(a => !a.region || a.region === userRegion);
   }
 
@@ -4669,9 +4860,9 @@ function loadActivitySchedule() {
 }
 
 function openAddActivityModal() {
-  const regionText = (currentUser && currentUser.role === "Super Admin") ? "Semua Regional" : (currentUser ? `Regional ${currentUser.region}` : '');
+  var regionText = (currentUser && currentUser.role === "Super Admin") ? "Semua Regional" : (currentUser ? `Regional ${currentUser.region}` : '');
   // infer class options
-  const classOptions = (typeof availableClasses !== 'undefined' ? Array.from(new Set(availableClasses.filter(c => currentUser.role === 'Super Admin' || c.region === currentUser.region).map(c=>c.name))) : ["Kelas GOLD","Kelas SILVER","Kelas BRONZE"]);
+  var classOptions = (typeof availableClasses !== 'undefined' ? Array.from(new Set(availableClasses.filter(c => currentUser.role === 'Super Admin' || c.region === currentUser.region).map(c=>c.name))) : ["Kelas GOLD","Kelas SILVER","Kelas BRONZE"]);
 
   openModal("Tambah Jadwal Kegiatan", `
     <form id="addActivityForm" class="space-y-4">
@@ -4709,7 +4900,7 @@ function openAddActivityModal() {
     </form>
   `);
 
-  const dateEl = document.getElementById("activityDate");
+  var dateEl = document.getElementById("activityDate");
   dateEl.addEventListener("change", ()=>{
     document.getElementById("activityDay").value = getDayNameFromDate(dateEl.value);
   });
@@ -4734,11 +4925,11 @@ function openAddActivityModal() {
   };
 }
 
-function editActivity(id) {
-  const idx = activityScheduleData.findIndex(a => String(a.id) === String(id));
+function editActivity_dup1(id) {
+  var idx = activityScheduleData.findIndex(a => String(a.id) === String(id));
   if (idx === -1) return;
   const a = activityScheduleData[idx];
-  const classOptions = (typeof availableClasses !== 'undefined' ? Array.from(new Set(availableClasses.filter(c => currentUser.role === 'Super Admin' || c.region === currentUser.region).map(c=>c.name))) : ["Kelas GOLD","Kelas SILVER","Kelas BRONZE"]);
+  var classOptions = (typeof availableClasses !== 'undefined' ? Array.from(new Set(availableClasses.filter(c => currentUser.role === 'Super Admin' || c.region === currentUser.region).map(c=>c.name))) : ["Kelas GOLD","Kelas SILVER","Kelas BRONZE"]);
 
   openModal("Edit Jadwal Kegiatan", `
     <form id="editActivityForm" class="space-y-4">
@@ -4797,7 +4988,7 @@ function editActivity(id) {
   };
 }
 
-function deleteActivity(id) {
+function deleteActivity_dup1(id) {
   if (!confirm("Apakah Anda yakin ingin menghapus kegiatan ini?")) return;
   activityScheduleData = activityScheduleData.filter(a => String(a.id) !== String(id));
   try { saveAllData(); } catch(e){ console.warn(e); }
@@ -4806,13 +4997,13 @@ function deleteActivity(id) {
 }
 
 // -------------------- Jadwal Belajar updates: table + dropdown + add/edit with auto-day --------------------
-function loadSchedule() {
-  const content = document.getElementById("contentArea");
+function loadSchedule_dup1() {
+  var content = document.getElementById("contentArea");
   const canEdit = currentUser && (currentUser.role === "Super Admin" || currentUser.role === "Admin");
-  const regionTitle = (currentUser && currentUser.role === "Super Admin") ? "(Semua Regional)" : (currentUser ? `(Regional ${currentUser.region})` : "");
+  var regionTitle = (currentUser && currentUser.role === "Super Admin") ? "(Semua Regional)" : (currentUser ? `(Regional ${currentUser.region})` : "");
 
   // class options
-  const classOptions = (typeof availableClasses !== 'undefined' ? Array.from(new Set(availableClasses.filter(c => currentUser.role === 'Super Admin' || c.region === currentUser.region).map(c=>c.name))) : ["Kelas GOLD","Kelas SILVER","Kelas BRONZE"]);
+  var classOptions = (typeof availableClasses !== 'undefined' ? Array.from(new Set(availableClasses.filter(c => currentUser.role === 'Super Admin' || c.region === currentUser.region).map(c=>c.name))) : ["Kelas GOLD","Kelas SILVER","Kelas BRONZE"]);
   classOptions.unshift("Semua Kelas");
 
   const currentFilter = localStorage.getItem("selectedClassFilter_schedule") || "Semua Kelas";
@@ -4828,7 +5019,7 @@ function loadSchedule() {
   }));
 
   // filter by region
-  let filtered = normalized;
+  var filtered = normalized;
   if (!currentUser || currentUser.role !== "Super Admin") {
     const userRegion = currentUser ? currentUser.region : '';
     filtered = filtered.filter(s => (s.region ? s.region === userRegion : true));
@@ -4899,7 +5090,7 @@ function loadSchedule() {
 // add schedule modal (with auto-day)
 function openAddScheduleModal() {
   const regionText = (currentUser && currentUser.role === "Super Admin") ? "Semua Regional" : (currentUser ? `Regional ${currentUser.region}` : '');
-  const classOptions = (typeof availableClasses !== 'undefined' ? Array.from(new Set(availableClasses.filter(c => currentUser.role === 'Super Admin' || c.region === currentUser.region).map(c=>c.name))) : ["Kelas GOLD","Kelas SILVER","Kelas BRONZE"]);
+  var classOptions = (typeof availableClasses !== 'undefined' ? Array.from(new Set(availableClasses.filter(c => currentUser.role === 'Super Admin' || c.region === currentUser.region).map(c=>c.name))) : ["Kelas GOLD","Kelas SILVER","Kelas BRONZE"]);
 
   openModal("Tambah Jadwal Belajar", `
     <form id="addScheduleForm_v2" class="space-y-4">
@@ -4956,11 +5147,11 @@ function openAddScheduleModal() {
   };
 }
 
-function editSchedule(id) {
-  const idx = scheduleData.findIndex(s => String(s.id) === String(id));
+function editSchedule_dup1(id) {
+  var idx = scheduleData.findIndex(s => String(s.id) === String(id));
   if (idx === -1) return;
-  const s = scheduleData[idx];
-  const classOptions = (typeof availableClasses !== 'undefined' ? Array.from(new Set(availableClasses.filter(c => currentUser.role === 'Super Admin' || c.region === currentUser.region).map(c=>c.name))) : ["Kelas GOLD","Kelas SILVER","Kelas BRONZE"]);
+  var s = scheduleData[idx];
+  var classOptions = (typeof availableClasses !== 'undefined' ? Array.from(new Set(availableClasses.filter(c => currentUser.role === 'Super Admin' || c.region === currentUser.region).map(c=>c.name))) : ["Kelas GOLD","Kelas SILVER","Kelas BRONZE"]);
 
   openModal("Edit Jadwal Belajar", `
     <form id="editScheduleForm_v2" class="space-y-4">
@@ -5014,7 +5205,7 @@ function editSchedule(id) {
 }
 
 // Delete schedule helper for schedule module
-function deleteSchedule(id) {
+function deleteSchedule_dup1(id) {
   if (!confirm("Apakah Anda yakin ingin menghapus jadwal ini?")) return;
   scheduleData = scheduleData.filter(s => String(s.id) !== String(id));
   try { saveAllData(); } catch(e){ console.warn(e); }
@@ -5040,9 +5231,9 @@ if (typeof currentModule !== 'undefined') {
   if (currentModule === 'activitySchedule') loadActivitySchedule();
   if (currentModule === 'schedule') loadSchedule();
 }
-</script>
-<!-- END: Injected by assistant -->
-<script>
+
+
+
 function smoothUpdateTable(sectionId) {
   const section = document.getElementById(sectionId);
   if (!section) return;
@@ -5082,58 +5273,11 @@ document.addEventListener('DOMContentLoaded', () => {
     sel.classList.add('w-full', 'sm:w-1/2', 'md:w-1/3');
   });
 });
-</script>
 
 
-<!-- === FITUR ZOOM INTERAKTIF PRO (KHUSUS SISWA) 
-<style>
-  #zoomModal {
-    display: none;
-    position: fixed;
-    z-index: 9999;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.9);
-    justify-content: center;
-    align-items: center;
-    transition: opacity 0.3s ease;
-  }
-  #zoomModal img {
-    max-width: 90%;
-    max-height: 90%;
-    border-radius: 12px;
-    box-shadow: 0 0 25px rgba(255,255,255,0.4);
-    transition: transform 0.3s ease;
-  }
-  #zoomPrev, #zoomNext {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    color: white;
-    font-size: 3rem;
-    cursor: pointer;
-    user-select: none;
-    padding: 0 20px;
-    transition: opacity 0.2s;
-  }
-  #zoomPrev:hover, #zoomNext:hover {
-    opacity: 0.7;
-  }
-  #zoomPrev { left: 20px; }
-  #zoomNext { right: 20px; }
-</style>
 
-<div id="zoomModal" onclick="closeZoom(event)">
-  <span id="zoomPrev" onclick="prevZoom(event)">&#10094;</span>
-  <img id="zoomImage" src="" alt="Zoomed Artwork" />
-  <span id="zoomNext" onclick="nextZoom(event)">&#10095;</span>
-</div>
-
-<script>
-  let currentZoomIndex = 0;
-  let zoomImages = [];
+  var currentZoomIndex = 0;
+  var zoomImages = [];
 
   function enableZoomForStudent() {
     if (currentUser && currentUser.role === 'Siswa') {
@@ -5148,8 +5292,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function openZoom(index) {
     currentZoomIndex = index;
-    const zoomModal = document.getElementById('zoomModal');
-    const zoomImage = document.getElementById('zoomImage');
+    var zoomModal = document.getElementById('zoomModal');
+    var zoomImage = document.getElementById('zoomImage');
     zoomImage.src = zoomImages[index].src;
     zoomModal.style.display = 'flex';
   }
@@ -5182,41 +5326,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  const originalLoadArtProgress = window.loadArtProgress;
+  var originalLoadArtProgress = window.loadArtProgress;
   window.loadArtProgress = function() {
     originalLoadArtProgress();
     setTimeout(() => enableZoomForStudent(), 500);
   };
-</script>
-<!-- === AKHIR FITUR ZOOM INTERAKTIF PRO 
-  
-<style>
-  #zoomModal {
-    display: none;
-    position: fixed;
-    z-index: 9999;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.9);
-    justify-content: center;
-    align-items: center;
-  }
-  #zoomModal img {
-    max-width: 90%;
-    max-height: 90%;
-    border-radius: 10px;
-    box-shadow: 0 0 25px rgba(255,255,255,0.3);
-  }
-</style>
 
-<div id="zoomModal" onclick="closeZoom()">
-  <img id="zoomImage" src="" alt="Zoomed Artwork" />
-</div>
 
-<script>
-  function enableZoomForStudent() {
+
+  function enableZoomForStudent_dup1() {
     if (currentUser && currentUser.role === 'Siswa') {
       document.querySelectorAll('#contentArea img').forEach(img => {
         img.style.cursor = 'zoom-in';
@@ -5225,76 +5343,30 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  function openZoom(src) {
-    const zoomModal = document.getElementById('zoomModal');
-    const zoomImage = document.getElementById('zoomImage');
+  function openZoom_dup1(src) {
+    var zoomModal = document.getElementById('zoomModal');
+    var zoomImage = document.getElementById('zoomImage');
     zoomImage.src = src;
     zoomModal.style.display = 'flex';
   }
 
-  function closeZoom() {
+  function closeZoom_dup1() {
     document.getElementById('zoomModal').style.display = 'none';
   }
 
   // Integrasi otomatis dengan modul Kemajuan Gambar
-  const originalLoadArtProgress = window.loadArtProgress;
+  var originalLoadArtProgress = window.loadArtProgress;
   window.loadArtProgress = function() {
     originalLoadArtProgress();
     setTimeout(() => enableZoomForStudent(), 500);
   };
-</script>
-<!-- === AKHIR FITUR ZOOM KHUSUS SISWA 
 
 
-<!-- === FITUR ZOOM INTERAKTIF PRO (KHUSUS SISWA) === -->
-<style>
-  #zoomModal {
-    display: none;
-    position: fixed;
-    z-index: 9999;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.9);
-    justify-content: center;
-    align-items: center;
-    transition: opacity 0.3s ease;
-  }
-  #zoomModal img {
-    max-width: 90%;
-    max-height: 90%;
-    border-radius: 12px;
-    box-shadow: 0 0 25px rgba(255,255,255,0.4);
-    transition: transform 0.3s ease;
-  }
-  #zoomPrev, #zoomNext {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    color: white;
-    font-size: 3rem;
-    cursor: pointer;
-    user-select: none;
-    padding: 0 20px;
-    transition: opacity 0.2s;
-  }
-  #zoomPrev:hover, #zoomNext:hover { opacity: 0.7; }
-  #zoomPrev { left: 20px; }
-  #zoomNext { right: 20px; }
-</style>
 
-<div id="zoomModal" onclick="closeZoom(event)">
-  <span id="zoomPrev" onclick="prevZoom(event)">&#10094;</span>
-  <img id="zoomImage" src="" alt="Zoomed Artwork" />
-  <span id="zoomNext" onclick="nextZoom(event)">&#10095;</span>
-</div>
-
-<script>
   let currentZoomIndex = 0;
   let zoomImages = [];
 
-  function enableZoomForStudent() {
+  function enableZoomForStudent_dup2() {
     if (currentUser && currentUser.role === 'Siswa') {
       zoomImages = Array.from(document.querySelectorAll('#contentArea img'));
       zoomImages.forEach((img, index) => {
@@ -5305,7 +5377,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  function openZoom(index) {
+  function openZoom_dup2(index) {
     currentZoomIndex = index;
     const zoomModal = document.getElementById('zoomModal');
     const zoomImage = document.getElementById('zoomImage');
@@ -5313,20 +5385,20 @@ document.addEventListener('DOMContentLoaded', () => {
     zoomModal.style.display = 'flex';
   }
 
-  function closeZoom(event) {
+  function closeZoom_dup2(event) {
     if (event.target.id === 'zoomModal' || event.key === 'Escape') {
       document.getElementById('zoomModal').style.display = 'none';
     }
   }
 
-  function prevZoom(event) {
+  function prevZoom_dup1(event) {
     event.stopPropagation();
     if (zoomImages.length === 0) return;
     currentZoomIndex = (currentZoomIndex - 1 + zoomImages.length) % zoomImages.length;
     document.getElementById('zoomImage').src = zoomImages[currentZoomIndex].src;
   }
 
-  function nextZoom(event) {
+  function nextZoom_dup1(event) {
     event.stopPropagation();
     if (zoomImages.length === 0) return;
     currentZoomIndex = (currentZoomIndex + 1) % zoomImages.length;
@@ -5346,20 +5418,17 @@ document.addEventListener('DOMContentLoaded', () => {
     originalLoadArtProgress();
     setTimeout(() => enableZoomForStudent(), 500);
   };
-</script>
-<!-- === AKHIR FITUR ZOOM INTERAKTIF PRO === -->
 
 
-<!-- === FITUR FILTER KELAS & BATASAN VISIBILITAS SISWA === -->
-<script>
+
   // Daftar kelas contoh (bisa diganti dari database nanti)
-  const daftarKelas = ['SR GOLD A', 'SR GOLD B', 'SR SILVER', 'SR PLATINUM'];
+  var daftarKelas = ['SR GOLD A', 'SR GOLD B', 'SR SILVER', 'SR PLATINUM'];
 
   // Utility render dropdown kelas
   function renderDropdownKelas(targetId) {
-    const container = document.getElementById(targetId);
+    var container = document.getElementById(targetId);
     if (!container) return;
-    let html = '<label class="block mb-1 text-sm font-medium">Filter Kelas:</label>';
+    var html = '<label class="block mb-1 text-sm font-medium">Filter Kelas:</label>';
     html += '<select id="filterKelasSelect" class="border rounded p-2 w-full mb-2">';
     daftarKelas.forEach(kls => html += `<option value="${kls}">${kls}</option>`);
     html += '</select>';
@@ -5372,14 +5441,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Terapkan filter ke modul sesuai kelas siswa atau pilihan admin
   function applyKelasFilter() {
-    const select = document.getElementById('filterKelasSelect');
-    const showAll = document.getElementById('showAllKelas').checked;
-    const kelasDipilih = select ? select.value : null;
-    const userRole = currentUser?.role || '';
-    const userKelas = currentUser?.kelas || '';
+    var select = document.getElementById('filterKelasSelect');
+    var showAll = document.getElementById('showAllKelas').checked;
+    var kelasDipilih = select ? select.value : null;
+    var userRole = currentUser?.role || '';
+    var userKelas = currentUser?.kelas || '';
 
     document.querySelectorAll('[data-kelas]').forEach(row => {
-      const kelasData = row.dataset.kelas;
+      var kelasData = row.dataset.kelas;
       if (userRole === 'Admin Regional') {
         row.style.display = showAll || kelasData === kelasDipilih ? '' : 'none';
       } else if (userRole === 'Siswa') {
@@ -5389,39 +5458,36 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Injek filter ke 3 modul target
-  const originalLoadJadwalBelajar = window.loadJadwalBelajar;
+  var originalLoadJadwalBelajar = window.loadJadwalBelajar;
   window.loadJadwalBelajar = function() {
     originalLoadJadwalBelajar();
     renderDropdownKelas('filterKelasJadwalBelajar');
     setTimeout(applyKelasFilter, 500);
   };
 
-  const originalLoadJadwalKegiatan = window.loadJadwalKegiatan;
+  var originalLoadJadwalKegiatan = window.loadJadwalKegiatan;
   window.loadJadwalKegiatan = function() {
     originalLoadJadwalKegiatan();
     renderDropdownKelas('filterKelasJadwalKegiatan');
     setTimeout(applyKelasFilter, 500);
   };
 
-  const originalLoadMateriKelas = window.loadMateriKelas;
+  var originalLoadMateriKelas = window.loadMateriKelas;
   window.loadMateriKelas = function() {
     originalLoadMateriKelas();
     renderDropdownKelas('filterKelasMateriKelas');
     setTimeout(applyKelasFilter, 500);
   };
-</script>
-<!-- === AKHIR FITUR FILTER KELAS === -->
 
 
-<!-- === PENYEMPURNAAN FILTER KELAS UNTUK SEMUA MODUL === -->
-<script>
-  const daftarKelas = ['SR GOLD A', 'SR GOLD B', 'SR SILVER', 'SR PLATINUM'];
 
-  function renderDropdownKelas(targetId, modulName) {
-    const container = document.getElementById(targetId);
+  var daftarKelas = ['SR GOLD A', 'SR GOLD B', 'SR SILVER', 'SR PLATINUM'];
+
+  function renderDropdownKelas_dup1(targetId, modulName) {
+    var container = document.getElementById(targetId);
     if (!container) return;
 
-    let html = '<label class="block mb-1 text-sm font-medium">Filter Kelas:</label>';
+    var html = '<label class="block mb-1 text-sm font-medium">Filter Kelas:</label>';
     html += '<select id="filterKelasSelect_' + modulName + '" class="border rounded p-2 w-full mb-2">';
     daftarKelas.forEach(kls => html += `<option value="${kls}">${kls}</option>`);
     html += '</select>';
@@ -5432,15 +5498,15 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('showAllKelas_' + modulName).addEventListener('change', () => applyKelasFilter(modulName));
   }
 
-  function applyKelasFilter(modulName) {
+  function applyKelasFilter_dup1(modulName) {
     const select = document.getElementById('filterKelasSelect_' + modulName);
     const showAll = document.getElementById('showAllKelas_' + modulName)?.checked;
     const kelasDipilih = select ? select.value : null;
-    const userRole = currentUser?.role || '';
-    const userKelas = currentUser?.kelas || '';
+    var userRole = currentUser?.role || '';
+    var userKelas = currentUser?.kelas || '';
 
     document.querySelectorAll('[data-modul="' + modulName + '"][data-kelas]').forEach(row => {
-      const kelasData = row.dataset.kelas;
+      var kelasData = row.dataset.kelas;
       if (userRole === 'Admin Regional') {
         row.style.display = showAll || kelasData === kelasDipilih ? '' : 'none';
       } else if (userRole === 'Siswa') {
@@ -5450,32 +5516,29 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Integrasi ke tiga modul dengan gaya Materi Kelas
-  const originalLoadJadwalBelajar = window.loadJadwalBelajar;
+  var originalLoadJadwalBelajar = window.loadJadwalBelajar;
   window.loadJadwalBelajar = function() {
     originalLoadJadwalBelajar();
     renderDropdownKelas('filterKelasJadwalBelajar', 'jadwalBelajar');
     setTimeout(() => applyKelasFilter('jadwalBelajar'), 500);
   };
 
-  const originalLoadJadwalKegiatan = window.loadJadwalKegiatan;
+  var originalLoadJadwalKegiatan = window.loadJadwalKegiatan;
   window.loadJadwalKegiatan = function() {
     originalLoadJadwalKegiatan();
     renderDropdownKelas('filterKelasJadwalKegiatan', 'jadwalKegiatan');
     setTimeout(() => applyKelasFilter('jadwalKegiatan'), 500);
   };
 
-  const originalLoadMateriKelas = window.loadMateriKelas;
+  var originalLoadMateriKelas = window.loadMateriKelas;
   window.loadMateriKelas = function() {
     originalLoadMateriKelas();
     renderDropdownKelas('filterKelasMateriKelas', 'materiKelas');
     setTimeout(() => applyKelasFilter('materiKelas'), 500);
   };
-</script>
-<!-- === AKHIR PENYEMPURNAAN FILTER KELAS === -->
 
 
-<!-- === FINAL FILTER DROPDOWN + CHECKLIST UNTUK SEMUA MODUL === -->
-<script>
+
   const daftarKelas = [
     'Kelas SR GOLD A (Cabang Jakarta Selatan)',
     'Kelas SR GOLD B (Cabang Jakarta Selatan)',
@@ -5484,13 +5547,13 @@ document.addEventListener('DOMContentLoaded', () => {
   ];
 
   function renderFilterKelas(containerId, modulName) {
-    const container = document.getElementById(containerId);
+    var container = document.getElementById(containerId);
     if (!container) return;
 
-    let html = '<div class="mb-2">';
+    var html = '<div class="mb-2">';
     html += '<label class="block mb-1 text-sm font-medium">Kelas Relevan</label>';
     daftarKelas.forEach(kls => {
-      const id = `${modulName}_${kls.replace(/\s+/g, '_')}`;
+      var id = `${modulName}_${kls.replace(/\s+/g, '_')}`;
       html += `<div class='flex items-center gap-2 mb-1'><input type='checkbox' id='${id}' value='${kls}' class='kelasCheckbox_${modulName}'> <label for='${id}'>${kls}</label></div>`;
     });
     html += '</div>';
@@ -5503,12 +5566,12 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function applyFilterKelas(modulName) {
-    const userRole = currentUser?.role || '';
-    const userKelas = currentUser?.kelas || '';
-    const selected = Array.from(document.querySelectorAll('.kelasCheckbox_' + modulName + ':checked')).map(cb => cb.value);
+    var userRole = currentUser?.role || '';
+    var userKelas = currentUser?.kelas || '';
+    var selected = Array.from(document.querySelectorAll('.kelasCheckbox_' + modulName + ':checked')).map(cb => cb.value);
 
     document.querySelectorAll('[data-modul="' + modulName + '"][data-kelas]').forEach(row => {
-      const kelasData = row.dataset.kelas;
+      var kelasData = row.dataset.kelas;
       if (userRole === 'Admin Regional') {
         row.style.display = selected.length === 0 || selected.includes(kelasData) ? '' : 'none';
       } else if (userRole === 'Siswa') {
@@ -5538,12 +5601,9 @@ document.addEventListener('DOMContentLoaded', () => {
     renderFilterKelas('filterKelasMateriKelas', 'materiKelas');
     setTimeout(() => applyFilterKelas('materiKelas'), 500);
   };
-</script>
-<!-- === AKHIR FILTER DROPDOWN + CHECKLIST FINAL === -->
 
 
-<!-- === PERBAIKAN FINAL MODUL JADWAL BELAJAR (FILTER KELAS AKTIF) === -->
-<script>
+
   const daftarKelasBelajar = [
     'Kelas SR GOLD A (Cabang Jakarta Selatan)',
     'Kelas SR GOLD B (Cabang Jakarta Selatan)',
@@ -5552,12 +5612,12 @@ document.addEventListener('DOMContentLoaded', () => {
   ];
 
   function renderFilterKelasBelajar(containerId) {
-    const container = document.getElementById(containerId);
+    var container = document.getElementById(containerId);
     if (!container) return;
-    let html = '<div class="mb-2">';
+    var html = '<div class="mb-2">';
     html += '<label class="block mb-1 text-sm font-medium">Kelas Relevan</label>';
     daftarKelasBelajar.forEach(kls => {
-      const id = 'jadwalBelajar_' + kls.replace(/\s+/g, '_');
+      var id = 'jadwalBelajar_' + kls.replace(/\s+/g, '_');
       html += `<div class='flex items-center gap-2 mb-1'><input type='checkbox' id='${id}' value='${kls}' class='kelasCheckbox_jadwalBelajar'> <label for='${id}'>${kls}</label></div>`;
     });
     html += '</div>';
@@ -5569,12 +5629,12 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function applyFilterKelasBelajar() {
-    const userRole = currentUser?.role || '';
-    const userKelas = currentUser?.kelas || '';
-    const selected = Array.from(document.querySelectorAll('.kelasCheckbox_jadwalBelajar:checked')).map(cb => cb.value);
+    var userRole = currentUser?.role || '';
+    var userKelas = currentUser?.kelas || '';
+    var selected = Array.from(document.querySelectorAll('.kelasCheckbox_jadwalBelajar:checked')).map(cb => cb.value);
 
     document.querySelectorAll('[data-modul="jadwalBelajar"][data-kelas]').forEach(row => {
-      const kelasData = row.dataset.kelas;
+      var kelasData = row.dataset.kelas;
       if (userRole === 'Admin Regional') {
         row.style.display = selected.length === 0 || selected.includes(kelasData) ? '' : 'none';
       } else if (userRole === 'Siswa') {
@@ -5584,18 +5644,15 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Rebuild fungsi loadSchedule agar gunakan filter baru
-  const originalLoadSchedule = window.loadSchedule;
+  var originalLoadSchedule = window.loadSchedule;
   window.loadSchedule = function() {
     originalLoadSchedule();
     renderFilterKelasBelajar('filterKelasJadwalBelajar');
     setTimeout(applyFilterKelasBelajar, 500);
   };
-</script>
-<!-- === AKHIR PERBAIKAN MODUL JADWAL BELAJAR === -->
 
 
-<!-- === PERBAIKAN AKHIR MODUL JADWAL BELAJAR (SAMA DENGAN JADWAL KEGIATAN) === -->
-<script>
+
   const daftarKelasSchedule = [
     'Kelas SR GOLD A (Cabang Jakarta Selatan)',
     'Kelas SR GOLD B (Cabang Jakarta Selatan)',
@@ -5610,7 +5667,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let html = '<div class="mb-2">';
     html += '<label class="block mb-1 text-sm font-medium">Filter Kelas Jadwal Belajar</label>';
     daftarKelasSchedule.forEach(kls => {
-      const id = 'jadwalBelajar_' + kls.replace(/\s+/g, '_');
+      var id = 'jadwalBelajar_' + kls.replace(/\s+/g, '_');
       html += `<div class='flex items-center gap-2 mb-1'>
                  <input type='checkbox' id='${id}' value='${kls}' class='kelasCheckbox_jadwalBelajar'> 
                  <label for='${id}'>${kls}</label>
@@ -5627,7 +5684,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function applyFilterKelasSchedule() {
     const userRole = currentUser?.role || '';
     const userKelas = currentUser?.kelas || '';
-    const selected = Array.from(document.querySelectorAll('.kelasCheckbox_jadwalBelajar:checked')).map(cb => cb.value);
+    var selected = Array.from(document.querySelectorAll('.kelasCheckbox_jadwalBelajar:checked')).map(cb => cb.value);
 
     document.querySelectorAll('[data-modul="jadwalBelajar"][data-kelas]').forEach(row => {
       const kelasData = row.dataset.kelas;
@@ -5646,19 +5703,16 @@ document.addEventListener('DOMContentLoaded', () => {
     renderFilterKelasSchedule('filterKelasJadwalBelajar');
     setTimeout(() => applyFilterKelasSchedule(), 500);
   };
-</script>
-<!-- === AKHIR PERBAIKAN MODUL JADWAL BELAJAR === -->
 
 
-<!-- BEGIN: Injected Fix — Regionalize Jadwal Belajar (LKS_141_ScheduleFix) -->
-<script>
+
 (function(){
   // Safety: ensure arrays exist
   if (typeof scheduleData === 'undefined') scheduleData = [];
   if (typeof availableClasses === 'undefined') availableClasses = [];
   if (typeof studentsData === 'undefined') studentsData = [];
 
-  function getDayNameFromDate(isoDate){
+  function getDayNameFromDate_dup1(isoDate){
     const d = new Date(isoDate);
     if (isNaN(d)) return '';
     const days = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
@@ -5674,7 +5728,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Enforce: Admin regional hanya melihat/CRUD untuk region sendiri.
   // Siswa hanya melihat jadwal yang ada di schedule.classes === siswa.class AND schedule.region === siswa.region
   window.loadSchedule = function(){
-    const content = document.getElementById("contentArea");
+    var content = document.getElementById("contentArea");
     if(!content) return;
     const isAdminOrSuperAdmin = currentUser && (currentUser.role === 'Admin' || currentUser.role === 'Super Admin');
     const isStudent = currentUser && currentUser.role === 'Siswa';
@@ -5773,11 +5827,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // When creating a schedule, Admin regional's schedule.region must be their region.
   window.openAddScheduleModal = function() {
     // Build class options limited to current region (for admin) or all for superadmin
-    const classesForRegion = (availableClasses || []).filter(c => !currentUser || currentUser.role === 'Super Admin' || c.region === currentUser.region).map(c => c.name);
-    const classOptionsHtml = classesForRegion.map(c => `<option value="${c}">${c}</option>`).join('');
+    var classesForRegion = (availableClasses || []).filter(c => !currentUser || currentUser.role === 'Super Admin' || c.region === currentUser.region).map(c => c.name);
+    var classOptionsHtml = classesForRegion.map(c => `<option value="${c}">${c}</option>`).join('');
     const defaultRegion = currentUser && currentUser.region ? currentUser.region : '';
 
-    const modalHtml = `
+    var modalHtml = `
       <form id="addScheduleForm" class="space-y-4">
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal</label>
@@ -5830,9 +5884,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Edit schedule but restrict editing to own region for Admins
   window.editSchedule = function(id){
-    const idx = scheduleData.findIndex(s => String(s.id) === String(id));
+    var idx = scheduleData.findIndex(s => String(s.id) === String(id));
     if (idx === -1) { notify('Jadwal tidak ditemukan','error'); return; }
-    const s = scheduleData[idx];
+    var s = scheduleData[idx];
     if (currentUser && currentUser.role === 'Admin' && s.region !== currentUser.region) {
       notify('Akses ditolak: Anda hanya dapat mengedit jadwal di regional Anda sendiri','error');
       return;
@@ -5895,7 +5949,7 @@ document.addEventListener('DOMContentLoaded', () => {
   window.deleteSchedule = function(id){
     const idx = scheduleData.findIndex(s => String(s.id) === String(id));
     if (idx === -1) return;
-    const s = scheduleData[idx];
+    var s = scheduleData[idx];
     if (currentUser && currentUser.role === 'Admin' && s.region !== currentUser.region) {
       notify('Akses ditolak: Anda hanya dapat menghapus jadwal di regional Anda sendiri','error');
       return;
@@ -5912,15 +5966,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (currentModule === 'schedule') loadSchedule();
   } catch(e){}
 })();
-</script>
-<!-- END: Injected Fix — Regionalize Jadwal Belajar -->
 
 
-<script>
+
 // --- FIX: Modul Kelola Kelas ---
-function loadManageClasses() {
-  const content = document.getElementById('contentArea');
-  let filteredClasses = availableClasses;
+function loadManageClasses_dup1() {
+  var content = document.getElementById('contentArea');
+  var filteredClasses = availableClasses;
 
   if (currentUser.role === 'Admin') {
     filteredClasses = availableClasses.filter(cls => cls.region === currentUser.region);
@@ -5964,7 +6016,7 @@ function loadManageClasses() {
 }
 
 // Fungsi Tambah Kelas
-function addClass() {
+function addClass_dup1() {
   openModal('Tambah Kelas Baru', `
     <form id="addClassForm" class="space-y-4">
       <div>
@@ -5984,9 +6036,9 @@ function addClass() {
 
   document.getElementById('addClassForm').addEventListener('submit', e => {
     e.preventDefault();
-    const name = document.getElementById('className').value.trim();
+    var name = document.getElementById('className').value.trim();
     const description = document.getElementById('classDesc').value.trim();
-    const region = document.getElementById('classRegion').value.trim();
+    var region = document.getElementById('classRegion').value.trim();
     
     if (!name || !description || !region) {
       showNotification('Semua field wajib diisi', 'error');
@@ -6006,7 +6058,7 @@ function addClass() {
 
 // Fungsi Edit Kelas
 window.editClass = function(id) {
-  const cls = availableClasses.find(c => c.id === id);
+  var cls = availableClasses.find(c => c.id === id);
   if (!cls) return;
   openModal('Edit Kelas', `
     <form id="editClassForm" class="space-y-4">
@@ -6064,14 +6116,13 @@ window.deleteClass = function(id) {
     showNotification('Kelas berhasil dihapus!', 'success');
   });
 };
-</script>
 
 
-<script>
+
 // Real-time sync: listener untuk memperbarui dropdown di modul Jadwal Kegiatan / Jadwal Kegiatan (Activity)
 function buildClassOptionsForRegion(region, includeAllOption = true) {
     const classes = (availableClasses || []).filter(c => region === 'all' || !region ? true : c.region === region);
-    let opts = '';
+    var opts = '';
     if (includeAllOption) opts += '<option value="all">Semua Kelas</option>';
     classes.forEach(c => {
         opts += `<option value="${c.name}">${c.name}</option>`;
@@ -6082,10 +6133,10 @@ function buildClassOptionsForRegion(region, includeAllOption = true) {
 function refreshActivityClassDropdown() {
     // update any select elements that depend on availableClasses
     // common IDs used in schedule/activity modules: classFilterSchedule, classFilterActivity, activityClassSelect, filterClass
-    const region = (currentUser && currentUser.role === 'Admin') ? currentUser.region : (document.getElementById('filterRegion') ? document.getElementById('filterRegion').value : 'all');
+    var region = (currentUser && currentUser.role === 'Admin') ? currentUser.region : (document.getElementById('filterRegion') ? document.getElementById('filterRegion').value : 'all');
     const opts = buildClassOptionsForRegion(region, true).html;
     ['classFilterSchedule','classFilterActivity','activityClassSelect','filterClass','classFilterSchedule'].forEach(id=>{
-        const el = document.getElementById(id);
+        var el = document.getElementById(id);
         if (el) {
             el.innerHTML = opts;
         }
@@ -6102,13 +6153,9 @@ document.addEventListener('kelasUpdated', function(e) {
 document.addEventListener('DOMContentLoaded', function(){
     refreshActivityClassDropdown();
 });
-</script>
 
 
 
-
-
-<script>
 // === FILTER REGIONAL FIX v2 ===
 
 // Ambil daftar region unik + fallback manual
@@ -6147,10 +6194,10 @@ function applyRegionFilter(region) {
 }
 
 // === Patch Modul Kelola Kelas ===
-function loadManageClasses() {
-  const content = document.getElementById('contentArea');
+function loadManageClasses_dup2() {
+  var content = document.getElementById('contentArea');
   let filteredClasses = availableClasses;
-  let selectedRegion = window.selectedRegion || 'all';
+  var selectedRegion = window.selectedRegion || 'all';
 
   if (currentUser.role === 'Admin') {
     filteredClasses = availableClasses.filter(cls => cls.region === currentUser.region);
@@ -6233,11 +6280,9 @@ window.loadActivitySchedule = function() {
   if (_oldLoadActivitySchedule) _oldLoadActivitySchedule();
   patchScheduleModules();
 };
-</script>
 
 
-<!-- BEGIN: Injected date-formatting helper (converts visible YYYY-MM-DD -> DD/MM/YYYY) -->
-<script>
+
 (function(){
   // Format a single ISO date string (YYYY-MM-DD) to DD/MM/YYYY
   function formatDateDDMMYYYY(dateString) {
@@ -6316,7 +6361,7 @@ window.loadActivitySchedule = function() {
   // Wrap existing openModal to format modal content after opening (if present)
   function wrapOpenModal() {
     if (typeof window.openModal === 'function' && !window.openModal._wrappedForDateFormat) {
-      const orig = window.openModal;
+      var orig = window.openModal;
       window.openModal = function(title, contentHtml) {
         orig(title, contentHtml);
         const modal = document.getElementById('modal');
@@ -6356,14 +6401,9 @@ window.loadActivitySchedule = function() {
   window.formatDateDDMMYYYY = formatDateDDMMYYYY;
   window.applyDateFormatting = function(root){ traverseAndFormat(root || document.body); };
 })();
-</script>
-<!-- END: Injected date-formatting helper -->
 
 
-<!-- BEGIN: Supabase Online Sync Injection (keeps local UI/UX, Option A: username/password in DB) -->
-<!-- Supabase JS SDK -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-<script>
+
 (function(){
   // CONFIG - Supabase project info (provided)
   const SUPABASE_URL = "https://zdyxkdghexhnmvklucfa.supabase.co";
@@ -6377,7 +6417,7 @@ window.loadActivitySchedule = function() {
   }
 
   // Helper notification (use existing showNotification if exists)
-  function notify(msg, type='success') {
+  function notify_dup1(msg, type='success') {
     if (typeof showNotification === 'function') return showNotification(msg, type);
     // simple toast fallback
     const id = 'sb_notify';
@@ -6409,7 +6449,7 @@ window.loadActivitySchedule = function() {
   // This is a simple single-row-per-key approach so we don't need to design many tables.
   async function supabaseUpsertKey(key, value) {
     try {
-      const payload = { key: key, value: value };
+      var payload = { key: key, value: value };
       const { data, error } = await supabase.from('app_state').upsert(payload, { onConflict: 'key' });
       if (error) throw error;
       return data;
@@ -6437,7 +6477,7 @@ window.loadActivitySchedule = function() {
   async function supabaseLoadAllData() {
     // Attempt to fetch each KEYS from app_state; if any fails we'll fallback to localStorage values
     const result = {};
-    for (const k of KEYS) {
+    for (var k of KEYS) {
       try {
         const val = await supabaseGetKey(k);
         if (val !== null && typeof val !== 'undefined') {
@@ -6571,25 +6611,21 @@ window.loadActivitySchedule = function() {
     migrateLocalToSupabase: async function(){ await supabaseSaveAllData(KEYS.reduce((acc,k)=>{ try{ acc[k]= JSON.parse(localStorage.getItem(k)); }catch(e){ acc[k]=null } return acc; },{})); notify('Manual migration done'); }
   };
 })();
-</script>
-<!-- END: Supabase Online Sync Injection -->
 
-</body>
-</html>
-<!-- === Materi Kelas UI Override (FINAL FIX) 
-<script>
+
+
 // Override aman: hanya ganti tampilan modul Materi Kelas tanpa ganggu modul lain
-function loadMaterials() {
-    const content = document.getElementById('contentArea');
+function loadMaterials_dup1() {
+    var content = document.getElementById('contentArea');
     if (!content) return;
 
-    let regionalMaterials = classMaterials.filter(m => currentUser.role === 'Super Admin' || m.region === currentUser.region);
+    var regionalMaterials = classMaterials.filter(m => currentUser.role === 'Super Admin' || m.region === currentUser.region);
 
     if (selectedClassMaterial !== 'all') {
         regionalMaterials = regionalMaterials.filter(m => m.classes.includes(selectedClassMaterial));
     }
 
-    const classOptions = [...new Set(classMaterials.flatMap(m => m.classes))];
+    var classOptions = [...new Set(classMaterials.flatMap(m => m.classes))];
 
     content.innerHTML = `
         <div class="fade-in">
@@ -6647,16 +6683,16 @@ function loadMaterials() {
 }
 
 function filterMaterials() {
-    const selected = document.getElementById('filterClassMaterial').value;
+    var selected = document.getElementById('filterClassMaterial').value;
     selectedClassMaterial = selected;
     loadMaterials();
 }
-</script>
-<!-- === Materi Kelas UI Override (FINAL FIX v2) 
-<script>
+
+
+
 // Versi dengan pembatasan: siswa tidak punya filter, admin regional lihat kelas di region-nya
-function loadMaterials() {
-    const content = document.getElementById('contentArea');
+function loadMaterials_dup2() {
+    var content = document.getElementById('contentArea');
     if (!content) return;
 
     let regionalMaterials = classMaterials.filter(m => 
@@ -6741,19 +6777,18 @@ function loadMaterials() {
     `;
 }
 
-function filterMaterials() {
+function filterMaterials_dup1() {
     const selected = document.getElementById('filterClassMaterial')?.value || 'all';
     selectedClassMaterial = selected;
     loadMaterials();
 }
-</script>
 
-<!-- === PATCH ADMIN REGIONAL FIX === -->
-<script>
+
+
 // === PATCH: Super Admin dapat menambah beberapa admin di regional yang sama ===
 
 // --- Fungsi Tambah Admin Regional ---
-function addRegionalAdmin() {
+function addRegionalAdmin_dup1() {
     const studentRegions = studentsData.map(s => s.region).filter(r => r);
     const adminRegions = regionalAdmins.map(a => a.region).filter(r => r);
     const existingRegions = [...new Set([...studentRegions, ...adminRegions])];
@@ -6831,8 +6866,8 @@ function addRegionalAdmin() {
 }
 
 // --- Perbaikan Tabel di loadManageAdmins() ---
-function loadManageAdmins() {
-    const content = document.getElementById('contentArea');
+function loadManageAdmins_dup1() {
+    var content = document.getElementById('contentArea');
     if (currentUser.role !== 'Super Admin') {
         content.innerHTML = '<div class="fade-in text-center text-red-600 text-xl font-bold p-10">Akses Ditolak. Hanya Super Admin yang dapat mengakses modul ini.</div>';
         return;
@@ -6935,5 +6970,18 @@ function loadManageAdmins() {
         </div>
     `;
 }
+
+}catch(e){ console.error('Inline script error:', e); }
+})();
+
 </script>
+</body>
+</html>
+<!-- === Materi Kelas UI Override (FINAL FIX) 
+
+<!-- === Materi Kelas UI Override (FINAL FIX v2) 
+
+
+<!-- === PATCH ADMIN REGIONAL FIX === -->
+
 <!-- === END PATCH === -->
