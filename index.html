@@ -97,7 +97,35 @@
 <style>@view-transition { navigation: auto; }</style>
 <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
 <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
+<script>
+/* SUPABASE INTEGRATION - AUTO-INJECTED */
+const SUPABASE_URL = "https://zdyxkdghexhnmvklucfa.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpkeXhrZGdoZXhobm12a2xvY2ZhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxNzEyNjgsImV4cCI6MjA3ODc0NzI2OH0.rMpEn7koPPWAu3jQxRUGEPP3lO9TsLAklvYC9giP1Bg";
+const SUPABASE_CONFIGURED = SUPABASE_URL && SUPABASE_ANON_KEY && !SUPABASE_URL.includes("REPLACE");
+let supabase = null;
+if (SUPABASE_CONFIGURED && typeof supabaseJs !== 'undefined') {
+  try { supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { persistSession: true } }); console.log('Supabase client ready'); }
+  catch(e){ console.warn('Supabase init warning', e); }
+}
+// Helpers to store/get app keys in a simple app_state table (upsert/select)
+async function supabaseSetKey(key, value) {
+  if (!supabase) throw new Error('Supabase not configured');
+  const payload = { key: key, value: value };
+  const { data, error } = await supabase.from('app_state').upsert(payload, { onConflict: 'key' }).select();
+  if (error) throw error;
+  return data;
+}
+async function supabaseGetKey(key) {
+  if (!supabase) throw new Error('Supabase not configured');
+  const { data, error } = await supabase.from('app_state').select('value').eq('key', key).limit(1).maybeSingle();
+  if (error) throw error;
+  return data ? data.value : null;
+}
+</script>
 </head>
+
 <body class="bg-white">
 <style>
 .login-bg {
@@ -185,39 +213,76 @@
 </div>
 <script>
 
-function saveAllData() {
-  localStorage.setItem("studentsData", JSON.stringify(studentsData));
-  localStorage.setItem("regionalAdmins", JSON.stringify(regionalAdmins));
-  localStorage.setItem("availableClasses", JSON.stringify(availableClasses));
-  localStorage.setItem("educationInfo", JSON.stringify(educationInfo));
-  localStorage.setItem("scheduleData", JSON.stringify(scheduleData));
-  localStorage.setItem("activityScheduleData", JSON.stringify(activityScheduleData));
-  localStorage.setItem("classMaterials", JSON.stringify(classMaterials));
-  localStorage.setItem("availableSchools", JSON.stringify(availableSchools));
 
-  // 🔁 Auto Refresh Dashboard jika di halaman Home (Super Admin / Admin)
-  if (currentUser && currentModule === 'home' && (currentUser.role === 'Admin' || currentUser.role === 'Super Admin')) {
-      loadHome();
+function saveAllData() {
+  try {
+    const payload = {
+      studentsData, regionalAdmins, availableClasses, educationInfo, scheduleData,
+      activityScheduleData, classMaterials, availableSchools
+    };
+    if (SUPABASE_CONFIGURED && supabase) {
+      const keys = Object.keys(payload);
+      (async () => {
+        for (const k of keys) {
+          try { await supabaseSetKey(k, payload[k]); } catch (err) { console.error('supabase set key error', k, err); }
+        }
+      })();
+      showNotification('Data tersimpan ke Supabase.', 'success');
+    } else {
+      localStorage.setItem("studentsData", JSON.stringify(studentsData));
+      localStorage.setItem("regionalAdmins", JSON.stringify(regionalAdmins));
+      localStorage.setItem("availableClasses", JSON.stringify(availableClasses));
+      localStorage.setItem("educationInfo", JSON.stringify(educationInfo));
+      localStorage.setItem("scheduleData", JSON.stringify(scheduleData));
+      localStorage.setItem("activityScheduleData", JSON.stringify(activityScheduleData));
+      localStorage.setItem("classMaterials", JSON.stringify(classMaterials));
+      localStorage.setItem("availableSchools", JSON.stringify(availableSchools));
+      showNotification('Data tersimpan di localStorage (fallback).', 'success');
+    }
+  } catch (err) {
+    console.error('saveAllData error', err);
+    showNotification('Gagal menyimpan data.', 'error');
   }
 }
+}
 
-function loadAllData() {
-  const sd = localStorage.getItem("studentsData");
-  const ra = localStorage.getItem("regionalAdmins");
-  const ac = localStorage.getItem("availableClasses");
-  const ei = localStorage.getItem("educationInfo");
-  const sch = localStorage.getItem("scheduleData");
-  if (sd) studentsData = JSON.parse(sd);
-  if (ra) regionalAdmins = JSON.parse(ra);
-  if (ac) availableClasses = JSON.parse(ac);
-  if (ei) educationInfo = JSON.parse(ei);
-  if (sch) scheduleData = JSON.parse(sch);
-  const act = localStorage.getItem("activityScheduleData");
-  if (act) activityScheduleData = JSON.parse(act);
-  const cm = localStorage.getItem('classMaterials');
-  const sc = localStorage.getItem('availableSchools');
-  if (cm) classMaterials = JSON.parse(cm);
-  if (sc) availableSchools = JSON.parse(sc);
+
+async function loadAllData() {
+  try {
+    if (SUPABASE_CONFIGURED && supabase) {
+      const keys = ["studentsData","regionalAdmins","availableClasses","educationInfo","scheduleData","activityScheduleData","classMaterials","availableSchools"];
+      for (const k of keys) {
+        try {
+          const val = await supabaseGetKey(k);
+          if (val !== null && val !== undefined) window[k] = val;
+        } catch (err) { console.error('supabase get key error', k, err); }
+      }
+      console.log('Loaded data from Supabase');
+      showNotification('Data dimuat dari Supabase.', 'success');
+    } else {
+      const sd = localStorage.getItem("studentsData");
+      const ra = localStorage.getItem("regionalAdmins");
+      const ac = localStorage.getItem("availableClasses");
+      const ei = localStorage.getItem("educationInfo");
+      const sch = localStorage.getItem("scheduleData");
+      if (sd) studentsData = JSON.parse(sd);
+      if (ra) regionalAdmins = JSON.parse(ra);
+      if (ac) availableClasses = JSON.parse(ac);
+      if (ei) educationInfo = JSON.parse(ei);
+      if (sch) scheduleData = JSON.parse(sch);
+      const act = localStorage.getItem("activityScheduleData");
+      if (act) activityScheduleData = JSON.parse(act);
+      const cm = localStorage.getItem('classMaterials');
+      const sc = localStorage.getItem('availableSchools');
+      if (cm) classMaterials = JSON.parse(cm);
+      if (sc) availableSchools = JSON.parse(sc);
+      console.log('Loaded data from localStorage');
+      showNotification('Data dimuat dari localStorage (fallback).', 'success');
+    }
+  } catch (err) {
+    console.error('loadAllData error', err);
+    showNotification('Gagal memuat data.', 'error');
+  }
 }
 function saveSession() {
   localStorage.setItem("currentUser", JSON.stringify(currentUser));
@@ -584,20 +649,49 @@ let activityScheduleData = [
 ];
 
         // Login Handler
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            
-            const users = getAllUsers();
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const username = document.getElementById('username').value;
+  const password = document.getElementById('password').value;
 
-            if (users[username] && users[username].password === password) {
-                currentUser = { username, ...users[username] };
-                showDashboard();
-                // 🔥 Record login activity (except Super Admin itself)
-                try {
-                    let logs = JSON.parse(localStorage.getItem('loginActivityLogs') || '[]');
-                    const now = new Date().toLocaleString('id-ID', { hour12: false });
+  if (SUPABASE_CONFIGURED && supabase) {
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({ email: username, password });
+      if (!error && data?.user) {
+        currentUser = { username: data.user.email, name: data.user.email, role: (data.user.user_metadata && data.user.user_metadata.role) || 'Siswa', region: (data.user.user_metadata && data.user.user_metadata.region) || null };
+        try { await loadAllData(); } catch(e) {}
+        showDashboard();
+        saveSession();
+        return;
+      } else {
+        console.warn('Supabase auth failed, falling back to local auth.', error);
+      }
+    } catch (err) { console.error('supabase signIn error', err); }
+  }
+
+  // original local auth fallback
+  const users = getAllUsers();
+  if (users[username] && users[username].password === password) {
+      currentUser = { username, ...users[username] };
+      showDashboard();
+      try {
+          let logs = JSON.parse(localStorage.getItem('loginActivityLogs') || '[]');
+          const now = new Date().toLocaleString('id-ID', { hour12: false });
+          const allUsers = getAllUsers();
+          if (allUsers[username] && allUsers[username].role !== 'Super Admin') {
+              logs.unshift({
+                  name: users[username].name,
+                  role: users[username].role,
+                  region: users[username].region || '-',
+                  time: now
+              });
+              localStorage.setItem('loginActivityLogs', JSON.stringify(logs.slice(0, 100)));
+          }
+      } catch (err) { console.error('Gagal menyimpan log aktivitas:', err); }
+  } else {
+      showNotification('Username atau password salah!', 'error');
+  }
+});
                     const allUsers = getAllUsers();
                     if (allUsers[username] && allUsers[username].role !== 'Super Admin') {
                         logs.unshift({
@@ -6553,6 +6647,244 @@ window.loadHome = function() {
 };
 // === END: Home Override Patch ===
 </script>
+
+
+<!-- MIGRATION UI (Super Admin, local username) -->
+<style>
+#migrationModal { display:none; position:fixed; inset:0; z-index:9999; align-items:center; justify-content:center; }
+#migrationModal .backdrop { position:absolute; inset:0; background:rgba(0,0,0,0.5); }
+#migrationModal .panel { position:relative; z-index:2; width:90%; max-width:900px; background:white; border-radius:8px; padding:18px; box-shadow:0 10px 30px rgba(0,0,0,0.2); }
+#migrationLog { max-height:300px; overflow:auto; background:#f8fafc; padding:10px; border-radius:6px; border:1px solid #e6edf3; font-family:monospace; font-size:13px; }
+</style>
+
+<div id="migrationModal" aria-hidden="true">
+  <div class="backdrop" onclick="closeMigrationModal()"></div>
+  <div class="panel">
+    <div class="flex justify-between items-center mb-3">
+      <h3 class="text-lg font-semibold">Migrasi Data ke Supabase (Relasional)</h3>
+      <button onclick="closeMigrationModal()" class="px-3 py-1 rounded bg-red-500 text-white">Tutup</button>
+    </div>
+    <div id="migrationControls" class="mb-3">
+      <label class="inline-flex items-center"><input type="checkbox" id="chkUpsertClasses" checked/> Upsert Classes</label>
+      &nbsp;&nbsp;
+      <label class="inline-flex items-center"><input type="checkbox" id="chkUpsertProfiles" checked/> Upsert Profiles (students)</label>
+      &nbsp;&nbsp;
+      <label class="inline-flex items-center"><input type="checkbox" id="chkUpsertArtifacts" checked/> Artworks</label>
+    </div>
+    <div id="migrationLog"></div>
+    <div class="mt-3 flex justify-end space-x-2">
+      <button id="btnStartMigration" class="px-4 py-2 bg-green-600 text-white rounded">Mulai Migrasi</button>
+      <button onclick="closeMigrationModal()" class="px-4 py-2 bg-gray-200 rounded">Batal</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// Expose a button for Super Admins (local username) to open migration modal
+function injectMigrationButton() {
+  try {
+    const header = document.querySelector('header .flex.items-center') || document.querySelector('header');
+    if (!header) return;
+    // Only show if currentUser exists and is Super Admin (local role)
+    if (typeof currentUser !== 'undefined' && currentUser && (currentUser.role === 'Super Admin' || currentUser.username === 'superadmin')) {
+      if (document.getElementById('btnMigration')) return;
+      const btn = document.createElement('button');
+      btn.id = 'btnMigration';
+      btn.className = 'ml-4 px-3 py-2 bg-yellow-500 text-white rounded shadow';
+      btn.textContent = 'Migrasi Data ke Supabase';
+      btn.onclick = openMigrationModal;
+      header.appendChild(btn);
+    }
+  } catch(err) { console.error('injectMigrationButton err', err); }
+}
+
+function openMigrationModal() {
+  document.getElementById('migrationModal').style.display = 'flex';
+  document.getElementById('migrationModal').removeAttribute('aria-hidden');
+  const log = document.getElementById('migrationLog');
+  log.innerHTML = '<div>Siap untuk memulai migrasi. Klik "Mulai Migrasi".</div>';
+}
+
+function closeMigrationModal() {
+  document.getElementById('migrationModal').style.display = 'none';
+  document.getElementById('migrationModal').setAttribute('aria-hidden','true');
+}
+
+// Utility logger
+function migLog(msg, isError) {
+  const el = document.getElementById('migrationLog');
+  const node = document.createElement('div');
+  node.textContent = '[' + new Date().toLocaleTimeString() + '] ' + msg;
+  if (isError) node.style.color = 'crimson';
+  el.appendChild(node);
+  el.scrollTop = el.scrollHeight;
+}
+
+// Idempotent helpers
+async function upsertClassRow(cls) {
+  // expects cls: {name, description, region}
+  try {
+    const payload = { class_name: cls.name || cls.name, region: cls.region || null, description: cls.description || null };
+    // onConflict by class_name (requires unique constraint in DB)
+    const { data, error } = await supabase.from('classes').upsert(payload, { onConflict: 'class_name' }).select();
+    if (error) { migLog('Error upsert class ' + cls.name + ' — ' + error.message, true); return null; }
+    migLog('Upsert class: ' + cls.name);
+    return data && data[0] ? data[0] : null;
+  } catch (err) { migLog('Exception upsertClass: ' + err.message, true); return null; }
+}
+
+async function upsertProfileRow(s) {
+  try {
+    const payload = { username: s.username || ('user_' + (s.id||Math.random()).toString()), full_name: s.name || null, role: 'student', region: s.region || null, school: s.school || null, metadata: JSON.stringify({ legacy_id: s.id || null }) };
+    const { data, error } = await supabase.from('profiles').upsert(payload, { onConflict: 'username' }).select();
+    if (error) { migLog('Error upsert profile ' + (s.username||s.name) + ' — ' + error.message, true); return null; }
+    migLog('Upsert profile: ' + (s.username||s.name));
+    return data && data[0] ? data[0] : null;
+  } catch (err) { migLog('Exception upsertProfile: ' + err.message, true); return null; }
+}
+
+async function insertArtworks(profileRow, artworks) {
+  if (!artworks || artworks.length===0) return;
+  for (const a of artworks) {
+    try {
+      const payload = { student_id: profileRow.id, image_url: a.image || a.image_url || null, notes: a.comment || a.notes || a.title || null, created_at: a.date || null };
+      const { data, error } = await supabase.from('artworks').insert(payload).select();
+      if (error) { migLog('Error insert artwork for ' + profileRow.username + ' — ' + error.message, true); }
+      else migLog('Inserted artwork for ' + profileRow.username + ' -> ' + (a.title||a.comment||'untitled'));
+    } catch (err) { migLog('Exception insertArtworks: ' + err.message, true); }
+  }
+}
+
+async function insertAttendance(profileRow, attendance) {
+  if (!attendance || attendance.length===0) return;
+  for (const att of attendance) {
+    try {
+      const payload = { student_id: profileRow.id, date: att.date, status: att.status };
+      const { data, error } = await supabase.from('attendance').insert(payload).select();
+      if (error) { migLog('Error insert attendance ' + profileRow.username + ' — ' + error.message, true); }
+    } catch (err) { migLog('Exception insertAttendance: ' + err.message, true); }
+  }
+}
+
+async function insertMaterials(classRow, materials) {
+  if (!materials || materials.length===0) return;
+  for (const m of materials) {
+    try {
+      const payload = { class_id: classRow.id, title: m.topic || m.title || null, description: m.description || m.desc || null, video_url: m.video || m.video_url || null };
+      const { data, error } = await supabase.from('class_materials').upsert(payload, { onConflict: ['class_id', 'title'] }).select();
+      if (error) { migLog('Error insert material for ' + (classRow.class_name || classRow.name) + ' — ' + error.message, true); }
+      else migLog('Upsert material for ' + (classRow.class_name || classRow.name));
+    } catch (err) { migLog('Exception insertMaterials: ' + err.message, true); }
+  }
+}
+
+async function insertSchedule(classRow, schedules) {
+  if (!schedules || schedules.length===0) return;
+  for (const sc of schedules) {
+    try {
+      const payload = { class_id: classRow.id, title: sc.subject || sc.title || null, date: sc.date || sc.day || null, time: sc.time || null, description: sc.description || null };
+      const { data, error } = await supabase.from('schedule').upsert(payload, { onConflict: ['class_id','title','date'] }).select();
+      if (error) { migLog('Error insert schedule for ' + (classRow.class_name || classRow.name) + ' — ' + error.message, true); }
+      else migLog('Upsert schedule for ' + (classRow.class_name || classRow.name));
+    } catch (err) { migLog('Exception insertSchedule: ' + err.message, true); }
+  }
+}
+
+// Main migration runner
+async function runMigrationUI() {
+  const chkClasses = document.getElementById('chkUpsertClasses').checked;
+  const chkProfiles = document.getElementById('chkUpsertProfiles').checked;
+  const chkArtifacts = document.getElementById('chkUpsertArtifacts').checked;
+  const log = document.getElementById('migrationLog');
+  log.innerHTML = '';
+  if (!SUPABASE_CONFIGURED || !supabase) { migLog('Supabase belum dikonfigurasi. Gagal melakukan migrasi.', true); return; }
+  migLog('Mulai migrasi...');
+  // load local data variables (from original script)
+  try {
+    const classesSrc = typeof availableClasses !== 'undefined' ? availableClasses : (JSON.parse(localStorage.getItem('availableClasses')||'[]'));
+    const studentsSrc = typeof studentsData !== 'undefined' ? studentsData : (JSON.parse(localStorage.getItem('studentsData')||'[]'));
+    const materialsSrc = typeof classMaterials !== 'undefined' ? classMaterials : (JSON.parse(localStorage.getItem('classMaterials')||'[]'));
+    const scheduleSrc = typeof scheduleData !== 'undefined' ? scheduleData : (JSON.parse(localStorage.getItem('scheduleData')||'[]'));
+    const activitySrc = typeof activityScheduleData !== 'undefined' ? activityScheduleData : (JSON.parse(localStorage.getItem('activityScheduleData')||'[]'));
+
+    // map classes
+    const classMap = {};
+    if (chkClasses) {
+      for (const c of classesSrc) {
+        const row = await upsertClassRow({ name: c.name || c.class_name || c.title, region: c.region || null, description: c.description || null });
+        if (row && row.id) classMap[c.name || c.class_name || c.title] = row;
+      }
+    }
+
+    // migrate profiles (students)
+    const profileMap = {};
+    if (chkProfiles) {
+      for (const s of studentsSrc) {
+        const prow = await upsertProfileRow(s);
+        if (prow && prow.username) profileMap[s.username || s.name] = prow;
+        // artworks
+        if (chkArtifacts && prow) await insertArtworks(prow, s.artworks || []);
+        // attendance
+        if (prow) await insertAttendance(prow, s.attendance || []);
+      }
+    }
+
+    // materials per class
+    if (chkClasses && materialsSrc) {
+      for (const m of materialsSrc) {
+        // materialsSrc may be array with region-level; try to handle both array and object forms
+        // if classMap has matching key, attach
+        const classKey = m.class || m.classes?.[0] || m.topic || null;
+        let classRow = null;
+        if (classKey && classMap[classKey]) classRow = classMap[classKey];
+        else if (classMap[m.class]) classRow = classMap[m.class];
+        else classRow = Object.values(classMap)[0] || null;
+        if (classRow) await insertMaterials(classRow, [m]);
+      }
+    }
+
+    // schedule
+    if (chkClasses && scheduleSrc) {
+      // scheduleSrc could be array of objects
+      for (const s of (Array.isArray(scheduleSrc) ? scheduleSrc : [scheduleSrc])) {
+        const classNames = s.classes || [s.class] || [];
+        for (const cname of classNames) {
+          const classRow = classMap[cname] || Object.values(classMap)[0];
+          if (classRow) await insertSchedule(classRow, [s]);
+        }
+      }
+    }
+
+    // activity schedule
+    if (activitySrc && activitySrc.length) {
+      for (const a of activitySrc) {
+        try {
+          const payload = { region: a.region || null, title: a.name || a.title || null, date: a.date || null, description: a.goal || a.description || null };
+          const { data, error } = await supabase.from('activity_schedule').upsert(payload, { onConflict: ['region','title','date'] }).select();
+          if (error) migLog('Error upsert activity ' + (a.name||a.title) + ' — ' + error.message, true);
+          else migLog('Upsert activity ' + (a.name||a.title));
+        } catch (err) { migLog('Exception activity upsert: ' + err.message, true); }
+      }
+    }
+
+    migLog('Migrasi selesai. Periksa log untuk error.');
+  } catch (err) {
+    migLog('Fatal migration error: ' + (err.message||err), true);
+  }
+}
+
+document.getElementById('btnStartMigration').addEventListener('click', async function() {
+  this.disabled = true;
+  await runMigrationUI();
+  this.disabled = false;
+});
+
+// inject button on initial load (attempt multiple times)
+setTimeout(injectMigrationButton, 800);
+setTimeout(injectMigrationButton, 1600);
+setTimeout(injectMigrationButton, 3000);
+</script>
+<!-- END MIGRATION UI -->
 
 </body>
 </html>
