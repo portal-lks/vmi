@@ -6289,6 +6289,271 @@ window.loadActivitySchedule = function() {
 </script>
 <!-- END: Injected date-formatting helper -->
 
+
+<script>
+// === START: Home Override Patch (Appends after original file) ===
+window.loadHome = function() {
+    const content = document.getElementById('contentArea');
+    if (!content) return;
+    const role = currentUser ? currentUser.role : 'Siswa';
+
+    // helper groups
+    const groupDefs = [
+        { key: 'SR GOLD', match: c => /sr gold/i.test(c) },
+        { key: 'SR ADVANCE', match: c => /sr advance/i.test(c) },
+        { key: 'MINAT SENI', match: c => /minat seni/i.test(c) },
+        { key: 'ARSITEKTUR', match: c => /arsitektur/i.test(c) && !/minat arsitektur/i.test(c) },
+        { key: 'MINAT ARSITEKTUR', match: c => /minat arsitektur/i.test(c) }
+    ];
+
+    function buildGrouped(students) {
+        const allClassNames = [...new Set(students.map(s => s.class?.trim()).filter(Boolean))];
+        let grouped = {};
+        groupDefs.forEach(g => grouped[g.key] = []);
+        let extra = new Set(allClassNames);
+
+        students.forEach(s => {
+            const cname = s.class || '';
+            let placed = false;
+            for (const g of groupDefs) {
+                try {
+                    if (g.match(cname)) {
+                        grouped[g.key].push(s);
+                        placed = true;
+                        break;
+                    }
+                } catch(e) { /* ignore match errors */ }
+            }
+            if (placed) extra.delete(cname);
+        });
+
+        extra.forEach(c => {
+            if (!c) return;
+            grouped[c] = students.filter(s => (s.class||'') === c);
+        });
+
+        return { grouped, allClassNames };
+    }
+
+    // Common stats
+    const totalStudentsAll = studentsData.length;
+    const allClassNamesAll = [...new Set(studentsData.map(s => s.class?.trim()).filter(Boolean))];
+    const totalKelasTurunanAll = allClassNamesAll.length;
+    const seniRupaCountAll = studentsData.filter(s => /sr|minat seni/i.test(s.class)).length;
+    const arsitekturCountAll = studentsData.filter(s => /arsitektur|minat arsitektur/i.test(s.class)).length;
+
+    if (role === 'Super Admin') {
+        // Cards
+        content.innerHTML = `
+        <div class="fade-in ml-6 mr-6">
+            <div class="bg-gradient-to-r from-blue-600 to-blue-800 rounded-lg p-6 mb-6 text-white shadow-lg">
+                <h2 class="text-4xl font-bold mb-2">Selamat Datang, ${currentUser.name}!</h2>
+                <p class="text-blue-100 text-lg">Dashboard Kontrol Pusat - Semua Regional</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-5 mb-6">
+                <div class="p-6 rounded-2xl shadow-lg bg-gradient-to-br from-blue-500 to-blue-700 text-center text-white">
+                    <h4 class="text-lg font-semibold">📘 Total Siswa</h4>
+                    <p class="text-4xl font-extrabold">${totalStudentsAll}</p>
+                </div>
+
+                <div class="p-6 rounded-2xl shadow-lg bg-gradient-to-br from-green-500 to-green-700 text-center text-white">
+                    <h4 class="text-lg font-semibold">🏫 Total Kelas</h4>
+                    <p class="text-4xl font-extrabold">${totalKelasTurunanAll}</p>
+                </div>
+
+                <div class="p-6 rounded-2xl shadow-lg bg-gradient-to-br from-purple-500 to-purple-700 text-center text-white">
+                    <h4 class="text-lg font-semibold">🎨 Siswa Seni Rupa</h4>
+                    <p class="text-4xl font-extrabold">${seniRupaCountAll}</p>
+                </div>
+
+                <div class="p-6 rounded-2xl shadow-lg bg-gradient-to-br from-orange-500 to-orange-700 text-center text-white">
+                    <h4 class="text-lg font-semibold">🏗️ Siswa Arsitektur</h4>
+                    <p class="text-4xl font-extrabold">${arsitekturCountAll}</p>
+                </div>
+            </div>
+
+            <div class="bg-white/80 backdrop-blur-sm border border-gray-200 rounded-2xl shadow-xl p-6 mt-4">
+                <h3 class="text-2xl font-bold mb-4">📋 Data Kelas Aktif</h3>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-blue-800 text-white">
+                            <tr>
+                                <th class="px-6 py-4 text-center text-xs font-semibold">NO</th>
+                                <th class="px-6 py-4 text-left text-xs font-semibold">NAMA KELAS</th>
+                                <th class="px-6 py-4 text-center text-xs font-semibold">JUMLAH KELAS</th>
+                                <th class="px-6 py-4 text-center text-xs font-semibold">JUMLAH SISWA</th>
+                                <th class="px-6 py-4 text-center text-xs font-semibold">STATUS KELAS</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-100" id="superAdminClassesBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        `;
+
+        const { grouped } = buildGrouped(studentsData);
+        const tbody = document.getElementById('superAdminClassesBody');
+        tbody.innerHTML = '';
+        let idx = 1;
+        Object.keys(grouped).forEach(groupName => {
+            const students = grouped[groupName] || [];
+            const jumlahSiswa = students.length;
+            const jumlahKelasTurunan = new Set(students.map(s => s.class?.trim())).size;
+            const status = jumlahSiswa > 0 ? 'Aktif' : 'Tidak Aktif';
+            const color = jumlahSiswa > 0 ? 'text-green-600' : 'text-red-500';
+            const icon = jumlahSiswa > 0 ? '🟢' : '🔴';
+
+            tbody.innerHTML += `
+            <tr class="hover:bg-blue-50 transition-colors">
+                <td class="px-6 py-3 text-center">${idx}</td>
+                <td class="px-6 py-3 font-semibold">${groupName}</td>
+                <td class="px-6 py-3 text-center">${jumlahKelasTurunan}</td>
+                <td class="px-6 py-3 text-center">${jumlahSiswa}</td>
+                <td class="px-6 py-3 text-center ${color}"><span class="mr-1">${icon}</span>${status}</td>
+            </tr>
+            `;
+            idx++;
+        });
+        return;
+    }
+
+    // Admin role: filter students to region
+    if (role === 'Admin') {
+        const adminStudents = studentsData.filter(s => s.region === currentUser.region);
+        const { grouped, allClassNames } = buildGrouped(adminStudents);
+
+        const totalStudents = adminStudents.length;
+        const totalKelasTurunan = allClassNames.length;
+        const seniRupaCount = adminStudents.filter(s => /sr|minat seni/i.test(s.class)).length;
+        const arsitekturCount = adminStudents.filter(s => /arsitektur|minat arsitektur/i.test(s.class)).length;
+
+        content.innerHTML = `
+        <main class='max-w-8xl mx-auto py-4 px-8 fade-in ml-1 mr-8'>
+            <div class='bg-gradient-to-r from-blue-600 to-blue-800 rounded-xl p-8 mb-5 text-white shadow-lg'>
+              <h2 class='text-3xl font-bold mb-2'>Selamat Datang, ${currentUser.name}!</h2>
+              <p class='text-blue-100'>Informasi Laporan Kemajuan Siswa - ${currentUser.region}</p>
+            </div>
+
+            <div class='grid grid-cols-1 md:grid-cols-4 gap-6 mb-8'>
+              <div class='rounded-xl p-6 shadow-md text-white bg-gradient-to-br from-blue-500 to-blue-700 text-center'>
+                <p class='text-sm mb-1'>Total Siswa</p>
+                <p class='text-3xl font-bold'>${totalStudents}</p>
+              </div>
+
+              <div class='rounded-xl p-6 shadow-md text-white bg-gradient-to-br from-green-500 to-green-700 text-center'>
+                <p class='text-sm mb-1'>Total Kelas</p>
+                <p class='text-3xl font-bold'>${totalKelasTurunan}</p>
+              </div>
+
+              <div class='rounded-xl p-6 shadow-md text-white bg-gradient-to-br from-purple-500 to-purple-700 text-center'>
+                <p class='text-sm mb-1'>Siswa Seni Rupa</p>
+                <p class='text-3xl font-bold'>${seniRupaCount}</p>
+              </div>
+
+              <div class='rounded-xl p-6 shadow-md text-white bg-gradient-to-br from-orange-500 to-orange-700 text-center'>
+                <p class='text-sm mb-1'>Siswa Arsitektur</p>
+                <p class='text-3xl font-bold'>${arsitekturCount}</p>
+              </div>
+            </div>
+
+            <h3 class='text-2xl font-bold text-gray-900 mb-4 flex items-center'>
+              <span class='text-2xl mr-2'>📋</span> Data Kelas Aktif
+            </h3>
+
+            <div class='bg-white/80 backdrop-blur-sm border border-gray-200 rounded-2xl shadow-xl overflow-hidden'>
+              <div class='overflow-x-auto'>
+                <table class='min-w-full divide-y divide-gray-200'>
+                  <thead class='bg-blue-800 text-white'>
+                    <tr>
+                      <th class='px-6 py-4 text-center text-xs font-semibold'>No</th>
+                      <th class='px-6 py-4 text-left text-xs font-semibold'>Nama Kelas</th>
+                      <th class='px-6 py-4 text-center text-xs font-semibold'>Jumlah Kelas</th>
+                      <th class='px-6 py-4 text-center text-xs font-semibold'>Jumlah Siswa</th>
+                      <th class='px-6 py-4 text-center text-xs font-semibold'>Status Kelas</th>
+                    </tr>
+                  </thead>
+                  <tbody class='bg-white divide-y divide-gray-100' id='adminClassesBody'>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+        </main>
+        `;
+
+        const tbody = document.getElementById('adminClassesBody');
+        tbody.innerHTML = '';
+        let idx = 1;
+        Object.keys(grouped).forEach(groupName => {
+            const students = grouped[groupName] || [];
+            const jumlahSiswa = students.length;
+            const jumlahKelasTurunan = new Set(students.map(s => s.class?.trim())).size;
+            const status = jumlahSiswa > 0 ? 'Aktif' : 'Tidak Aktif';
+            const color = jumlahSiswa > 0 ? 'text-green-600' : 'text-red-500';
+            const icon = jumlahSiswa > 0 ? '🟢' : '🔴';
+
+            tbody.innerHTML += `
+            <tr class="hover:bg-blue-50 transition-colors">
+                <td class="px-6 py-3 text-center">${idx}</td>
+                <td class="px-6 py-3 font-semibold">${groupName}</td>
+                <td class="px-6 py-3 text-center">${jumlahKelasTurunan}</td>
+                <td class="px-6 py-3 text-center">${jumlahSiswa}</td>
+                <td class="px-6 py-3 text-center ${color}"><span class="mr-1">${icon}</span>${status}</td>
+            </tr>
+            `;
+            idx++;
+        });
+        return;
+    }
+
+    // Student: keep original student view if exists, otherwise basic message
+    const studentData = studentsData.find(s => s.username === currentUser.username) || studentsData.find(s => s.name === currentUser.name);
+    if (!studentData) {
+        content.innerHTML = '<div class="text-center text-gray-500">Data siswa tidak ditemukan</div>';
+        return;
+    }
+    // keep existing student UI cards (simple)
+    const totalAttendance = (studentData.attendance || []).length;
+    const hadirCount = (studentData.attendance || []).filter(a => a.status === 'Hadir').length;
+    const hadirPercent = totalAttendance > 0 ? Math.round((hadirCount / totalAttendance) * 100) : 0;
+    const skolastikScores = (studentData.skolastikTests || []).map(t => t.score);
+    const avgSkolastik = skolastikScores.length > 0 ? Math.round(skolastikScores.reduce((a,b)=>a+b,0) / skolastikScores.length) : 0;
+    const tkaScores = (studentData.tkaTests || []).map(t => t.score);
+    const avgTKA = tkaScores.length > 0 ? Math.round(tkaScores.reduce((a,b)=>a+b,0) / tkaScores.length) : 0;
+
+    content.innerHTML = `
+    <div class="fade-in ml-6 mr-6">
+        <div class="bg-gradient-to-r from-blue-600 to-blue-800 rounded-lg p-6 mb-3 text-white shadow-lg">
+            <h2 class="text-4xl font-bold mb-3">Selamat Datang, ${currentUser.name}!</h2>
+            <p class="text-blue-100 text-2xl mt-1">Pantau terus perkembangan belajar Anda</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-6">
+            <div class="p-6 rounded-2xl shadow-lg bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 text-center">
+                <h4 class="font-semibold mb-2 text-lg">📘 Kehadiran</h4>
+                <p class="text-5xl font-extrabold text-blue-600">${hadirPercent}%</p>
+                <p class="text-sm text-gray-600 mt-2">${hadirCount} dari ${totalAttendance} pertemuan</p>
+            </div>
+
+            <div class="p-6 rounded-2xl shadow-lg bg-gradient-to-br from-green-50 to-green-100 border border-green-200 text-center">
+                <h4 class="font-semibold mb-2 text-lg">📊 Tes Skolastik</h4>
+                <p class="text-5xl font-extrabold text-green-600">${avgSkolastik}</p>
+                <p class="text-sm text-gray-600 mt-2">Rata-rata skor</p>
+            </div>
+
+            <div class="p-6 rounded-2xl shadow-lg bg-gradient-to-br from-purple-50 to-purple-100 border border-purple-200 text-center">
+                <h4 class="font-semibold mb-2 text-lg">📈 Kemajuan TKA</h4>
+                <p class="text-5xl font-extrabold text-purple-600">${avgTKA}</p>
+                <p class="text-sm text-gray-600 mt-2">Rata-rata skor</p>
+            </div>
+        </div>
+    </div>
+    `;
+};
+// === END: Home Override Patch ===
+</script>
+
 </body>
 </html>
 <!-- === Materi Kelas UI Override (FINAL FIX) 
