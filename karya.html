@@ -99,28 +99,55 @@
 <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
 </head>
 <body class="bg-white">
-<div class="min-h-full flex items-center justify-center py-12 px-4" id="loginPage">
-<div class="max-w-md w-full space-y-8">
-<div class="text-center">
-<div class="bg-white-600 w-24 h-24 mx-auto rounded-lg flex items-center justify-center mb-4 shadow-lg">
-<img alt="Logo Bimbel Gambar Villa Merah" class="w-20 h-20 p-2" src="https://www.villamerah.com/assets/images/logo/logo-2.png"/>
-</div>
-<h2 class="text-3xl font-bold text-gray-900 mb-2" style="color: red;">Bimbel Gambar Villa Merah</h2>
-<h3 class="text-3xl font-semibold text-blue-600">Laporan Kemajuan Siswa</h3>
-</div>
-<form class="mt-8 space-y-6" id="loginForm">
-<div class="space-y-4">
-<div><label class="block text-sm font-medium text-gray-700 mb-1" for="username">Username</label> <input class="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" id="username" name="username" placeholder="Masukkan username" required="" type="text"/>
-</div>
-<div><label class="block text-sm font-medium text-gray-700 mb-1" for="password">Password</label> <input class="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" id="password" name="password" placeholder="Masukkan password" required="" type="password"/>
-</div>
-</div>
-<div><button class="w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors" type="submit"> Masuk </button>
-</div>
-</form>
-<div class="mt-4 text-center text-sm text-gray-600">
-</div>
-</div>
+
+
+
+
+
+
+<div id="loginPage" class="relative min-h-screen flex items-center justify-center bg-cover bg-center" 
+     style="background-image: url('./FSRD.jpeg');">
+  <!-- Overlay Putih Transparan -->
+  <div class="absolute inset-0 bg-white/70"></div>
+
+  <!-- FORM LOGIN DI DEPAN (LEBIH LEBAR HORIZONTAL) -->
+  <div class="relative z-10 flex flex-col items-center justify-center w-full max-w-3xl p-10 bg-white/90 backdrop-blur-md rounded-2xl shadow-2xl">
+    <div class="text-center">
+      <div class="bg-white w-28 h-28 mx-auto rounded-lg flex items-center justify-center mb-5 shadow-lg">
+        <img alt="Logo Bimbel Gambar Villa Merah" class="w-24 h-24 p-2" src="https://www.villamerah.com/assets/images/logo/logo-2.png"/>
+      </div>
+      <h2 class="text-4xl font-bold text-gray-900 mb-1 whitespace-nowrap" style="color: red;">Bimbel Gambar Villa Merah</h2>
+      <h3 class="text-2xl font-semibold text-blue-600">Laporan Kemajuan Siswa</h3>
+    </div>
+
+    <form class="mt-10 space-y-6 w-3/4" id="loginForm">
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1" for="username">Username</label>
+          <input id="username" name="username" type="text" required placeholder="Masukkan username"
+                 class="appearance-none relative block w-full px-4 py-3 border border-gray-300 
+                        placeholder-gray-500 text-gray-900 rounded-lg 
+                        focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1" for="password">Password</label>
+          <input id="password" name="password" type="password" required placeholder="Masukkan password"
+                 class="appearance-none relative block w-full px-4 py-3 border border-gray-300 
+                        placeholder-gray-500 text-gray-900 rounded-lg 
+                        focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+        </div>
+      </div>
+
+      <div>
+        <button type="submit"
+                class="w-full flex justify-center py-3 px-4 border border-transparent text-base font-medium 
+                       rounded-lg text-white bg-blue-600 hover:bg-blue-700 
+                       focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+          Masuk
+        </button>
+      </div>
+    </form>
+  </div>
 </div>
 <div class="hidden min-h-full" id="dashboardPage">
 <header class="bg-white border-b border-gray-200 fixed w-full top-0 z-10 shadow-sm">
@@ -139,7 +166,7 @@
 </div>
 </header>
 <div class="flex pt-20">
-<aside class="w-64 bg-blue-600 min-h-full fixed left-0 text-white shadow-lg">
+<aside class="w-64 fixed left-0 min-h-full text-white bg-gradient-to-b from-blue-700 to-blue-900 shadow-xl border-r border-blue-950/20 transition-all duration-300">
 <nav class="p-4 space-y-2" id="sidebarMenu"></nav>
 </aside>
 <main class="ml-64 flex-1 p-8 w-full">
@@ -623,7 +650,7 @@ let activityScheduleData = [
             }
 
             sidebar.innerHTML = menuItems.map(item => `
-                <button onclick="loadModule('${item.id}')" id="menu-${item.id}" class="w-full text-left px-4 py-3 rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-3">
+                <button onclick="loadModule('${item.id}')" id="menu-${item.id}" class="w-full text-left px-5 py-3 rounded-xl hover:bg-blue-800 hover:shadow-lg hover:shadow-blue-900/30 transition-all duration-300 flex items-center space-x-3 tracking-wide font-medium" style="text-shadow: 0 1px 2px rgba(0,0,0,0.4);">
                     <span class="text-xl">${item.icon}</span>
                     <span>${item.label}</span>
                 </button>
@@ -709,7 +736,7 @@ let activityScheduleData = [
 
                         <h3 class="text-2xl font-bold text-gray-900 mb-6">🌎 Ringkasan Data Regional</h3>
 
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-6">
                             <div class="super-admin-card-1 rounded-lg p-6 text-white shadow-xl">
                                 <div class="flex items-center justify-between">
                                     <div>
@@ -846,8 +873,8 @@ else if (role === 'Admin') {
 
     const content = document.getElementById('contentArea');
     content.innerHTML = `
-      <main class='max-w-8xl mx-auto py-10 px-10 fade-in'>
-        <div class='bg-gradient-to-r from-blue-600 to-blue-800 rounded-xl p-8 mb-6 text-white shadow-lg'>
+      <main class='max-w-8xl mx-auto py-4 px-8 fade-in ml-1 mr-8'>
+        <div class='bg-gradient-to-r from-blue-600 to-blue-800 rounded-xl p-8 mb-5 text-white shadow-lg'>
           <h2 class='text-3xl font-bold mb-2'>Selamat Datang, ${currentUser.name}!</h2>
           <p class='text-blue-100'>Informasi Laporan Kemajuan Siswa - ${currentUser.region}</p>
         </div>
@@ -896,22 +923,56 @@ else if (role === 'Admin') {
       </main>`;
 }
  else {
-    // Student Home (Fixed UI)
+    // Student Home (Fixed UI) - UPDATED with 3 realtime statistic cards above the original 3 cards
     const studentData = studentsData.find(s => s.name === currentUser.name);
     if (!studentData) {
         content.innerHTML = '<div class="text-center text-gray-500">Data siswa tidak ditemukan</div>';
         return;
     }
+
+    // realtime calculations
+    const totalAttendance = (studentData.attendance || []).length;
+    const hadirCount = (studentData.attendance || []).filter(a => a.status === 'Hadir').length;
+    const hadirPercent = totalAttendance > 0 ? Math.round((hadirCount / totalAttendance) * 100) : 0;
+
+    const skolastikScores = (studentData.skolastikTests || []).map(t => t.score);
+    const avgSkolastik = skolastikScores.length > 0 ? Math.round(skolastikScores.reduce((a,b)=>a+b,0) / skolastikScores.length) : 0;
+
+    const tkaScores = (studentData.tkaTests || []).map(t => t.score);
+    const avgTKA = tkaScores.length > 0 ? Math.round(tkaScores.reduce((a,b)=>a+b,0) / tkaScores.length) : 0;
+
     content.innerHTML = `
-    <div class="fade-in">
-        <div class="bg-gradient-to-r from-blue-600 to-blue-800 rounded-lg p-8 mb-10 text-white shadow-lg">
+    <div class="fade-in ml-6 mr-6">
+        <div class="bg-gradient-to-r from-blue-600 to-blue-800 rounded-lg p-6 mb-4 text-white shadow-lg">
             <h2 class="text-4xl font-bold mb-3">Selamat Datang, ${currentUser.name}!</h2>
             <p class="text-blue-100 text-lg">Laporan Kemajuan Siswa</p>
             <p class="text-blue-100 mt-1">Pantau terus perkembangan belajar Anda</p>
         </div>
 
+        <!-- ===== Top: 3 Realtime Statistic Cards (Kehadiran, Skolastik, TKA) ===== -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-6">
+            <div class="p-6 rounded-2xl shadow-lg bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 text-center hover:shadow-2xl transition-all">
+                <h4 class="font-semibold text-gray-900 mb-2 text-lg">📘 Kehadiran</h4>
+                <p class="text-5xl font-extrabold text-blue-600">${hadirPercent}%</p>
+                <p class="text-sm text-gray-600 mt-2">${hadirCount} dari ${totalAttendance} pertemuan</p>
+            </div>
+
+            <div class="p-6 rounded-2xl shadow-lg bg-gradient-to-br from-green-50 to-green-100 border border-green-200 text-center hover:shadow-2xl transition-all">
+                <h4 class="font-semibold text-gray-900 mb-2 text-lg">📊 Tes Skolastik</h4>
+                <p class="text-5xl font-extrabold text-green-600">${avgSkolastik}</p>
+                <p class="text-sm text-gray-600 mt-2">Rata-rata skor</p>
+            </div>
+
+            <div class="p-6 rounded-2xl shadow-lg bg-gradient-to-br from-purple-50 to-purple-100 border border-purple-200 text-center hover:shadow-2xl transition-all">
+                <h4 class="font-semibold text-gray-900 mb-2 text-lg">📈 Kemajuan TKA</h4>
+                <p class="text-5xl font-extrabold text-purple-600">${avgTKA}</p>
+                <p class="text-sm text-gray-600 mt-2">Rata-rata skor</p>
+            </div>
+        </div>
+
+        <!-- ===== Bottom: original 3 cards (kept intact) ===== -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mb-12">
-            <div class="text-center p-10 rounded-2xl shadow-lg bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 hover:shadow-2xl transition-all duration-300 min-h-[450px] flex flex-col justify-center items-center space-y-4">
+            <div class="text-center p-8 rounded-2xl shadow-md bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 hover:shadow-2xl transition-all duration-300 min-h-[380px] flex flex-col justify-center items-center space-y-4">
                 <div class="bg-blue-500 rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-4 shadow-md">
                     <span class="text-4xl text-white">🎨</span>
                 </div>
@@ -919,7 +980,7 @@ else if (role === 'Admin') {
                 <p class="text-5xl font-extrabold text-blue-600">${studentData.artworks.length}</p>
             </div>
 
-            <div class="text-center p-10 rounded-2xl shadow-lg bg-gradient-to-br from-green-50 to-green-100 border border-green-200 hover:shadow-2xl transition-all duration-300 min-h-[450px] flex flex-col justify-center items-center space-y-4">
+            <div class="text-center p-8 rounded-2xl shadow-md bg-gradient-to-br from-green-50 to-green-100 border border-green-200 hover:shadow-2xl transition-all duration-300 min-h-[380px] flex flex-col justify-center items-center space-y-4">
                 <div class="bg-green-500 rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-4 shadow-md">
                     <span class="text-4xl text-white">📅</span>
                 </div>
@@ -930,7 +991,7 @@ else if (role === 'Admin') {
                 ` : `<p class="text-2xl font-bold text-gray-500">Belum ada</p>`}
             </div>
 
-            <div class="text-center p-10 rounded-2xl shadow-lg bg-gradient-to-br from-purple-50 to-purple-100 border border-purple-200 hover:shadow-2xl transition-all duration-300 min-h-[450px] flex flex-col justify-center items-center space-y-4">
+            <div class="text-center p-8 rounded-2xl shadow-md bg-gradient-to-br from-purple-50 to-purple-100 border border-purple-200 hover:shadow-2xl transition-all duration-300 min-h-[380px] flex flex-col justify-center items-center space-y-4">
                 <div class="bg-purple-500 rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-4 shadow-md">
                     <span class="text-4xl text-white">🏆</span>
                 </div>
@@ -938,10 +999,8 @@ else if (role === 'Admin') {
                 <p class="text-5xl font-extrabold text-purple-600">${studentData.class}</p>
             </div>
         </div>
-    </div>
-    `;
-}
-        }
+    </div>`;
+}}
 
         // FUNGSI HELPER BARU: untuk toggle input regional di Super Admin
         window.toggleNewRegionInput = function(selectedValue) {
@@ -1634,7 +1693,7 @@ else if (role === 'Admin') {
 
                     ${renderRegionDropdown(selectedAdminRegion, 'filterArtProgressByRegion')}
 
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-6">
                         <div class="super-admin-card-3 rounded-lg p-6 text-white shadow-xl">
                             <p class="text-blue-100">Total Siswa</p>
                             <p class="text-4xl font-bold">${totalStudents}</p>
@@ -1763,7 +1822,7 @@ else if (role === 'Admin') {
 
                     ${renderRegionDropdown(selectedAdminRegion, 'filterSkolastikByRegion')}
 
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-6">
                         <div class="super-admin-card-3 rounded-lg p-6 text-white shadow-xl">
                             <p class="text-blue-100">Total Siswa</p>
                             <p class="text-4xl font-bold">${totalStudents}</p>
@@ -1890,7 +1949,7 @@ else if (role === 'Admin') {
 
                     ${renderRegionDropdown(selectedAdminRegion, 'filterTkaByRegion')}
 
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-6">
                         <div class="super-admin-card-3 rounded-lg p-6 text-white shadow-xl">
                             <p class="text-blue-100">Total Siswa</p>
                             <p class="text-4xl font-bold">${totalStudents}</p>
@@ -5069,6 +5128,890 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 <!-- === AKHIR FITUR ZOOM INTERAKTIF PRO === -->
 
+
+<!-- === FITUR FILTER KELAS & BATASAN VISIBILITAS SISWA === -->
+<script>
+  // Daftar kelas contoh (bisa diganti dari database nanti)
+  const daftarKelas = ['SR GOLD A', 'SR GOLD B', 'SR SILVER', 'SR PLATINUM'];
+
+  // Utility render dropdown kelas
+  function renderDropdownKelas(targetId) {
+    const container = document.getElementById(targetId);
+    if (!container) return;
+    let html = '<label class="block mb-1 text-sm font-medium">Filter Kelas:</label>';
+    html += '<select id="filterKelasSelect" class="border rounded p-2 w-full mb-2">';
+    daftarKelas.forEach(kls => html += `<option value="${kls}">${kls}</option>`);
+    html += '</select>';
+    html += '<label class="flex items-center gap-2"><input type="checkbox" id="showAllKelas"> Tampilkan semua kelas</label>';
+    container.innerHTML = html;
+
+    document.getElementById('filterKelasSelect').addEventListener('change', applyKelasFilter);
+    document.getElementById('showAllKelas').addEventListener('change', applyKelasFilter);
+  }
+
+  // Terapkan filter ke modul sesuai kelas siswa atau pilihan admin
+  function applyKelasFilter() {
+    const select = document.getElementById('filterKelasSelect');
+    const showAll = document.getElementById('showAllKelas').checked;
+    const kelasDipilih = select ? select.value : null;
+    const userRole = currentUser?.role || '';
+    const userKelas = currentUser?.kelas || '';
+
+    document.querySelectorAll('[data-kelas]').forEach(row => {
+      const kelasData = row.dataset.kelas;
+      if (userRole === 'Admin Regional') {
+        row.style.display = showAll || kelasData === kelasDipilih ? '' : 'none';
+      } else if (userRole === 'Siswa') {
+        row.style.display = kelasData === userKelas ? '' : 'none';
+      }
+    });
+  }
+
+  // Injek filter ke 3 modul target
+  const originalLoadJadwalBelajar = window.loadJadwalBelajar;
+  window.loadJadwalBelajar = function() {
+    originalLoadJadwalBelajar();
+    renderDropdownKelas('filterKelasJadwalBelajar');
+    setTimeout(applyKelasFilter, 500);
+  };
+
+  const originalLoadJadwalKegiatan = window.loadJadwalKegiatan;
+  window.loadJadwalKegiatan = function() {
+    originalLoadJadwalKegiatan();
+    renderDropdownKelas('filterKelasJadwalKegiatan');
+    setTimeout(applyKelasFilter, 500);
+  };
+
+  const originalLoadMateriKelas = window.loadMateriKelas;
+  window.loadMateriKelas = function() {
+    originalLoadMateriKelas();
+    renderDropdownKelas('filterKelasMateriKelas');
+    setTimeout(applyKelasFilter, 500);
+  };
+</script>
+<!-- === AKHIR FITUR FILTER KELAS === -->
+
+
+<!-- === PENYEMPURNAAN FILTER KELAS UNTUK SEMUA MODUL === -->
+<script>
+  const daftarKelas = ['SR GOLD A', 'SR GOLD B', 'SR SILVER', 'SR PLATINUM'];
+
+  function renderDropdownKelas(targetId, modulName) {
+    const container = document.getElementById(targetId);
+    if (!container) return;
+
+    let html = '<label class="block mb-1 text-sm font-medium">Filter Kelas:</label>';
+    html += '<select id="filterKelasSelect_' + modulName + '" class="border rounded p-2 w-full mb-2">';
+    daftarKelas.forEach(kls => html += `<option value="${kls}">${kls}</option>`);
+    html += '</select>';
+    html += '<label class="flex items-center gap-2"><input type="checkbox" id="showAllKelas_' + modulName + '"> Tampilkan semua kelas</label>';
+    container.innerHTML = html;
+
+    document.getElementById('filterKelasSelect_' + modulName).addEventListener('change', () => applyKelasFilter(modulName));
+    document.getElementById('showAllKelas_' + modulName).addEventListener('change', () => applyKelasFilter(modulName));
+  }
+
+  function applyKelasFilter(modulName) {
+    const select = document.getElementById('filterKelasSelect_' + modulName);
+    const showAll = document.getElementById('showAllKelas_' + modulName)?.checked;
+    const kelasDipilih = select ? select.value : null;
+    const userRole = currentUser?.role || '';
+    const userKelas = currentUser?.kelas || '';
+
+    document.querySelectorAll('[data-modul="' + modulName + '"][data-kelas]').forEach(row => {
+      const kelasData = row.dataset.kelas;
+      if (userRole === 'Admin Regional') {
+        row.style.display = showAll || kelasData === kelasDipilih ? '' : 'none';
+      } else if (userRole === 'Siswa') {
+        row.style.display = kelasData === userKelas ? '' : 'none';
+      }
+    });
+  }
+
+  // Integrasi ke tiga modul dengan gaya Materi Kelas
+  const originalLoadJadwalBelajar = window.loadJadwalBelajar;
+  window.loadJadwalBelajar = function() {
+    originalLoadJadwalBelajar();
+    renderDropdownKelas('filterKelasJadwalBelajar', 'jadwalBelajar');
+    setTimeout(() => applyKelasFilter('jadwalBelajar'), 500);
+  };
+
+  const originalLoadJadwalKegiatan = window.loadJadwalKegiatan;
+  window.loadJadwalKegiatan = function() {
+    originalLoadJadwalKegiatan();
+    renderDropdownKelas('filterKelasJadwalKegiatan', 'jadwalKegiatan');
+    setTimeout(() => applyKelasFilter('jadwalKegiatan'), 500);
+  };
+
+  const originalLoadMateriKelas = window.loadMateriKelas;
+  window.loadMateriKelas = function() {
+    originalLoadMateriKelas();
+    renderDropdownKelas('filterKelasMateriKelas', 'materiKelas');
+    setTimeout(() => applyKelasFilter('materiKelas'), 500);
+  };
+</script>
+<!-- === AKHIR PENYEMPURNAAN FILTER KELAS === -->
+
+
+<!-- === FINAL FILTER DROPDOWN + CHECKLIST UNTUK SEMUA MODUL === -->
+<script>
+  const daftarKelas = [
+    'Kelas SR GOLD A (Cabang Jakarta Selatan)',
+    'Kelas SR GOLD B (Cabang Jakarta Selatan)',
+    'Kelas SR SILVER (Cabang Bandung)',
+    'Kelas SR PLATINUM (Cabang Surabaya)'
+  ];
+
+  function renderFilterKelas(containerId, modulName) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    let html = '<div class="mb-2">';
+    html += '<label class="block mb-1 text-sm font-medium">Kelas Relevan</label>';
+    daftarKelas.forEach(kls => {
+      const id = `${modulName}_${kls.replace(/\s+/g, '_')}`;
+      html += `<div class='flex items-center gap-2 mb-1'><input type='checkbox' id='${id}' value='${kls}' class='kelasCheckbox_${modulName}'> <label for='${id}'>${kls}</label></div>`;
+    });
+    html += '</div>';
+    container.innerHTML = html;
+
+    // Tambah event listener agar otomatis filter
+    document.querySelectorAll('.kelasCheckbox_' + modulName).forEach(cb => {
+      cb.addEventListener('change', () => applyFilterKelas(modulName));
+    });
+  }
+
+  function applyFilterKelas(modulName) {
+    const userRole = currentUser?.role || '';
+    const userKelas = currentUser?.kelas || '';
+    const selected = Array.from(document.querySelectorAll('.kelasCheckbox_' + modulName + ':checked')).map(cb => cb.value);
+
+    document.querySelectorAll('[data-modul="' + modulName + '"][data-kelas]').forEach(row => {
+      const kelasData = row.dataset.kelas;
+      if (userRole === 'Admin Regional') {
+        row.style.display = selected.length === 0 || selected.includes(kelasData) ? '' : 'none';
+      } else if (userRole === 'Siswa') {
+        row.style.display = kelasData === userKelas ? '' : 'none';
+      }
+    });
+  }
+
+  // Integrasi ke tiga modul: belajar, kegiatan, materi
+  const originalLoadJadwalBelajar = window.loadJadwalBelajar;
+  window.loadJadwalBelajar = function() {
+    originalLoadJadwalBelajar();
+    renderFilterKelas('filterKelasJadwalBelajar', 'jadwalBelajar');
+    setTimeout(() => applyFilterKelas('jadwalBelajar'), 500);
+  };
+
+  const originalLoadJadwalKegiatan = window.loadJadwalKegiatan;
+  window.loadJadwalKegiatan = function() {
+    originalLoadJadwalKegiatan();
+    renderFilterKelas('filterKelasJadwalKegiatan', 'jadwalKegiatan');
+    setTimeout(() => applyFilterKelas('jadwalKegiatan'), 500);
+  };
+
+  const originalLoadMateriKelas = window.loadMateriKelas;
+  window.loadMateriKelas = function() {
+    originalLoadMateriKelas();
+    renderFilterKelas('filterKelasMateriKelas', 'materiKelas');
+    setTimeout(() => applyFilterKelas('materiKelas'), 500);
+  };
+</script>
+<!-- === AKHIR FILTER DROPDOWN + CHECKLIST FINAL === -->
+
+
+<!-- === PERBAIKAN FINAL MODUL JADWAL BELAJAR (FILTER KELAS AKTIF) === -->
+<script>
+  const daftarKelasBelajar = [
+    'Kelas SR GOLD A (Cabang Jakarta Selatan)',
+    'Kelas SR GOLD B (Cabang Jakarta Selatan)',
+    'Kelas SR SILVER (Cabang Bandung)',
+    'Kelas SR PLATINUM (Cabang Surabaya)'
+  ];
+
+  function renderFilterKelasBelajar(containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    let html = '<div class="mb-2">';
+    html += '<label class="block mb-1 text-sm font-medium">Kelas Relevan</label>';
+    daftarKelasBelajar.forEach(kls => {
+      const id = 'jadwalBelajar_' + kls.replace(/\s+/g, '_');
+      html += `<div class='flex items-center gap-2 mb-1'><input type='checkbox' id='${id}' value='${kls}' class='kelasCheckbox_jadwalBelajar'> <label for='${id}'>${kls}</label></div>`;
+    });
+    html += '</div>';
+    container.innerHTML = html;
+
+    document.querySelectorAll('.kelasCheckbox_jadwalBelajar').forEach(cb => {
+      cb.addEventListener('change', applyFilterKelasBelajar);
+    });
+  }
+
+  function applyFilterKelasBelajar() {
+    const userRole = currentUser?.role || '';
+    const userKelas = currentUser?.kelas || '';
+    const selected = Array.from(document.querySelectorAll('.kelasCheckbox_jadwalBelajar:checked')).map(cb => cb.value);
+
+    document.querySelectorAll('[data-modul="jadwalBelajar"][data-kelas]').forEach(row => {
+      const kelasData = row.dataset.kelas;
+      if (userRole === 'Admin Regional') {
+        row.style.display = selected.length === 0 || selected.includes(kelasData) ? '' : 'none';
+      } else if (userRole === 'Siswa') {
+        row.style.display = kelasData === userKelas ? '' : 'none';
+      }
+    });
+  }
+
+  // Rebuild fungsi loadSchedule agar gunakan filter baru
+  const originalLoadSchedule = window.loadSchedule;
+  window.loadSchedule = function() {
+    originalLoadSchedule();
+    renderFilterKelasBelajar('filterKelasJadwalBelajar');
+    setTimeout(applyFilterKelasBelajar, 500);
+  };
+</script>
+<!-- === AKHIR PERBAIKAN MODUL JADWAL BELAJAR === -->
+
+
+<!-- === PERBAIKAN AKHIR MODUL JADWAL BELAJAR (SAMA DENGAN JADWAL KEGIATAN) === -->
+<script>
+  const daftarKelasSchedule = [
+    'Kelas SR GOLD A (Cabang Jakarta Selatan)',
+    'Kelas SR GOLD B (Cabang Jakarta Selatan)',
+    'Kelas SR SILVER (Cabang Bandung)',
+    'Kelas SR PLATINUM (Cabang Surabaya)'
+  ];
+
+  function renderFilterKelasSchedule(containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    let html = '<div class="mb-2">';
+    html += '<label class="block mb-1 text-sm font-medium">Filter Kelas Jadwal Belajar</label>';
+    daftarKelasSchedule.forEach(kls => {
+      const id = 'jadwalBelajar_' + kls.replace(/\s+/g, '_');
+      html += `<div class='flex items-center gap-2 mb-1'>
+                 <input type='checkbox' id='${id}' value='${kls}' class='kelasCheckbox_jadwalBelajar'> 
+                 <label for='${id}'>${kls}</label>
+               </div>`;
+    });
+    html += '</div>';
+    container.innerHTML = html;
+
+    document.querySelectorAll('.kelasCheckbox_jadwalBelajar').forEach(cb => {
+      cb.addEventListener('change', applyFilterKelasSchedule);
+    });
+  }
+
+  function applyFilterKelasSchedule() {
+    const userRole = currentUser?.role || '';
+    const userKelas = currentUser?.kelas || '';
+    const selected = Array.from(document.querySelectorAll('.kelasCheckbox_jadwalBelajar:checked')).map(cb => cb.value);
+
+    document.querySelectorAll('[data-modul="jadwalBelajar"][data-kelas]').forEach(row => {
+      const kelasData = row.dataset.kelas;
+      if (userRole === 'Admin Regional') {
+        row.style.display = selected.length === 0 || selected.includes(kelasData) ? '' : 'none';
+      } else if (userRole === 'Siswa') {
+        row.style.display = kelasData === userKelas ? '' : 'none';
+      }
+    });
+  }
+
+  // Perbarui fungsi loadSchedule agar identik dengan loadJadwalKegiatan
+  const originalLoadSchedule = window.loadSchedule;
+  window.loadSchedule = function() {
+    originalLoadSchedule();
+    renderFilterKelasSchedule('filterKelasJadwalBelajar');
+    setTimeout(() => applyFilterKelasSchedule(), 500);
+  };
+</script>
+<!-- === AKHIR PERBAIKAN MODUL JADWAL BELAJAR === -->
+
+
+<!-- BEGIN: Injected Fix — Regionalize Jadwal Belajar (LKS_141_ScheduleFix) -->
+<script>
+(function(){
+  // Safety: ensure arrays exist
+  if (typeof scheduleData === 'undefined') scheduleData = [];
+  if (typeof availableClasses === 'undefined') availableClasses = [];
+  if (typeof studentsData === 'undefined') studentsData = [];
+
+  function getDayNameFromDate(isoDate){
+    const d = new Date(isoDate);
+    if (isNaN(d)) return '';
+    const days = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
+    return days[d.getDay()];
+  }
+
+  // Helper notification (uses existing showNotification if present)
+  function notify(msg, type){
+    if (typeof showNotification === 'function') return showNotification(msg, type || 'success');
+    alert(msg);
+  }
+
+  // Enforce: Admin regional hanya melihat/CRUD untuk region sendiri.
+  // Siswa hanya melihat jadwal yang ada di schedule.classes === siswa.class AND schedule.region === siswa.region
+  window.loadSchedule = function(){
+    const content = document.getElementById("contentArea");
+    if(!content) return;
+    const isAdminOrSuperAdmin = currentUser && (currentUser.role === 'Admin' || currentUser.role === 'Super Admin');
+    const isStudent = currentUser && currentUser.role === 'Siswa';
+
+    // Prepare regional filtering
+    let regionalSchedule = scheduleData;
+    let regionTitle = '';
+    if (currentUser && currentUser.role === 'Admin') {
+      regionalSchedule = scheduleData.filter(s => s.region === currentUser.region);
+      regionTitle = `Regional ${currentUser.region}`;
+    } else if (currentUser && currentUser.role === 'Super Admin') {
+      regionalSchedule = scheduleData;
+      regionTitle = 'Semua Regional';
+    } else if (currentUser && currentUser.role === 'Siswa') {
+      regionalSchedule = scheduleData.filter(s => s.region === currentUser.region);
+      regionTitle = `Regional ${currentUser.region}`;
+    }
+
+    // For students, filter further by their class
+    let filtered = regionalSchedule.slice();
+    if (isStudent) {
+      const stu = studentsData.find(s => s.username === currentUser.username || s.name === currentUser.name);
+      const stuClass = stu ? stu.class : null;
+      if (stuClass) {
+        filtered = filtered.filter(s => Array.isArray(s.classes) ? s.classes.includes(stuClass) : (s.classTarget ? s.classTarget === stuClass : true));
+      } else {
+        // if no class info, show none
+        filtered = [];
+      }
+    }
+
+    // For admins/superadmin we can optionally filter by selectedClassSchedule (keeps existing behavior)
+    const selectedFilter = window.selectedClassSchedule || 'all';
+    if (isAdminOrSuperAdmin && selectedFilter && selectedFilter !== 'all') {
+      filtered = filtered.filter(s => (s.classes && s.classes.includes(selectedFilter)) || s.classTarget === selectedFilter);
+    }
+
+    // Normalize and sort
+    filtered = filtered.map(s => ({
+      id: s.id,
+      date: s.date || '',
+      day: s.day || getDayNameFromDate(s.date || ''),
+      time: s.time || s.time || '',
+      subject: s.subject || s.title || '',
+      classes: s.classes || (s.classTarget ? [s.classTarget] : []),
+      region: s.region || ''
+    })).sort((a,b) => (a.date || '').localeCompare(b.date || ''));
+
+    // Render
+    content.innerHTML = `
+      <div class="fade-in">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-2xl font-bold text-gray-900 flex items-center"><span class="text-3xl mr-2">📚</span> Jadwal Belajar ${regionTitle ? '('+regionTitle+')' : ''}</h2>
+          ${(currentUser && (currentUser.role === 'Admin' || currentUser.role === 'Super Admin')) ? '<button onclick="openAddScheduleModal()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition shadow-sm">+ Tambah Jadwal</button>' : ''}
+        </div>
+        <div class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
+          <div class="overflow-x-auto">
+            <table class="w-full">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-4 py-3 text-left text-sm font-semibold text-gray-900">Tanggal</th>
+                  <th class="px-4 py-3 text-left text-sm font-semibold text-gray-900">Hari</th>
+                  <th class="px-4 py-3 text-left text-sm font-semibold text-gray-900">Waktu</th>
+                  <th class="px-4 py-3 text-left text-sm font-semibold text-gray-900">Materi</th>
+                  <th class="px-4 py-3 text-left text-sm font-semibold text-gray-900">Kelas</th>
+                  <th class="px-4 py-3 text-left text-sm font-semibold text-gray-900">Regional</th>
+                  <th class="px-4 py-3 text-left text-sm font-semibold text-gray-900">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="scheduleTableBody" class="bg-white">
+                ${filtered.map(s => `
+                  <tr class="border-t border-gray-200 hover:bg-blue-50">
+                    <td class="px-4 py-3 text-sm text-gray-700">${s.date}</td>
+                    <td class="px-4 py-3 text-sm text-gray-700">${s.day}</td>
+                    <td class="px-4 py-3 text-sm text-gray-700">${s.time || '-'}</td>
+                    <td class="px-4 py-3 text-sm text-gray-700">${s.subject}</td>
+                    <td class="px-4 py-3 text-sm text-gray-700">${(s.classes && s.classes.length) ? s.classes.join(', ') : '-'}</td>
+                    <td class="px-4 py-3 text-sm text-gray-700">${s.region || '-'}</td>
+                    <td class="px-4 py-3 text-sm">
+                      ${ (currentUser && (currentUser.role === 'Admin' || currentUser.role === 'Super Admin')) ? 
+                        `<button onclick="editSchedule(${s.id})" class="text-blue-600 hover:text-blue-800 mr-2">Edit</button>
+                         <button onclick="deleteSchedule(${s.id})" class="text-red-600 hover:text-red-800">Hapus</button>` : '-' }
+                    </td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    `;
+  };
+
+  // When creating a schedule, Admin regional's schedule.region must be their region.
+  window.openAddScheduleModal = function() {
+    // Build class options limited to current region (for admin) or all for superadmin
+    const classesForRegion = (availableClasses || []).filter(c => !currentUser || currentUser.role === 'Super Admin' || c.region === currentUser.region).map(c => c.name);
+    const classOptionsHtml = classesForRegion.map(c => `<option value="${c}">${c}</option>`).join('');
+    const defaultRegion = currentUser && currentUser.region ? currentUser.region : '';
+
+    const modalHtml = `
+      <form id="addScheduleForm" class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal</label>
+          <input type="date" id="scheduleDate" required class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Waktu</label>
+          <input type="text" id="scheduleTime" placeholder="Contoh: 09.00 - 11.00" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Materi</label>
+          <input type="text" id="scheduleSubject" required class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Kelas (opsional - pilih untuk menargetkan kelas tertentu)</label>
+          <select id="scheduleClasses" multiple class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+            ${classOptionsHtml}
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Regional</label>
+          <input type="text" id="scheduleRegion" value="${defaultRegion}" readonly class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100">
+        </div>
+        <div>
+          <button type="submit" class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Simpan</button>
+        </div>
+      </form>
+    `;
+    openModal('Tambah Jadwal Belajar', modalHtml);
+
+    document.getElementById('addScheduleForm').addEventListener('submit', function(e){
+      e.preventDefault();
+      const newObj = {
+        id: Date.now(),
+        date: document.getElementById('scheduleDate').value,
+        day: getDayNameFromDate(document.getElementById('scheduleDate').value),
+        time: document.getElementById('scheduleTime').value,
+        subject: document.getElementById('scheduleSubject').value,
+        classes: Array.from(document.getElementById('scheduleClasses').selectedOptions).map(o=>o.value),
+        region: currentUser && currentUser.role === 'Admin' ? currentUser.region : (document.getElementById('scheduleRegion').value || '')
+      };
+      // Save
+      scheduleData.push(newObj);
+      try{ saveAllData(); } catch(e){ console.warn(e); }
+      closeModal();
+      notify('Jadwal berhasil ditambahkan!', 'success');
+      if (typeof loadSchedule === 'function') loadSchedule();
+    });
+  };
+
+  // Edit schedule but restrict editing to own region for Admins
+  window.editSchedule = function(id){
+    const idx = scheduleData.findIndex(s => String(s.id) === String(id));
+    if (idx === -1) { notify('Jadwal tidak ditemukan','error'); return; }
+    const s = scheduleData[idx];
+    if (currentUser && currentUser.role === 'Admin' && s.region !== currentUser.region) {
+      notify('Akses ditolak: Anda hanya dapat mengedit jadwal di regional Anda sendiri','error');
+      return;
+    }
+
+    const classesForRegion = (availableClasses || []).filter(c => !currentUser || currentUser.role === 'Super Admin' || c.region === s.region).map(c => c.name);
+    const classOptionsHtml = classesForRegion.map(c => `<option value="${c}" ${ (s.classes||[]).includes(c) ? 'selected' : '' }>${c}</option>`).join('');
+
+    const modalHtml = `
+      <form id="editScheduleForm" class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal</label>
+          <input type="date" id="editScheduleDate" value="${s.date || ''}" required class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Waktu</label>
+          <input type="text" id="editScheduleTime" value="${s.time || ''}" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Materi</label>
+          <input type="text" id="editScheduleSubject" value="${s.subject || ''}" required class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Kelas (opsional)</label>
+          <select id="editScheduleClasses" multiple class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+            ${classOptionsHtml}
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Regional</label>
+          <input type="text" id="editScheduleRegion" value="${s.region || ''}" readonly class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100">
+        </div>
+        <div>
+          <button type="submit" class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Update</button>
+        </div>
+      </form>
+    `;
+    openModal('Edit Jadwal Belajar', modalHtml);
+
+    document.getElementById('editScheduleForm').addEventListener('submit', function(e){
+      e.preventDefault();
+      scheduleData[idx] = {
+        ...scheduleData[idx],
+        date: document.getElementById('editScheduleDate').value,
+        day: getDayNameFromDate(document.getElementById('editScheduleDate').value),
+        time: document.getElementById('editScheduleTime').value,
+        subject: document.getElementById('editScheduleSubject').value,
+        classes: Array.from(document.getElementById('editScheduleClasses').selectedOptions).map(o=>o.value),
+        // region must not be changed by admin (readonly)
+        region: scheduleData[idx].region || (currentUser && currentUser.region ? currentUser.region : '')
+      };
+      try{ saveAllData(); } catch(e){ console.warn(e); }
+      closeModal();
+      notify('Jadwal berhasil diperbarui!', 'success');
+      if (typeof loadSchedule === 'function') loadSchedule();
+    });
+  };
+
+  // Delete schedule - restrict to admin's region
+  window.deleteSchedule = function(id){
+    const idx = scheduleData.findIndex(s => String(s.id) === String(id));
+    if (idx === -1) return;
+    const s = scheduleData[idx];
+    if (currentUser && currentUser.role === 'Admin' && s.region !== currentUser.region) {
+      notify('Akses ditolak: Anda hanya dapat menghapus jadwal di regional Anda sendiri','error');
+      return;
+    }
+    if (!confirm('Apakah Anda yakin ingin menghapus jadwal ini?')) return;
+    scheduleData.splice(idx,1);
+    try{ saveAllData(); } catch(e){ console.warn(e); }
+    notify('Jadwal belajar berhasil dihapus!', 'success');
+    if (typeof loadSchedule === 'function') loadSchedule();
+  };
+
+  // If page currently on schedule, refresh
+  try {
+    if (currentModule === 'schedule') loadSchedule();
+  } catch(e){}
+})();
+</script>
+<!-- END: Injected Fix — Regionalize Jadwal Belajar -->
+
+
+<script>
+// --- FIX: Modul Kelola Kelas ---
+function loadManageClasses() {
+  const content = document.getElementById('contentArea');
+  let filteredClasses = availableClasses;
+
+  if (currentUser.role === 'Admin') {
+    filteredClasses = availableClasses.filter(cls => cls.region === currentUser.region);
+  }
+
+  content.innerHTML = `
+    <div class="fade-in">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-gray-900">🏫 Kelola Kelas</h2>
+        <button onclick="addClass()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-sm">+ Tambah Kelas</button>
+      </div>
+
+      <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+        <h3 class="text-xl font-semibold text-gray-900 mb-4">Daftar Kelas (${filteredClasses.length})</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-900">Nama Kelas</th>
+                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-900">Deskripsi</th>
+                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-900">Regional</th>
+                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-900">Aksi</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white">
+              ${filteredClasses.map(cls => `
+                <tr class="border-t border-gray-200 hover:bg-blue-50">
+                  <td class="px-4 py-3 text-sm font-medium text-gray-900">${cls.name}</td>
+                  <td class="px-4 py-3 text-sm text-gray-600">${cls.description}</td>
+                  <td class="px-4 py-3 text-sm text-blue-600 font-medium">${cls.region}</td>
+                  <td class="px-4 py-3 text-sm">
+                    ${ (currentUser.role === 'Super Admin' || cls.region === currentUser.region) ? `<button onclick="editClass(${cls.id})" class="text-blue-600 hover:text-blue-800 mr-3">Edit</button>
+                    <button onclick="deleteClass(${cls.id})" class="text-red-600 hover:text-red-800">Hapus</button>` : `<span class="text-gray-400">-</span>`}
+                  </td>
+                </tr>`).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>`;
+}
+
+// Fungsi Tambah Kelas
+function addClass() {
+  openModal('Tambah Kelas Baru', `
+    <form id="addClassForm" class="space-y-4">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Nama Kelas</label>
+        <input type="text" id="className" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Deskripsi</label>
+        <textarea id="classDesc" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"></textarea>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Regional</label>
+        <input type="text" id="classRegion" value="${currentUser.role === 'Admin' ? currentUser.region : ''}" ${currentUser.role === 'Admin' ? 'readonly' : ''} class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+      </div>
+      <button type="submit" class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Simpan</button>
+    </form>`);
+
+  document.getElementById('addClassForm').addEventListener('submit', e => {
+    e.preventDefault();
+    const name = document.getElementById('className').value.trim();
+    const description = document.getElementById('classDesc').value.trim();
+    const region = document.getElementById('classRegion').value.trim();
+    
+    if (!name || !description || !region) {
+      showNotification('Semua field wajib diisi', 'error');
+      return;
+    }
+
+    const newClass = { id: Date.now(), name, description, region };
+    availableClasses.push(newClass);
+    saveAllData();
+    // dispatch real-time update
+    document.dispatchEvent(new CustomEvent('kelasUpdated', { detail: { availableClasses: availableClasses } }));
+    closeModal();
+    loadManageClasses();
+    showNotification('Kelas baru berhasil ditambahkan!', 'success');
+  });
+}
+
+// Fungsi Edit Kelas
+window.editClass = function(id) {
+  const cls = availableClasses.find(c => c.id === id);
+  if (!cls) return;
+  openModal('Edit Kelas', `
+    <form id="editClassForm" class="space-y-4">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Nama Kelas</label>
+        <input type="text" id="editName" value="${cls.name}" required class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Deskripsi</label>
+        <textarea id="editDesc" required class="w-full px-3 py-2 border border-gray-300 rounded-lg">${cls.description}</textarea>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Regional</label>
+        <input type="text" id="editRegion" value="${cls.region}" ${currentUser.role === 'Admin' ? 'readonly' : ''} class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+      </div>
+      <button type="submit" class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Update</button>
+    </form>`);
+
+  document.getElementById('editClassForm').addEventListener('submit', e => {
+    e.preventDefault();
+    cls.name = document.getElementById('editName').value.trim();
+    cls.description = document.getElementById('editDesc').value.trim();
+    if (currentUser.role !== 'Admin') {
+      cls.region = document.getElementById('editRegion').value.trim();
+    }
+    saveAllData();
+    // dispatch real-time update
+    document.dispatchEvent(new CustomEvent('kelasUpdated', { detail: { availableClasses: availableClasses } }));
+    closeModal();
+    loadManageClasses();
+    showNotification('Kelas berhasil diperbarui!', 'success');
+  });
+};
+
+// Fungsi Hapus Kelas
+window.deleteClass = function(id) {
+  const cls = availableClasses.find(c => c.id === id);
+  if (!cls) return;
+  openModal('Konfirmasi Hapus', `
+    <div class="text-center">
+      <p class="mb-4 text-gray-700">Apakah Anda yakin ingin menghapus kelas <strong>${cls.name}</strong>?</p>
+      <div class="flex space-x-3">
+        <button id="confirmDelete" class="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">Ya, Hapus</button>
+        <button onclick="closeModal()" class="flex-1 px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400">Batal</button>
+      </div>
+    </div>`);
+
+  document.getElementById('confirmDelete').addEventListener('click', () => {
+    availableClasses = availableClasses.filter(c => c.id !== id);
+    saveAllData();
+    // dispatch real-time update
+    document.dispatchEvent(new CustomEvent('kelasUpdated', { detail: { availableClasses: availableClasses } }));
+    closeModal();
+    loadManageClasses();
+    showNotification('Kelas berhasil dihapus!', 'success');
+  });
+};
+</script>
+
+
+<script>
+// Real-time sync: listener untuk memperbarui dropdown di modul Jadwal Kegiatan / Jadwal Kegiatan (Activity)
+function buildClassOptionsForRegion(region, includeAllOption = true) {
+    const classes = (availableClasses || []).filter(c => region === 'all' || !region ? true : c.region === region);
+    let opts = '';
+    if (includeAllOption) opts += '<option value="all">Semua Kelas</option>';
+    classes.forEach(c => {
+        opts += `<option value="${c.name}">${c.name}</option>`;
+    });
+    return { html: opts, classes };
+}
+
+function refreshActivityClassDropdown() {
+    // update any select elements that depend on availableClasses
+    // common IDs used in schedule/activity modules: classFilterSchedule, classFilterActivity, activityClassSelect, filterClass
+    const region = (currentUser && currentUser.role === 'Admin') ? currentUser.region : (document.getElementById('filterRegion') ? document.getElementById('filterRegion').value : 'all');
+    const opts = buildClassOptionsForRegion(region, true).html;
+    ['classFilterSchedule','classFilterActivity','activityClassSelect','filterClass','classFilterSchedule'].forEach(id=>{
+        const el = document.getElementById(id);
+        if (el) {
+            el.innerHTML = opts;
+        }
+    });
+}
+
+// Dengarkan event update kelas
+document.addEventListener('kelasUpdated', function(e) {
+    // rebuild dropdowns where necessary
+    refreshActivityClassDropdown();
+});
+
+// Pastikan dropdown tersinkron ketika halaman siap dan setelah loadManageClasses dipanggil
+document.addEventListener('DOMContentLoaded', function(){
+    refreshActivityClassDropdown();
+});
+</script>
+
+
+
+
+
+<script>
+// === FILTER REGIONAL FIX v2 ===
+
+// Ambil daftar region unik + fallback manual
+function getAllRegions() {
+  const regionSet = new Set();
+  if (typeof availableRegions !== 'undefined' && availableRegions.length > 0) {
+    availableRegions.forEach(r => regionSet.add(r.name || r));
+  }
+  if (typeof availableClasses !== 'undefined' && availableClasses.length > 0) {
+    availableClasses.forEach(c => regionSet.add(c.region));
+  }
+  // Tambah fallback region default
+  regionSet.add('Pusat Bandung');
+  return Array.from(regionSet);
+}
+
+// Bangun dropdown regional
+function buildRegionDropdown() {
+  const regions = getAllRegions();
+  let options = '<option value="all">Semua Regional</option>';
+  regions.forEach(r => options += `<option value="${r}">${r}</option>`);
+  return `<select id="filterRegion" onchange="applyRegionFilter(this.value)" class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 ml-3">${options}</select>`;
+}
+
+// Terapkan filter hanya untuk modul aktif
+function applyRegionFilter(region) {
+  window.selectedRegion = region;
+  const activeTitle = document.querySelector('#contentArea h2')?.textContent || '';
+  if (activeTitle.includes('Kelola Kelas')) {
+    if (typeof loadManageClasses === 'function') loadManageClasses();
+  } else if (activeTitle.includes('Jadwal Belajar')) {
+    if (typeof loadLearningSchedule === 'function') loadLearningSchedule();
+  } else if (activeTitle.includes('Jadwal Kegiatan')) {
+    if (typeof loadActivitySchedule === 'function') loadActivitySchedule();
+  }
+}
+
+// === Patch Modul Kelola Kelas ===
+function loadManageClasses() {
+  const content = document.getElementById('contentArea');
+  let filteredClasses = availableClasses;
+  let selectedRegion = window.selectedRegion || 'all';
+
+  if (currentUser.role === 'Admin') {
+    filteredClasses = availableClasses.filter(cls => cls.region === currentUser.region);
+  } else if (currentUser.role === 'Super Admin' && selectedRegion !== 'all') {
+    filteredClasses = availableClasses.filter(cls => cls.region === selectedRegion);
+  }
+
+  const regionFilterHTML = currentUser.role === 'Super Admin' ? buildRegionDropdown() : '';
+
+  content.innerHTML = `
+    <div class="fade-in">
+      <div class="flex justify-between items-center mb-6">
+        <div class="flex items-center">
+          <h2 class="text-2xl font-bold text-gray-900">🏫 Kelola Kelas</h2>
+          ${regionFilterHTML}
+        </div>
+        <button onclick="addClass()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-sm">+ Tambah Kelas</button>
+      </div>
+      <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+        <h3 class="text-xl font-semibold text-gray-900 mb-4">Daftar Kelas (${filteredClasses.length})</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-900">Nama Kelas</th>
+                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-900">Deskripsi</th>
+                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-900">Regional</th>
+                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-900">Aksi</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white">
+              ${filteredClasses.map(cls => `
+                <tr class="border-t border-gray-200 hover:bg-blue-50">
+                  <td class="px-4 py-3 text-sm font-medium text-gray-900">${cls.name}</td>
+                  <td class="px-4 py-3 text-sm text-gray-600">${cls.description}</td>
+                  <td class="px-4 py-3 text-sm text-blue-600 font-medium">${cls.region}</td>
+                  <td class="px-4 py-3 text-sm">
+                    ${(currentUser.role === 'Super Admin' || cls.region === currentUser.region) ? 
+                      `<button onclick="editClass(${cls.id})" class="text-blue-600 hover:text-blue-800 mr-3">Edit</button>
+                      <button onclick="deleteClass(${cls.id})" class="text-red-600 hover:text-red-800">Hapus</button>` :
+                      `<span class='text-gray-400'>-</span>`}
+                  </td>
+                </tr>`).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>`;
+
+  if (currentUser.role === 'Super Admin' && document.getElementById('filterRegion')) {
+    document.getElementById('filterRegion').value = selectedRegion;
+  }
+}
+
+// === Tambahkan dropdown regional di Jadwal Belajar & Kegiatan ===
+function patchScheduleModules() {
+  if (currentUser.role !== 'Super Admin') return;
+  const title = document.querySelector('#contentArea h2')?.textContent || '';
+  if (title.includes('Jadwal Belajar') || title.includes('Jadwal Kegiatan')) {
+    if (!document.getElementById('filterRegion')) {
+      const header = document.querySelector('.flex.justify-between.items-center.mb-6') || document.querySelector('.schedule-header, .activity-header');
+      if (header) header.insertAdjacentHTML('beforeend', buildRegionDropdown());
+    }
+    if (document.getElementById('filterRegion')) {
+      document.getElementById('filterRegion').value = window.selectedRegion || 'all';
+    }
+  }
+}
+
+// Patch fungsi jadwal belajar
+const _oldLoadLearningSchedule = window.loadLearningSchedule;
+window.loadLearningSchedule = function() {
+  if (_oldLoadLearningSchedule) _oldLoadLearningSchedule();
+  patchScheduleModules();
+};
+
+// Patch fungsi jadwal kegiatan
+const _oldLoadActivitySchedule = window.loadActivitySchedule;
+window.loadActivitySchedule = function() {
+  if (_oldLoadActivitySchedule) _oldLoadActivitySchedule();
+  patchScheduleModules();
+};
+</script>
+
 </body>
 </html>
 <!-- === Materi Kelas UI Override (FINAL FIX) 
@@ -5242,3 +6185,141 @@ function filterMaterials() {
     loadMaterials();
 }
 </script>
+
+<!-- === PATCH ADMIN REGIONAL FIX === -->
+<script>
+// === PATCH: Super Admin dapat menambah beberapa admin di regional yang sama ===
+
+// --- Fungsi Tambah Admin Regional ---
+function addRegionalAdmin() {
+    const studentRegions = studentsData.map(s => s.region).filter(r => r);
+    const adminRegions = regionalAdmins.map(a => a.region).filter(r => r);
+    const existingRegions = [...new Set([...studentRegions, ...adminRegions])];
+
+    openModal('Tambah Admin Regional Baru', `
+        <form id="addAdminForm" class="space-y-4">
+            <div>
+                <label for="adminName" class="block text-sm font-medium text-gray-700 mb-1">Nama Admin</label>
+                <input type="text" id="adminName" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+            </div>
+            <div>
+                <label for="adminUsername" class="block text-sm font-medium text-gray-700 mb-1">Username</label>
+                <input type="text" id="adminUsername" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+            </div>
+            <div>
+                <label for="adminPassword" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                <input type="password" id="adminPassword" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+            </div>
+            
+            <div>
+                <label for="adminRegionSelect" class="block text-sm font-medium text-gray-700 mb-1">Regional</label>
+                <select id="adminRegionSelect" onchange="toggleNewRegionInput(this.value)" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                    <option value="">--- Pilih Regional yang Sudah Ada ---</option>
+                    ${[...new Set(studentsData.map(s => s.region).concat(regionalAdmins.map(a => a.region)))].sort().map(regionName => `
+                        <option value="${regionName}">${regionName}</option>
+                    `).join('')}
+                    <option value="NEW_REGION">--- Tambah Regional Baru ---</option>
+                </select>
+            </div>
+
+            <div id="newRegionInputContainer" class="hidden">
+                <label for="adminRegionInput" class="block text-sm font-medium text-gray-700 mb-1">Regional Baru</label>
+                <input type="text" id="adminRegionInput" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500" placeholder="Contoh: Jakarta Pusat">
+            </div>
+
+            <button type="submit" class="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">Tambah Admin</button>
+        </form>
+    `);
+
+    document.getElementById('addAdminForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const username = document.getElementById('adminUsername').value;
+        const name = document.getElementById('adminName').value;
+        const password = document.getElementById('adminPassword').value;
+
+        const selectedRegion = document.getElementById('adminRegionSelect').value;
+        let region = '';
+
+        if (selectedRegion === 'NEW_REGION') {
+            region = document.getElementById('adminRegionInput').value.trim();
+        } else if (selectedRegion) {
+            region = selectedRegion;
+        }
+
+        if (!region) {
+            showNotification('Silakan pilih atau masukkan Regional!', 'error');
+            return;
+        }
+
+        if (getAllUsers()[username]) {
+            showNotification('Username sudah digunakan!', 'error');
+            return;
+        }
+
+        // 🔧 Tidak ada lagi pembatasan 1 admin per regional
+
+        const newAdmin = { username, password, role: 'Admin', name, region };
+        regionalAdmins.push(newAdmin);
+
+        showNotification('Admin Regional berhasil ditambahkan!');
+        this.reset();
+        closeModal();
+        loadManageAdmins();
+    });
+}
+
+// --- Perbaikan Tabel di loadManageAdmins() ---
+function loadManageAdmins() {
+    const content = document.getElementById('contentArea');
+    if (currentUser.role !== 'Super Admin') {
+        content.innerHTML = '<div class="fade-in text-center text-red-600 text-xl font-bold p-10">Akses Ditolak. Hanya Super Admin yang dapat mengakses modul ini.</div>';
+        return;
+    }
+
+    content.innerHTML = `
+        <div class="fade-in">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-900">🛡️ Kelola Admin Regional</h2>
+                <button onclick="addRegionalAdmin()" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 shadow-sm">+ Tambah Admin Regional</button>
+            </div>
+
+            <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                <h3 class="text-xl font-semibold text-gray-900 mb-4">Daftar Akun Admin Regional (${regionalAdmins.length})</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-900">#</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-900">Nama Admin</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-900">Username</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-900">Regional</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-900">Jml Siswa</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-900">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white">
+                            ${regionalAdmins.map((admin, i) => {
+                                const studentsInRegion = studentsData.filter(s => s.region === admin.region).length;
+                                return `
+                                    <tr class="border-t border-gray-200 hover:bg-red-50">
+                                        <td class="px-4 py-3 text-sm text-gray-600">${i + 1}</td>
+                                        <td class="px-4 py-3 text-sm font-medium text-gray-900">${admin.name}</td>
+                                        <td class="px-4 py-3 text-sm text-gray-600">${admin.username}</td>
+                                        <td class="px-4 py-3 text-sm text-red-600 font-medium">${admin.region}</td>
+                                        <td class="px-4 py-3 text-sm text-blue-600 font-bold">${studentsInRegion}</td>
+                                        <td class="px-4 py-3 text-sm">
+                                            <button onclick="editRegionalAdmin('${admin.username}')" class="text-blue-600 hover:text-blue-800 mr-3">Edit</button>
+                                            <button onclick="deleteRegionalAdmin('${admin.username}')" class="text-red-600 hover:text-red-800">Hapus</button>
+                                        </td>
+                                    </tr>
+                                `;
+                            }).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    `;
+}
+</script>
+<!-- === END PATCH === -->
