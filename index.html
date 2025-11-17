@@ -185,6 +185,16 @@
 </div>
 <script>
 
+/* PATCH: Ensure globals exist to prevent ReferenceError on GitHub Pages */
+window.availableSchools = window.availableSchools || [];
+window.scheduleData = window.scheduleData || [];
+window.availableClasses = window.availableClasses || [];
+window.studentsData = window.studentsData || [];
+window.classMaterials = window.classMaterials || [];
+window.regionalAdmins = window.regionalAdmins || [];
+window.daftarKelas = window.daftarKelas || [];
+
+
 function saveAllData() {
   localStorage.setItem("studentsData", JSON.stringify(studentsData));
   localStorage.setItem("regionalAdmins", JSON.stringify(regionalAdmins));
@@ -5455,7 +5465,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <!-- === FITUR FILTER KELAS & BATASAN VISIBILITAS SISWA === -->
 <script>
   // Daftar kelas contoh (bisa diganti dari database nanti)
-  const daftarKelas = ['SR GOLD A', 'SR GOLD B', 'SR SILVER', 'SR PLATINUM'];
+  window.daftarKelas = window.daftarKelas || ['SR GOLD A', 'SR GOLD B', 'SR SILVER', 'SR PLATINUM'];
 
   // Utility render dropdown kelas
   function renderDropdownKelas(targetId) {
@@ -5517,7 +5527,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 <!-- === PENYEMPURNAAN FILTER KELAS UNTUK SEMUA MODUL === -->
 <script>
-  const daftarKelas = ['SR GOLD A', 'SR GOLD B', 'SR SILVER', 'SR PLATINUM'];
+  window.daftarKelas = window.daftarKelas || ['SR GOLD A', 'SR GOLD B', 'SR SILVER', 'SR PLATINUM'];
 
   function renderDropdownKelas(targetId, modulName) {
     const container = document.getElementById(targetId);
@@ -5578,7 +5588,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 <!-- === FINAL FILTER DROPDOWN + CHECKLIST UNTUK SEMUA MODUL === -->
 <script>
-  const daftarKelas = [
+  window.daftarKelas = window.daftarKelas || [
     'Kelas SR GOLD A (Cabang Jakarta Selatan)',
     'Kelas SR GOLD B (Cabang Jakarta Selatan)',
     'Kelas SR SILVER (Cabang Bandung)',
