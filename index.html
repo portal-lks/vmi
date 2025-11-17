@@ -3,7 +3,9 @@
 <html lang="id">
 <head>
 <script>
-localStorage.clear();
+
+['classMaterials','availableClasses','selectedClassMaterial'].forEach(k=>localStorage.removeItem(k));
+
 console.log("LocalStorage cleared automatically.");
 </script>
 
