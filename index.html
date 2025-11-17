@@ -95,20 +95,10 @@
         .super-admin-card-3 { background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%); } /* Blue */
     </style>
 <style>@view-transition { navigation: auto; }</style>
-<script>
-(function(){
-  const sdkPaths=['/_sdk/data_sdk.js','/_sdk/element_sdk.js'];
-  sdkPaths.forEach(p=>{
-    fetch(p,{method:'HEAD'}).then(r=>{
-      if(r.ok){
-        const s=document.createElement('script');s.src=p;document.head.appendChild(s);
-      }
-    }).catch(()=>{/* ignore missing SDK */});
-  });
-})();
-</script>
+<script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+<script src="/_sdk/element_sdk.js" type="text/javascript"></script>
 </head>
-<body class="bg-white"><script>window.window.availableSchools = window.window.availableSchools || []; window.daftarKelasSchedule = window.daftarKelasSchedule || []; window.daftarKelas = window.daftarKelas || []; window._originalLoadSchedule = window._originalLoadSchedule || null; window._originalLoadArtProgress = window._originalLoadArtProgress || null; window._lks_patched = true;</script>
+<body class="bg-white">
 <style>
 .login-bg {
   background: url('FSRD.jpeg') no-repeat center center fixed;
@@ -203,7 +193,7 @@ function saveAllData() {
   localStorage.setItem("scheduleData", JSON.stringify(scheduleData));
   localStorage.setItem("activityScheduleData", JSON.stringify(activityScheduleData));
   localStorage.setItem("classMaterials", JSON.stringify(classMaterials));
-  localStorage.setItem("window.availableSchools", JSON.stringify(window.availableSchools));
+  localStorage.setItem("availableSchools", JSON.stringify(availableSchools));
 
   // 🔁 Auto Refresh Dashboard jika di halaman Home (Super Admin / Admin)
   if (currentUser && currentModule === 'home' && (currentUser.role === 'Admin' || currentUser.role === 'Super Admin')) {
@@ -225,9 +215,9 @@ function loadAllData() {
   const act = localStorage.getItem("activityScheduleData");
   if (act) activityScheduleData = JSON.parse(act);
   const cm = localStorage.getItem('classMaterials');
-  const sc = localStorage.getItem('window.availableSchools');
+  const sc = localStorage.getItem('availableSchools');
   if (cm) classMaterials = JSON.parse(cm);
-  if (sc) window.availableSchools = JSON.parse(sc);
+  if (sc) availableSchools = JSON.parse(sc);
 }
 function saveSession() {
   localStorage.setItem("currentUser", JSON.stringify(currentUser));
@@ -268,24 +258,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
-if (typeof logout === 'function') {
-  (function(){
-    const _orig = logout;
-    logout = function(){
-      try{ saveAllData(); }catch(e){}
-      try{ localStorage.removeItem("currentUser"); }catch(e){}
-      return _orig.apply(this, arguments);
-    };
-  })();
-} else {
-  window.logout = function(){
-    try{ saveAllData(); }catch(e){}
-    try{ localStorage.removeItem("currentUser"); }catch(e){}
-    document.getElementById('loginPage')?.classList.remove('hidden');
-    document.getElementById('dashboardPage')?.classList.add('hidden');
-    document.getElementById('loginForm')?.reset();
-  };
-}
+
 window.saveAllData = saveAllData;
 
         // Data Storage
@@ -2233,13 +2206,36 @@ function confirmDeleteRegionalAdmin(username) {
         function loadMaterials() {
             const content = document.getElementById('contentArea');
             const isAdminOrSuperAdmin = currentUser.role === 'Admin' || currentUser.role === 'Super Admin';
-            
+
+            // Fixed category options
+            const CATEGORY_OPTIONS = ['SR GOLD','SR ADVANCE','MINAT SENI','ARSITEKTUR','MINAT ARSITEKTUR'];
+
+            function mapClassToCategory(cls) {
+                if (!cls) return null;
+                const s = cls.toString().trim().toLowerCase();
+                if (/sr\s*gold|(^|\s)gold(\s|$)/i.test(cls)) return 'SR GOLD';
+                if (/sr\s*advance|(^|\s)advance(\s|$)/i.test(cls)) return 'SR ADVANCE';
+                if (/minat\s*seni/i.test(cls)) return 'MINAT SENI';
+                if (/minat\s*arsitektur/i.test(cls)) return 'MINAT ARSITEKTUR';
+                if (/arsitek|arsitektur/i.test(cls)) return 'ARSITEKTUR';
+                return null;
+            }
+
+            // Helper: expand category to matching class names available in this region
+            function classesForCategory(cat, region) {
+                if (!cat) return [];
+                return availableClasses
+                    .filter(c => (region === 'all' || c.region === region))
+                    .map(c => c.name)
+                    .filter(name => mapClassToCategory(name) === cat);
+            }
+
             // Filter kelas yang tersedia di regional Admin saat ini
             const regionalAvailableClasses = availableClasses.filter(c => 
                 currentUser.role === 'Super Admin' ? (selectedAdminRegion === 'all' || c.region === selectedAdminRegion) : c.region === currentUser.region
             );
 
-            // START: MODIFIKASI REGIONALISASI DATA
+            // START: REGIONAL MATERIALS
             let regionalMaterials = classMaterials;
             let regionFilterTitle = '';
 
@@ -2253,57 +2249,52 @@ function confirmDeleteRegionalAdmin(username) {
                 regionalMaterials = classMaterials; // Global view for Super Admin default
                 regionFilterTitle = 'Semua Regional';
             }
-            // END: MODIFIKASI REGIONALISASI DATA
-            
-            let filteredMaterials = regionalMaterials; // Gunakan data yang sudah difilter regional
+            // END: REGIONAL MATERIALS
+
+            // Determine active filter (admin uses selectedClassMaterial, students use their class mapped)
             const studentClass = studentsData.find(s => s.name === currentUser.name)?.class;
-            
-            // Jika siswa, activeClassFilter adalah kelasnya. Jika admin, menggunakan filter yang dipilih (default 'all').
             const activeClassFilter = isAdminOrSuperAdmin ? selectedClassMaterial : (studentClass || 'all');
-            
-            if (activeClassFilter !== 'all') {
-                // Filter material yang memiliki nama kelas di dalam array 'classes' mereka
-                filteredMaterials = regionalMaterials.filter(material => 
-                    material.classes && material.classes.includes(activeClassFilter)
-                );
+
+            // Filtering logic: if a category is selected, match materials that have at least one class that maps into that category
+            let filteredMaterials = regionalMaterials;
+            if (activeClassFilter && activeClassFilter !== 'all') {
+                filteredMaterials = regionalMaterials.filter(material => {
+                    // if material already has classes matching category name directly
+                    if (Array.isArray(material.classes) && material.classes.some(c => {
+                        const cat = mapClassToCategory(c);
+                        return cat === activeClassFilter;
+                    })) return true;
+                    // also accept if material.classes contains the category string itself
+                    if (Array.isArray(material.classes) && material.classes.some(c=> String(c).toUpperCase() === activeClassFilter)) return true;
+                    return false;
+                });
             }
-            
+
+            // Build filter UI (select) — placed above table
+            const filterUI = isAdminOrSuperAdmin ? `
+                <div class="flex items-center gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Filter Kelas</label>
+                        <select id="filterClassMaterial" onchange="filterMaterials()" 
+                            class="border border-blue-500 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="all"${selectedClassMaterial==='all'?' selected':''}>Semua Kelas</option>
+                            ${CATEGORY_OPTIONS.map(c => `<option value="${c}" ${(selectedClassMaterial===c)?'selected':''}>${c}</option>`).join('')}
+                        </select>
+                    </div>
+                </div>
+            ` : '' ;
+
             content.innerHTML = `
                 <div class="fade-in">
                     <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-2xl font-bold text-gray-900">📚 Materi Kelas ${currentUser.role !== 'Siswa' ? `(${regionFilterTitle})` : ''}</h2>
-                        ${currentUser.role === 'Siswa' ? `
-                            <button onclick="generatePDF('materialsContent', 'Materi_Kelas_Villa_Merah.pdf')" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 shadow-sm">
-                                <span class="text-lg mr-2">⬇️</span> Download PDF
-                            </button>
-                        ` : ''}
-                        ${isAdminOrSuperAdmin ? '<button onclick="addMaterial()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-sm">+ Tambah Materi</button>' : ''}
+                        ${filterUI}
+                        ${isAdminOrSuperAdmin ? '<button onclick="openAddMaterialModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow transition">+ Tambah Materi</button>' : ''}
                     </div>
 
-                    <div id="materialsContent">
-
-                    ${currentUser.role === 'Super Admin' ? renderRegionDropdown(selectedAdminRegion, 'filterMaterialByRegion') : ''}
-
-                    ${isAdminOrSuperAdmin ? `
-                        <div class="bg-white border border-gray-200 rounded-lg p-4 mb-6 shadow-sm">
-                            <h3 class="text-lg font-semibold text-gray-900 mb-3">Filter Kelas</h3>
-                            <div class="flex flex-wrap gap-2">
-                                <button onclick="filterMaterialByClass('all')" class="px-4 py-2 rounded-lg transition-colors ${activeClassFilter === 'all' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}">
-                                    Semua Materi
-                                </button>
-                                ${regionalAvailableClasses.map(classItem => `
-                                    <button onclick="filterMaterialByClass('${classItem.name}')" class="px-4 py-2 rounded-lg transition-colors ${activeClassFilter === classItem.name ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}">
-                                        Kelas ${classItem.name}
-                                    </button>
-                                `).join('')}
-                            </div>
-                        </div>
-                    ` : ''}
-
-                    <div class="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm">
-                        <div class="bg-blue-600 text-white px-6 py-3">
-                            <h3 class="text-lg font-semibold bg-blue-600">Daftar Materi Pembelajaran ${!isAdminOrSuperAdmin && studentClass ? `(Kelas ${studentClass})` : ''}</h3>
-                        </div>
+                    <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center">
+                            <span class="text-3xl mr-3">📚</span> Daftar Materi Kelas ${currentUser.role !== 'Siswa' ? `(${regionFilterTitle})` : ''}
+                        </h2>
                         <div class="overflow-x-auto">
                             <table class="w-full">
                                 <thead class="bg-blue-800 text-white">
@@ -2311,19 +2302,21 @@ function confirmDeleteRegionalAdmin(username) {
                                         <th class="px-6 py-3 text-left text-sm font-semibold text-white-700">Topik</th>
                                         <th class="px-6 py-3 text-left text-sm font-semibold text-white-700">Penjelasan Materi</th>
                                         <th class="px-6 py-3 text-left text-sm font-semibold text-white-700">Video</th>
-${currentUser.role === 'Super Admin' ? '<th class="px-6 py-3 text-left text-sm font-semibold text-white-700">Regional</th>' : ''}
+                                        ${currentUser.role === 'Super Admin' ? '<th class="px-6 py-3 text-left text-sm font-semibold text-white-700">Regional</th>' : ''}
                                         ${isAdminOrSuperAdmin ? '<th class="px-6 py-3 text-left text-sm font-semibold text-white-700">Kelas Target</th>' : ''}
                                         ${isAdminOrSuperAdmin ? '<th class="px-6 py-3 text-left text-sm font-semibold text-white-700">Aksi</th>' : ''}
                                     </tr>
                                 </thead>
-                                <tbody class="bg-white">
-                                    ${filteredMaterials.length > 0 ? filteredMaterials.map(material => `
-                                        <tr class="border-t border-gray-200 hover:bg-gray-50">
-                                            <td class="px-6 py-4 text-sm font-medium text-gray-900">${material.topic}</td>
-                                            <td class="px-6 py-4 text-sm text-gray-600">${material.description}</td>
-                                            <td class="px-6 py-4 text-sm text-blue-600 font-medium">${material.youtubeLink ? `<a href="${material.youtubeLink}" target="_blank" class="text-blue-600 underline">🎥 Tonton Video</a>` : "-"}</td>
+                                <tbody class="bg-white divide-y divide-gray-100">
+                                    ${filteredMaterials.length ? filteredMaterials.map(material => {
+                                        const displayClasses = Array.isArray(material.classes) && material.classes.length ? material.classes.join(', ') : '-';
+                                        return `
+                                        <tr>
+                                            <td class="px-6 py-4 text-sm text-gray-800 font-medium">${material.topic}</td>
+                                            <td class="px-6 py-4 text-sm text-gray-600">${material.description || '-'}</td>
+                                            <td class="px-6 py-4 text-sm text-gray-600">${material.youtubeLink ? '<a href="'+material.youtubeLink+'" target="_blank">Lihat</a>' : '-'}</td>
                                             ${currentUser.role === 'Super Admin' ? `<td class="px-6 py-4 text-sm text-red-600 font-medium">${material.region}</td>` : ''}
-                                            ${isAdminOrSuperAdmin ? `<td class="px-6 py-4 text-sm text-blue-600 font-medium">${material.classes.join(', ')}</td>` : ''}
+                                            ${isAdminOrSuperAdmin ? `<td class="px-6 py-4 text-sm text-blue-600 font-medium">${displayClasses}</td>` : ''}
                                             ${isAdminOrSuperAdmin ? `
                                                 <td class="px-6 py-4 text-sm">
                                                     <button onclick="editMaterial(${material.id})" class="text-blue-600 hover:text-blue-800 mr-3">Edit</button>
@@ -2331,9 +2324,10 @@ ${currentUser.role === 'Super Admin' ? '<th class="px-6 py-3 text-left text-sm f
                                                 </td>
                                             ` : ''}
                                         </tr>
-                                    `).join('') : `
+                                        `;
+                                    }).join('') : `
                                         <tr>
-                                            <td colspan="${isAdminOrSuperAdmin ? 4 : 2}" class="px-6 py-4 text-center text-gray-500">
+                                            <td colspan="${isAdminOrSuperAdmin ? 6 : 3}" class="px-6 py-4 text-center text-gray-500">
                                                 Tidak ada materi yang tersedia untuk regional atau filter kelas ini.
                                             </td>
                                         </tr>
@@ -2342,11 +2336,156 @@ ${currentUser.role === 'Super Admin' ? '<th class="px-6 py-3 text-left text-sm f
                             </table>
                         </div>
                     </div>
-                    
+
                     </div> </div>
             `;
-        }
 
+            // expose helper for other parts
+            window.mapClassToCategory = mapClassToCategory;
+            window.classesForCategory = classesForCategory;
+            // ensure filterMaterials exists
+            window.filterMaterials = function() {
+                const sel = document.getElementById('filterClassMaterial');
+                if (!sel) return;
+                selectedClassMaterial = sel.value;
+                loadMaterials();
+            };
+
+            // create add modal opener that will include Kelas Relevan dropdown
+            window.openAddMaterialModal = function(isEdit=false, editId) {
+                const regionValue = currentUser.region || (selectedAdminRegion !== 'all' ? selectedAdminRegion : '');
+                const classOptionsHtml = CATEGORY_OPTIONS.map(c => `<option value="${c}">${c}</option>`).join('');
+                const modalHtml = `
+                    <form id="addMaterialForm" class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Topik</label>
+                            <input type="text" id="materialTopic" required class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Penjelasan Materi</label>
+                            <textarea id="materialDescription" class="w-full px-3 py-2 border border-gray-300 rounded-lg"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Kelas Relevan</label>
+                            <select id="materialClassRelevant" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                                <option value="">-- Pilih Kategori --</option>
+                                ${classOptionsHtml}
+                            </select>
+                            <p class="text-xs text-gray-500 mt-1">Jika memilih kategori, sistem akan otomatis assign materi ke semua kelas turunan pada regional ini.</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Regional</label>
+                            <input type="text" id="materialRegion" value="${regionValue}" readonly class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Link YouTube (opsional)</label>
+                            <input type="text" id="materialYoutube" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                        </div>
+                        <div>
+                            <button type="submit" class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Simpan Materi</button>
+                        </div>
+                    </form>
+                `;
+                openModal('Tambah Materi', modalHtml);
+
+                document.getElementById('addMaterialForm').addEventListener('submit', function(e){
+                    e.preventDefault();
+                    const topic = document.getElementById('materialTopic').value.trim();
+                    const description = document.getElementById('materialDescription').value.trim();
+                    const category = document.getElementById('materialClassRelevant').value;
+                    const region = document.getElementById('materialRegion').value || (currentUser.region || '');
+                    const youtubeLink = document.getElementById('materialYoutube').value.trim();
+
+                    if (!topic) { alert('Topik materi wajib diisi'); return; }
+
+                    // determine classes array: if category chosen, expand to matching classes in this region; otherwise empty
+                    let classesArr = [];
+                    if (category) {
+                        classesArr = expandCategoryToClasses(category, region);
+                    }
+
+                    const newId = classMaterials.length ? Math.max(...classMaterials.map(m=>m.id))+1 : 1;
+                    classMaterials.push({ id: newId, topic, description, classes: classesArr, region, youtubeLink });
+
+                    try { saveAllData(); } catch(e){ console.warn(e); }
+                    closeModal();
+                    loadMaterials();
+                    showNotification('Materi berhasil disimpan!', 'success');
+                });
+            };
+
+            // ensure editMaterial uses same modal logic but prefilled
+            window.editMaterial = function(id) {
+                const idx = classMaterials.findIndex(m=>m.id===id);
+                if (idx===-1) return alert('Materi tidak ditemukan');
+                const mat = classMaterials[idx];
+                const regionValue = mat.region || currentUser.region || '';
+                const classOptionsHtml = CATEGORY_OPTIONS.map(c => `<option value="${c}" ${(mat.classes && mat.classes.some(cc=>mapClassToCategory(cc)===c)) ? 'selected' : ''}>${c}</option>`).join('');
+                const modalHtml = `
+                    <form id="editMaterialForm" class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Topik</label>
+                            <input type="text" id="materialTopic" value="${mat.topic}" required class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Penjelasan Materi</label>
+                            <textarea id="materialDescription" class="w-full px-3 py-2 border border-gray-300 rounded-lg">${mat.description || ''}</textarea>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Kelas Relevan</label>
+                            <select id="materialClassRelevant" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                                <option value="">-- Pilih Kategori --</option>
+                                ${classOptionsHtml}
+                            </select>
+                            <p class="text-xs text-gray-500 mt-1">Jika memilih kategori, sistem akan otomatis assign materi ke semua kelas turunan pada regional ini.</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Regional</label>
+                            <input type="text" id="materialRegion" value="${regionValue}" readonly class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Link YouTube (opsional)</label>
+                            <input type="text" id="materialYoutube" value="${mat.youtubeLink || ''}" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                        </div>
+                        <div>
+                            <button type="submit" class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Update Materi</button>
+                        </div>
+                    </form>
+                `;
+                openModal('Edit Materi', modalHtml);
+
+                document.getElementById('editMaterialForm').addEventListener('submit', function(e){
+                    e.preventDefault();
+                    const topic = document.getElementById('materialTopic').value.trim();
+                    const description = document.getElementById('materialDescription').value.trim();
+                    const category = document.getElementById('materialClassRelevant').value;
+                    const region = document.getElementById('materialRegion').value || (currentUser.region || '');
+                    const youtubeLink = document.getElementById('materialYoutube').value.trim();
+
+                    if (!topic) { alert('Topik materi wajib diisi'); return; }
+
+                    let classesArr = [];
+                    if (category) {
+                        classesArr = expandCategoryToClasses(category, region);
+                    }
+
+                    classMaterials[idx] = { ...classMaterials[idx], topic, description, classes: classesArr, region, youtubeLink };
+                    try { saveAllData(); } catch(e){ console.warn(e); }
+                    closeModal();
+                    loadMaterials();
+                    showNotification('Materi berhasil diperbarui!', 'success');
+                });
+            };
+
+            // deleteMaterial
+            window.deleteMaterial = function(id) {
+                if (!confirm('Hapus materi ini?')) return;
+                classMaterials = classMaterials.filter(m=>m.id!==id);
+                try { saveAllData(); } catch(e){ console.warn(e); }
+                loadMaterials();
+                showNotification('Materi berhasil dihapus!', 'success');
+            };
+        }
         // --- MODIFIED FUNCTION 5: Jadwal Belajar (Ditambahkan Filter Berbasis Kelas dan Regional) ---
         function loadSchedule() {
             const content = document.getElementById('contentArea');
@@ -3878,7 +4017,7 @@ function openAddStudentModal() {
         // --- NEW SCHOOL MANAGEMENT FUNCTIONS ---
 
         function editSchool(schoolId) {
-            const school = window.availableSchools.find(s => s.id === schoolId);
+            const school = availableSchools.find(s => s.id === schoolId);
             
             openModal('Edit Sekolah', `
                 <form id="editSchoolForm" class="space-y-4">
@@ -3894,7 +4033,7 @@ function openAddStudentModal() {
                 e.preventDefault();
                 const newName = document.getElementById('editSchoolName').value.trim();
                 
-                if (window.availableSchools.some(s => s.id !== schoolId && s.name.toLowerCase() === newName.toLowerCase())) {
+                if (availableSchools.some(s => s.id !== schoolId && s.name.toLowerCase() === newName.toLowerCase())) {
                     showNotification('Nama sekolah sudah ada!', 'error');
                     return;
                 }
@@ -3916,7 +4055,7 @@ function openAddStudentModal() {
         }
 
         function deleteSchool(schoolId) {
-            const school = window.availableSchools.find(s => s.id === schoolId);
+            const school = availableSchools.find(s => s.id === schoolId);
             const studentsInSchool = studentsData.filter(s => s.school === school.name);
 
             if (studentsInSchool.length > 0) {
@@ -3951,7 +4090,7 @@ function openAddStudentModal() {
         }
 
         function confirmDeleteSchool(schoolId) {
-            window.availableSchools = window.availableSchools.filter(s => s.id !== schoolId);
+            availableSchools = availableSchools.filter(s => s.id !== schoolId);
             closeModal();
             loadAddStudent();
             showNotification('Sekolah berhasil dihapus!');
@@ -4307,19 +4446,19 @@ function filterClasses() {
     }
    })();
   
-// --- Added CRUD helpers for classMaterials and window.availableSchools (ensure persistence) ---
+// --- Added CRUD helpers for classMaterials and availableSchools (ensure persistence) ---
 function addSchool(name){
   if(!name) return;
   const id = Date.now();
-  window.availableSchools.push({id, name});
+  availableSchools.push({id, name});
   saveAllData();
 }
 function updateSchool(id, name){
-  const idx = window.availableSchools.findIndex(s=>s.id===id);
-  if(idx!==-1){ window.availableSchools[idx].name = name; saveAllData(); }
+  const idx = availableSchools.findIndex(s=>s.id===id);
+  if(idx!==-1){ availableSchools[idx].name = name; saveAllData(); }
 }
 function deleteSchoolById(id){
-  window.availableSchools = window.availableSchools.filter(s=>s.id!==id);
+  availableSchools = availableSchools.filter(s=>s.id!==id);
   // unset student.school references with that id/name (best effort)
   saveAllData();
 }
@@ -5145,9 +5284,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  if(!window._originalLoadArtProgress) window._originalLoadArtProgress = window.loadArtProgress || function(){};
+  const originalLoadArtProgress = window.loadArtProgress;
   window.loadArtProgress = function() {
-    window._originalLoadArtProgress && window._originalLoadArtProgress();
+    originalLoadArtProgress();
     setTimeout(() => enableZoomForStudent(), 500);
   };
 </script>
@@ -5200,9 +5339,9 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Integrasi otomatis dengan modul Kemajuan Gambar
-  if(!window._originalLoadArtProgress) window._originalLoadArtProgress = window.loadArtProgress || function(){};
+  const originalLoadArtProgress = window.loadArtProgress;
   window.loadArtProgress = function() {
-    window._originalLoadArtProgress && window._originalLoadArtProgress();
+    originalLoadArtProgress();
     setTimeout(() => enableZoomForStudent(), 500);
   };
 </script>
@@ -5304,9 +5443,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  if(!window._originalLoadArtProgress) window._originalLoadArtProgress = window.loadArtProgress || function(){};
+  const originalLoadArtProgress = window.loadArtProgress;
   window.loadArtProgress = function() {
-    window._originalLoadArtProgress && window._originalLoadArtProgress();
+    originalLoadArtProgress();
     setTimeout(() => enableZoomForStudent(), 500);
   };
 </script>
@@ -5316,7 +5455,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <!-- === FITUR FILTER KELAS & BATASAN VISIBILITAS SISWA === -->
 <script>
   // Daftar kelas contoh (bisa diganti dari database nanti)
-  window.daftarKelas = window.daftarKelas || ['SR GOLD A', 'SR GOLD B', 'SR SILVER', 'SR PLATINUM'];
+  const daftarKelas = ['SR GOLD A', 'SR GOLD B', 'SR SILVER', 'SR PLATINUM'];
 
   // Utility render dropdown kelas
   function renderDropdownKelas(targetId) {
@@ -5378,7 +5517,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 <!-- === PENYEMPURNAAN FILTER KELAS UNTUK SEMUA MODUL === -->
 <script>
-  window.daftarKelas = window.daftarKelas || ['SR GOLD A', 'SR GOLD B', 'SR SILVER', 'SR PLATINUM'];
+  const daftarKelas = ['SR GOLD A', 'SR GOLD B', 'SR SILVER', 'SR PLATINUM'];
 
   function renderDropdownKelas(targetId, modulName) {
     const container = document.getElementById(targetId);
@@ -5439,7 +5578,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 <!-- === FINAL FILTER DROPDOWN + CHECKLIST UNTUK SEMUA MODUL === -->
 <script>
-  window.daftarKelas = window.daftarKelas || [
+  const daftarKelas = [
     'Kelas SR GOLD A (Cabang Jakarta Selatan)',
     'Kelas SR GOLD B (Cabang Jakarta Selatan)',
     'Kelas SR SILVER (Cabang Bandung)',
@@ -5547,9 +5686,9 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Rebuild fungsi loadSchedule agar gunakan filter baru
-  if(!window._originalLoadSchedule) window._originalLoadSchedule = window.loadSchedule || function(){};
+  const originalLoadSchedule = window.loadSchedule;
   window.loadSchedule = function() {
-    window._originalLoadSchedule && window._originalLoadSchedule();
+    originalLoadSchedule();
     renderFilterKelasBelajar('filterKelasJadwalBelajar');
     setTimeout(applyFilterKelasBelajar, 500);
   };
@@ -5559,7 +5698,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 <!-- === PERBAIKAN AKHIR MODUL JADWAL BELAJAR (SAMA DENGAN JADWAL KEGIATAN) === -->
 <script>
-  window.daftarKelasSchedule = window.daftarKelasSchedule || [
+  const daftarKelasSchedule = [
     'Kelas SR GOLD A (Cabang Jakarta Selatan)',
     'Kelas SR GOLD B (Cabang Jakarta Selatan)',
     'Kelas SR SILVER (Cabang Bandung)',
@@ -5603,9 +5742,9 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Perbarui fungsi loadSchedule agar identik dengan loadJadwalKegiatan
-  if(!window._originalLoadSchedule) window._originalLoadSchedule = window.loadSchedule || function(){};
+  const originalLoadSchedule = window.loadSchedule;
   window.loadSchedule = function() {
-    window._originalLoadSchedule && window._originalLoadSchedule();
+    originalLoadSchedule();
     renderFilterKelasSchedule('filterKelasJadwalBelajar');
     setTimeout(() => applyFilterKelasSchedule(), 500);
   };
@@ -6698,6 +6837,29 @@ if (typeof window.addMaterial === 'function') {
         return _origAddMaterial();
     }
 }
+
+// --- AUTO-EXPAND KATEGORI KE KELAS TURUNAN ---
+// Mengubah kategori seperti "SR GOLD" menjadi daftar kelas turunan
+function expandCategoryToClasses(category, region) {
+    try {
+        if (!category) return [];
+        const cat = String(category).trim();
+        // ambil semua kelas di region (jika region kosong, ambil semua)
+        const allClassesInRegion = studentsData
+            .filter(s => !region || s.region === region)
+            .map(s => (s.class || '').toString().trim().toUpperCase())
+            .filter(Boolean);
+        const base = cat.toUpperCase().replace(/ /g, '.*');
+        const reg = new RegExp('^' + base, 'i');
+        const expanded = [...new Set(allClassesInRegion.filter(c => reg.test(c)))];
+        // jika tidak ada turunan, kembalikan kategori asli (compatibility)
+        return expanded.length ? expanded : [category];
+    } catch (e) {
+        console.warn('expandCategoryToClasses error', e);
+        return [category];
+    }
+}
+// --- AKHIR AUTO-EXPAND ---
 if (typeof window.saveMaterial === 'undefined') {
     // Provide a generic saveMaterial used by modal forms if not defined elsewhere.
     window.saveMaterial = function(isEdit, editId) {
