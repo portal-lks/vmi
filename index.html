@@ -6461,6 +6461,246 @@ window.loadActivitySchedule = function() {
 </script>
 <!-- END: Injected date-formatting helper -->
 
+
+<!-- BEGIN: Cleaned Kelola Kelas Module (injected by assistant) -->
+<script>
+(function(){
+  // Safe overwrite: always assign to window to avoid duplicate-declaration errors
+  window.loadManageClasses = function() {
+    const content = document.getElementById('contentArea');
+    if(!content) return;
+
+    // Determine classes visible according to role and selectedRegion
+    let filteredClasses = (typeof availableClasses !== 'undefined' ? availableClasses : []);
+    const selectedRegion = window.selectedRegion || 'all';
+
+    if (currentUser && currentUser.role === 'Admin') {
+      filteredClasses = filteredClasses.filter(cls => cls.region === currentUser.region);
+    } else if (currentUser && currentUser.role === 'Super Admin' && selectedRegion !== 'all') {
+      filteredClasses = filteredClasses.filter(cls => cls.region === selectedRegion);
+    }
+
+    // region dropdown for Super Admin
+    const regionFilterHTML = (currentUser && currentUser.role === 'Super Admin' && typeof buildRegionDropdown === 'function')
+      ? buildRegionDropdown()
+      : '';
+
+    // render table rows
+    const rows = filteredClasses.map((cls, idx) => {
+      const jumlahSiswa = (typeof studentsData !== 'undefined') ? studentsData.filter(s=> (s.class||'').toString() === (cls.name||'')).length : 0;
+      const status = jumlahSiswa > 0 ? `<span class="text-green-600 font-semibold">Aktif</span>` : `<span class="text-red-500 font-semibold">Tidak Aktif</span>`;
+      return `
+        <tr class="hover:bg-gray-50">
+          <td class="px-6 py-4 text-center">${idx+1}</td>
+          <td class="px-6 py-4 font-semibold">${cls.name}</td>
+          <td class="px-6 py-4 text-center">${jumlahSiswa}</td>
+          <td class="px-6 py-4 text-center">1</td>
+          <td class="px-6 py-4 text-center">${status}</td>
+          <td class="px-6 py-4 text-center">
+            <button onclick="openEditClassModal(${cls.id})" class="text-blue-600 hover:underline mr-2">Edit</button>
+            <button onclick="deleteClassById(${cls.id})" class="text-red-600 hover:underline">Hapus</button>
+          </td>
+        </tr>
+      `;
+    }).join('');
+
+    content.innerHTML = `
+      <div class="fade-in">
+        <div class="flex justify-between items-center mb-6">
+          <div class="flex items-center">
+            <h2 class="text-2xl font-bold text-gray-900">🏫 Kelola Kelas</h2>
+            ${regionFilterHTML}
+          </div>
+          <button id="btnAddClass" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-sm">+ Tambah Kelas</button>
+        </div>
+
+        <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+          <h3 class="text-xl font-semibold text-gray-900 mb-4">Daftar Kelas (${filteredClasses.length})</h3>
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-blue-800 text-white">
+                <tr>
+                  <th class="px-6 py-3 text-center text-xs font-semibold uppercase tracking-wider">No</th>
+                  <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider">Nama Kelas</th>
+                  <th class="px-6 py-3 text-center text-xs font-semibold uppercase tracking-wider">Jumlah Siswa</th>
+                  <th class="px-6 py-3 text-center text-xs font-semibold uppercase tracking-wider">Jumlah Kelas</th>
+                  <th class="px-6 py-3 text-center text-xs font-semibold uppercase tracking-wider">Status Kelas</th>
+                  <th class="px-6 py-3 text-center text-xs font-semibold uppercase tracking-wider">Aksi</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-100">
+                ${rows}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    `;
+
+    // attach add button listener (use event delegation safe)
+    const btn = document.getElementById('btnAddClass');
+    if (btn) {
+      btn.onclick = function(){ openAddClassModal(); };
+    }
+  };
+
+  // Helper to open Add Class modal
+  window.openAddClassModal = function() {
+    // build region options from getAllRegions if available, else fallback to availableClasses regions
+    let regions = [];
+    if (typeof getAllRegions === 'function') regions = getAllRegions();
+    else if (typeof availableClasses !== 'undefined') regions = Array.from(new Set(availableClasses.map(c=>c.region))).filter(Boolean);
+    if (regions.length === 0) regions = ['Pusat Bandung'];
+
+    const options = regions.map(r=>`<option value="\${r}">\${r}</option>`).join('');
+    const modalHtml = `
+      <form id="addClassForm" class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Nama Kelas</label>
+          <input type="text" id="className" class="w-full px-3 py-2 border border-gray-300 rounded-lg" required>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Deskripsi</label>
+          <textarea id="classDesc" class="w-full px-3 py-2 border border-gray-300 rounded-lg" required></textarea>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Regional</label>
+          <select id="classRegion" class="w-full px-3 py-2 border border-gray-300 rounded-lg" required>
+            ${options}
+          </select>
+        </div>
+        <div>
+          <button type="submit" class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg">Simpan</button>
+        </div>
+      </form>
+    `;
+    if (typeof openModal === 'function') {
+      openModal('Tambah Kelas', modalHtml);
+      const form = document.getElementById('addClassForm');
+      if (form) {
+        form.addEventListener('submit', function(e){
+          e.preventDefault();
+          const name = document.getElementById('className').value.trim();
+          const description = document.getElementById('classDesc').value.trim();
+          const region = document.getElementById('classRegion').value.trim();
+          if (!name || !description || !region) {
+            if (typeof showNotification === 'function') showNotification('Semua field wajib diisi', 'error');
+            return;
+          }
+          // ensure availableClasses exists
+          if (typeof availableClasses === 'undefined') window.availableClasses = [];
+          // prevent duplicate name in same region
+          const exists = availableClasses.some(c=> (c.name||'').toLowerCase()===name.toLowerCase() && c.region===region);
+          if (exists) {
+            if (typeof showNotification === 'function') showNotification('Nama kelas sudah ada di region tersebut', 'error');
+            return;
+          }
+          const newClass = { id: Date.now(), name, description, region };
+          availableClasses.push(newClass);
+          try{ saveAllData(); } catch(e){}
+          document.dispatchEvent(new CustomEvent('kelasUpdated', { detail:{ availableClasses } }));
+          if (typeof closeModal === 'function') closeModal();
+          if (typeof loadManageClasses === 'function') loadManageClasses();
+          if (typeof showNotification === 'function') showNotification('Kelas baru berhasil ditambahkan!', 'success');
+        }, { once: true });
+      }
+    } else {
+      alert('Modal tidak tersedia');
+    }
+  };
+
+  // Open edit modal by class id
+  window.openEditClassModal = function(id) {
+    const cls = (typeof availableClasses !== 'undefined') ? availableClasses.find(c=>String(c.id)===String(id)) : null;
+    if (!cls) return;
+    const modalHtml = `
+      <form id="editClassForm" class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Nama Kelas</label>
+          <input type="text" id="editName" value="${cls.name}" class="w-full px-3 py-2 border border-gray-300 rounded-lg" required>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Deskripsi</label>
+          <textarea id="editDesc" class="w-full px-3 py-2 border border-gray-300 rounded-lg" required>${cls.description}</textarea>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Regional</label>
+          <input type="text" id="editRegion" value="${cls.region}" class="w-full px-3 py-2 border border-gray-300 rounded-lg" ${currentUser && currentUser.role==='Admin' ? 'readonly' : ''}>
+        </div>
+        <div>
+          <button type="submit" class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg">Update</button>
+        </div>
+      </form>
+    `;
+    if (typeof openModal === 'function') {
+      openModal('Edit Kelas', modalHtml);
+      const form = document.getElementById('editClassForm');
+      if (form) {
+        form.addEventListener('submit', function(e){
+          e.preventDefault();
+          const name = document.getElementById('editName').value.trim();
+          const description = document.getElementById('editDesc').value.trim();
+          const region = document.getElementById('editRegion').value.trim();
+          if (!name || !description || !region) {
+            if (typeof showNotification === 'function') showNotification('Semua field wajib diisi', 'error');
+            return;
+          }
+          const idx = availableClasses.findIndex(c=>String(c.id)===String(id));
+          if (idx===-1) return;
+          // prevent duplicate name in same region excluding current
+          const exists = availableClasses.some((c,i)=> i!==idx && (c.name||'').toLowerCase()===name.toLowerCase() && c.region===region);
+          if (exists) {
+            if (typeof showNotification === 'function') showNotification('Nama kelas sudah ada di region tersebut', 'error');
+            return;
+          }
+          availableClasses[idx].name = name;
+          availableClasses[idx].description = description;
+          if (!(currentUser && currentUser.role==='Admin')) availableClasses[idx].region = region;
+          try{ saveAllData(); } catch(e){}
+          document.dispatchEvent(new CustomEvent('kelasUpdated', { detail:{ availableClasses } }));
+          if (typeof closeModal === 'function') closeModal();
+          if (typeof loadManageClasses === 'function') loadManageClasses();
+          if (typeof showNotification === 'function') showNotification('Kelas berhasil diperbarui!', 'success');
+        }, { once: true });
+      }
+    } else {
+      alert('Modal tidak tersedia');
+    }
+  };
+
+  // Delete by id
+  window.deleteClassById = function(id) {
+    if (!confirm('Hapus kelas ini?')) return;
+    const idx = availableClasses.findIndex(c=>String(c.id)===String(id));
+    if (idx===-1) return;
+    // restrict admin to own region
+    if (currentUser && currentUser.role==='Admin' && availableClasses[idx].region !== currentUser.region) {
+      if (typeof showNotification === 'function') showNotification('Akses ditolak: hanya dapat menghapus kelas di regional Anda', 'error');
+      return;
+    }
+    availableClasses.splice(idx,1);
+    try{ saveAllData(); } catch(e){}
+    document.dispatchEvent(new CustomEvent('kelasUpdated', { detail:{ availableClasses } }));
+    if (typeof loadManageClasses === 'function') loadManageClasses();
+    if (typeof showNotification === 'function') showNotification('Kelas berhasil dihapus', 'success');
+  };
+
+  // ensure initial load refresh if currently on manageClasses
+  try {
+    if (currentModule === 'manageClasses' || currentModule === 'kelolaKelas') {
+      loadManageClasses();
+    }
+  } catch(e){ console.warn(e); }
+
+  // listen to kelasUpdated for dropdown sync
+  document.addEventListener('kelasUpdated', function(){ 
+    try{ if (typeof refreshActivityClassDropdown === 'function') refreshActivityClassDropdown(); } catch(e){}
+  });
+
+})();
+</script>
+<!-- END: Cleaned Kelola Kelas Module -->
+
 </body>
 </html>
 <!-- === Materi Kelas UI Override (FINAL FIX) 
