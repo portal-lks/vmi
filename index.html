@@ -93,10 +93,31 @@
         .super-admin-card-1 { background: linear-gradient(135deg, #F97316 0%, #EA580C 100%); } /* Orange */
         .super-admin-card-2 { background: linear-gradient(135deg, #10B981 0%, #059669 100%); } /* Green */
         .super-admin-card-3 { background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%); } /* Blue */
-    </style>
+    
+#contentArea.student-view > *:not(.materi-container):not(.jadwal-container):not(.materi-wrapper):not(.jadwal-wrapper) {
+  background:white!important;
+  border:1px solid #e5e7eb!important;
+  border-radius:1rem!important;
+  padding:1.5rem!important;
+  box-shadow:0 2px 10px rgba(0,0,0,0.05)!important;
+  margin-bottom:1.5rem!important;
+}
+
+</style>
 <style>@view-transition { navigation: auto; }</style>
 <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
 <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
+<style>
+/* === ADMIN REGIONAL ROUNDED CARD PATCH === */
+#contentArea.admin-view > * {
+  background:white!important;
+  border:1px solid #e5e7eb!important;
+  border-radius:1rem!important;
+  padding:1.5rem!important;
+  box-shadow:0 2px 10px rgba(0,0,0,0.05)!important;
+  margin-bottom:1.5rem!important;
+}
+</style>
 </head>
 <body class="bg-white">
 <style>
@@ -162,7 +183,7 @@
 </div>
 </header>
 <div class="flex pt-20">
-<aside class="w-64 fixed left-0 min-h-full text-white bg-gradient-to-b from-blue-700 to-blue-900 shadow-xl border-r border-blue-950/20 transition-all duration-300">
+<aside class="w-64 fixed left-0 min-h-full bg-white text-gray-900 shadow-xl border-r border-gray-200 transition-all duration-300">
 <nav class="p-4 space-y-2" id="sidebarMenu"></nav>
 </aside>
 <main class="ml-64 flex-1 p-8 w-full">
@@ -701,6 +722,20 @@ let activityScheduleData = [
         }
 
         function loadModule(moduleId) {
+    const ca = document.getElementById('contentArea');
+    // PATCH: add admin-view class
+    if (currentUser.role === 'Admin') {
+        ca.classList.add('admin-view');
+    } else {
+        ca.classList.remove('admin-view');
+    }
+
+    if (currentUser.role === 'Siswa' && moduleId !== 'home') {
+        ca.classList.add('student-view');
+    } else {
+        ca.classList.remove('student-view');
+    }
+
             currentModule = moduleId;
             setActiveMenu(moduleId);
             
@@ -796,7 +831,7 @@ if (role === 'Super Admin') {
 content.innerHTML = `
         <div class="fade-in ml-6 mr-6">
             <div class="bg-gradient-to-r from-blue-600 to-blue-800 rounded-lg p-6 mb-6 text-white shadow-lg">
-                <h2 class="text-4xl font-bold mb-2">Selamat Datang, ${currentUser.name}!</h2>
+                <h2 class="text-4xl font-bold mb-2">Selamat Datang ${currentUser.name}</h2>
                 <p class="text-blue-100 text-lg">Dashboard Kontrol Pusat - Semua Regional</p>
             </div>
 
@@ -832,7 +867,7 @@ content.innerHTML = `
                     
                 </div>
 
-                <div class="overflow-x-auto mt-4">
+                
                     <table id="superAdminClassesTable" class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-blue-800 text-white">
                             <tr>
@@ -845,7 +880,7 @@ content.innerHTML = `
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-100" id="superAdminClassesBody"></tbody>
                     </table>
-                </div>
+                
             </div>
         </div>`;
 
@@ -893,7 +928,7 @@ content.innerHTML = `
                     <td class='px-6 py-3 text-sm text-gray-600 text-center font-medium'>${idx}</td>
                     <td class='px-6 py-3 text-sm font-semibold text-gray-900'>${clsName}</td>
                     <td class='px-6 py-3 text-sm text-center text-gray-700'>${jumlah}</td>
-                    <td class='px-6 py-3 text-sm text-gray-600'>${totalTurunanKelas}</td>
+                    <td class='px-6 py-3 text-sm text-center text-gray-600'>${totalTurunanKelas}</td>
                     <td class='px-6 py-3 text-sm text-center font-semibold ${color}'><span class='text-lg mr-1'>${icon}</span>${status}</td>
                 </tr>`;
             idx++;
@@ -980,7 +1015,7 @@ else if (role === 'Admin') {
     content.innerHTML = `
       <main class='max-w-8xl mx-auto py-4 px-8 fade-in ml-1 mr-8'>
         <div class='bg-gradient-to-r from-blue-600 to-blue-800 rounded-xl p-8 mb-5 text-white shadow-lg'>
-          <h2 class='text-3xl font-bold mb-2'>Selamat Datang, ${currentUser.name}!</h2>
+          <h2 class='text-3xl font-bold mb-2'>Selamat Datang ${currentUser.name}</h2>
           <p class='text-blue-100'>Informasi Laporan Kemajuan Siswa - ${currentUser.region}</p>
         </div>
 
@@ -1049,7 +1084,7 @@ else if (role === 'Admin') {
     content.innerHTML = `
     <div class="fade-in ml-6 mr-6">
         <div class="bg-gradient-to-r from-blue-600 to-blue-800 rounded-lg p-6 mb-4 text-white shadow-lg">
-            <h2 class="text-4xl font-bold mb-3">Selamat Datang, ${currentUser.name}!</h2>
+            <h2 class="text-4xl font-bold mb-3">Selamat Datang ${currentUser.name}</h2>
             <p class="text-blue-100 text-2xl mt-1">Pantau terus perkembangan belajar Anda</p>
         </div>
 
@@ -2305,7 +2340,7 @@ function confirmDeleteRegionalAdmin(username) {
                         ${isAdminOrSuperAdmin ? '<button onclick="openAddMaterialModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow transition">+ Tambah Materi</button>' : ''}
                     </div>
 
-                    <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                    <div class=" p-6 ">
                         <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center">
                             <span class="text-3xl mr-3">📚</span> Daftar Materi Kelas ${currentUser.role !== 'Siswa' ? `(${regionFilterTitle})` : ''}
                         </h2>
@@ -7148,3 +7183,36 @@ if (typeof window.saveMaterial === 'undefined') {
 
 </script>
 <!-- === END PATCH === -->
+
+<style>
+    /* Sidebar white background */
+    aside.w-64 {
+        background: white !important;
+        color: #1e293b !important; /* slate-800 */
+    }
+
+    /* Sidebar text and icon color change */
+    #sidebarMenu button span {
+        color: #1e293b !important; /* black */
+    }
+
+    /* Sidebar button default state */
+    #sidebarMenu button {
+        background: white !important;
+        color: #1e293b !important;
+        text-shadow: none !important;
+        border-radius: 0.75rem !important;
+    }
+
+    /* Sidebar button hover state */
+    #sidebarMenu button:hover {
+        background: #f3f4f6 !important; /* light gray */
+        color: #1e40af !important;      /* blue */
+    }
+
+    /* Active state for sidebar menu items */
+    .sidebar-active {
+        background: #e0e7ff !important; /* soft blue */
+        color: #1e40af !important;
+    }
+</style>
