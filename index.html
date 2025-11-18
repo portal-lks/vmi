@@ -97,6 +97,15 @@
 <style>@view-transition { navigation: auto; }</style>
 <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
 <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
+
+<style>
+.superadmin-home-container {
+    margin-left: 14px !important;  /* 6 + 8 */
+    margin-right: 14px !important;
+    margin-top: -8px !important;   /* naik 8px */
+}
+</style>
+
 </head>
 <body class="bg-white">
 <style>
@@ -794,7 +803,7 @@ if (role === 'Super Admin') {
         const totalKelas = [...new Set(studentsData.map(s => (s.class||'').toString().trim()).filter(Boolean))].length;
 
 content.innerHTML = `
-        <div class="fade-in ml-6 mr-6">
+        <div class="fade-in ml-6 mr-6 superadmin-home-container">
             <div class="bg-gradient-to-r from-blue-600 to-blue-800 rounded-lg p-6 mb-6 text-white shadow-lg">
                 <h2 class="text-4xl font-bold mb-2">Selamat Datang, ${currentUser.name}!</h2>
                 <p class="text-blue-100 text-lg">Dashboard Kontrol Pusat - Semua Regional</p>
@@ -809,10 +818,9 @@ content.innerHTML = `
 
                 <div class="p-6 rounded-2xl shadow-lg bg-gradient-to-br from-green-500 to-green-700 border border-green-200 text-white text-center">
                     <h4 class="font-semibold mb-2 text-lg">🏫 Total Kelas</h4>
-                    <p class="text-4xl font-bold text-white mb-1">${totalKelas}</p>
-                    <p class="text-md text-green-100">${topSchoolRegion}</p>
-                    <p class="text-sm text-green-100 mt-2">Total ${topSchoolCount} siswa</p>
-                </div>
+    <p class="text-4xl font-bold text-white">${totalKelas}</p>
+    <p class="text-sm text-green-100 mt-2">Total seluruh regional</p>
+</div>
 
                 <div class="p-6 rounded-2xl shadow-lg bg-gradient-to-br from-purple-500 to-purple-700 border border-purple-200 text-center text-white">
                     <h4 class="font-semibold text-lg mb-2">🎨 Siswa Seni Rupa</h4>
@@ -1048,35 +1056,40 @@ else if (role === 'Admin') {
     const avgTKA = tkaScores.length > 0 ? Math.round(tkaScores.reduce((a,b)=>a+b,0) / tkaScores.length) : 0;
 
     content.innerHTML = `
-    <div class="fade-in ml-6 mr-6">
+    <div class="fade-in ml-6 mr-6 superadmin-home-container">
         <div class="bg-gradient-to-r from-blue-600 to-blue-800 rounded-lg p-6 mb-4 text-white shadow-lg">
             <h2 class="text-4xl font-bold mb-3">Selamat Datang, ${currentUser.name}!</h2>
             <p class="text-blue-100 text-2xl mt-1">Pantau terus perkembangan belajar Anda</p>
         </div>
 
         <!-- ===== Top: 3 Realtime Statistic Cards (Kehadiran, Skolastik, TKA) ===== -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-6">
-            <div class="p-6 rounded-2xl shadow-lg bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 text-center hover:shadow-2xl transition-all">
-                <h4 class="font-semibold text-center text-gray-900 mb-2 text-lg">📘 Kehadiran</h4>
-                <p class="text-5xl font-extrabold text-center text-blue-600">${hadirPercent}%</p>
-                <p class="text-sm text-center text-gray-600 mt-2">${hadirCount} dari ${totalAttendance} pertemuan</p>
-            </div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-10 mt-6 mb-6">
 
-            <div class="p-6 rounded-2xl shadow-lg bg-gradient-to-br from-green-50 to-green-100 border border-green-200 text-center hover:shadow-2xl transition-all">
-                <h4 class="font-semibold text-center text-gray-900 mb-2 text-lg">📊 Tes Skolastik</h4>
-                <p class="text-5xl text-center font-extrabold text-green-600">${avgSkolastik}</p>
-                <p class="text-sm text-center text-gray-600 mt-2">Rata-rata skor</p>
-            </div>
+    <!-- Kehadiran -->
+    <div class="text-center p-8 rounded-2xl shadow-md bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 flex flex-col justify-center items-center space-y-2 hover:shadow-2xl transition-all">
+        <h4 class="font-semibold text-gray-900 text-xl">📘 Kehadiran</h4>
+        <p class="text-5xl font-extrabold text-blue-600">${hadirPercent}%</p>
+        <p class="text-sm text-gray-600">${hadirCount} dari ${totalAttendance} pertemuan</p>
+    </div>
 
-            <div class="p-6 rounded-2xl shadow-lg bg-gradient-to-br from-purple-50 to-purple-100 border border-purple-200 text-center hover:shadow-2xl transition-all">
-                <h4 class="font-semibold text-center text-gray-900 mb-2 text-lg">📈 Kemajuan TKA</h4>
-                <p class="text-5xl text-center font-extrabold text-purple-600">${avgTKA}</p>
-                <p class="text-sm text-center text-gray-600 mt-2">Rata-rata skor</p>
-            </div>
-        </div>
+    <!-- Tes Skolastik -->
+    <div class="text-center p-8 rounded-2xl shadow-md bg-gradient-to-br from-green-50 to-green-100 border border-green-200 flex flex-col justify-center items-center space-y-2 hover:shadow-2xl transition-all">
+        <h4 class="font-semibold text-gray-900 text-xl">📊 Tes Skolastik</h4>
+        <p class="text-5xl font-extrabold text-green-600">${avgSkolastik}</p>
+        <p class="text-sm text-gray-600">Rata-rata skor</p>
+    </div>
 
-        <!-- ===== Bottom: original 3 cards (kept intact) ===== -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mb-12">
+    <!-- TKA -->
+    <div class="text-center p-8 rounded-2xl shadow-md bg-gradient-to-br from-purple-50 to-purple-100 border border-purple-200 flex flex-col justify-center items-center space-y-2 hover:shadow-2xl transition-all">
+        <h4 class="font-semibold text-gray-900 text-xl">📈 Kemajuan TKA</h4>
+        <p class="text-5xl font-extrabold text-purple-600">${avgTKA}</p>
+        <p class="text-sm text-gray-600">Rata-rata skor</p>
+    </div>
+
+</div>
+
+<!-- ===== Bottom: original 3 cards   (kept intact) ===== -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mt-6 mb-12">
             <div class="text-center p-8 rounded-2xl shadow-md bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 hover:shadow-2xl transition-all duration-300 min-h-[380px] flex flex-col justify-center items-center space-y-4">
                 <div class="bg-blue-500 rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-4 shadow-md">
                     <span class="text-4xl text-white">🎨</span>
@@ -1098,7 +1111,7 @@ else if (role === 'Admin') {
 
             <div class="text-center p-8 rounded-2xl shadow-md bg-gradient-to-br from-purple-50 to-purple-100 border border-purple-200 hover:shadow-2xl transition-all duration-300 min-h-[380px] flex flex-col justify-center items-center space-y-4">
                 <div class="bg-purple-500 rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-4 shadow-md">
-                    <span class="text-4xl text-white">🏆</span>
+                    <span class="text-4xl text-white">🏠</span>
                 </div>
                 <h4 class="font-semibold text-gray-900 mb-2 text-xl">Kelas Saat Ini</h4>
                 <p class="text-5xl font-extrabold text-purple-600">${studentData.class}</p>
@@ -2324,7 +2337,7 @@ function confirmDeleteRegionalAdmin(username) {
                                         <tr>
                                             <td class="px-6 py-4 text-sm text-gray-800 font-medium">${material.topic}</td>
                                             <td class="px-6 py-4 text-sm text-gray-600">${material.description || '-'}</td>
-                                            <td class="px-6 py-4 text-sm text-gray-600">${material.youtubeLink ? '<a href="'+material.youtubeLink+'" target="_blank">Lihat</a>' : '-'}</td>
+                                            <td class="px-6 py-4 text-sm text-gray-600">${material.youtubeLink ? '<a href="'+material.youtubeLink+'" target="_blank">📹 Lihat</a>' : '-'}</td>
                                             ${currentUser.role === 'Super Admin' ? `<td class="px-6 py-4 text-sm text-red-600 font-medium">${material.region}</td>` : ''}
                                             ${isAdminOrSuperAdmin ? `<td class="px-6 py-4 text-sm text-blue-600 font-medium">${displayClasses}</td>` : ''}
                                             ${isAdminOrSuperAdmin ? `
