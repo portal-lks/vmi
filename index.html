@@ -93,11 +93,7 @@
         .super-admin-card-1 { background: linear-gradient(135deg, #F97316 0%, #EA580C 100%); } /* Orange */
         .super-admin-card-2 { background: linear-gradient(135deg, #10B981 0%, #059669 100%); } /* Green */
         .super-admin-card-3 { background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%); } /* Blue */
-    
-/* Center JUMLAH KELAS column */
-table tr td:nth-child(4), table tr th:nth-child(4){ text-align:center !important; }
-
-</style>
+    </style>
 <style>@view-transition { navigation: auto; }</style>
 <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
 <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
@@ -800,7 +796,7 @@ if (role === 'Super Admin') {
 content.innerHTML = `
         <div class="fade-in ml-6 mr-6">
             <div class="bg-gradient-to-r from-blue-600 to-blue-800 rounded-lg p-6 mb-6 text-white shadow-lg">
-                <h2 class="text-4xl font-bold mb-2">Selamat Datang ${currentUser.name}</h2>
+                <h2 class="text-4xl font-bold mb-2">Selamat Datang, ${currentUser.name}!</h2>
                 <p class="text-blue-100 text-lg">Dashboard Kontrol Pusat - Semua Regional</p>
             </div>
 
@@ -984,7 +980,7 @@ else if (role === 'Admin') {
     content.innerHTML = `
       <main class='max-w-8xl mx-auto py-4 px-8 fade-in ml-1 mr-8'>
         <div class='bg-gradient-to-r from-blue-600 to-blue-800 rounded-xl p-8 mb-5 text-white shadow-lg'>
-          <h2 class='text-3xl font-bold mb-2'>Selamat Datang ${currentUser.name}</h2>
+          <h2 class='text-3xl font-bold mb-2'>Selamat Datang, ${currentUser.name}!</h2>
           <p class='text-blue-100'>Informasi Laporan Kemajuan Siswa - ${currentUser.region}</p>
         </div>
 
@@ -1053,7 +1049,7 @@ else if (role === 'Admin') {
     content.innerHTML = `
     <div class="fade-in ml-6 mr-6">
         <div class="bg-gradient-to-r from-blue-600 to-blue-800 rounded-lg p-6 mb-4 text-white shadow-lg">
-            <h2 class="text-4xl font-bold mb-3">Selamat Datang ${currentUser.name}</h2>
+            <h2 class="text-4xl font-bold mb-3">Selamat Datang, ${currentUser.name}!</h2>
             <p class="text-blue-100 text-2xl mt-1">Pantau terus perkembangan belajar Anda</p>
         </div>
 
