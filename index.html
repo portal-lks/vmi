@@ -92,7 +92,7 @@
         /* Custom colors for Super Admin Home */
         .super-admin-card-1 { background: linear-gradient(135deg, #F97316 0%, #EA580C 100%); } /* Orange */
         .super-admin-card-2 { background: linear-gradient(135deg, #10B981 0%, #059669 100%); } /* Green */
-        .super-admin-card-3 { background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%); } /* Blue */
+        .super-admin-card-3 rounded-xl { background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%); } /* Blue */
     
 #contentArea.student-view > *:not(.materi-container):not(.jadwal-container):not(.materi-wrapper):not(.jadwal-wrapper) {
   background:white!important;
@@ -108,16 +108,58 @@
 <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
 <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
 <style>
-/* === ADMIN REGIONAL ROUNDED CARD PATCH === */
-#contentArea.admin-view > * {
-  background:white!important;
-  border:1px solid #e5e7eb!important;
-  border-radius:1rem!important;
-  padding:1.5rem!important;
-  box-shadow:0 2px 10px rgba(0,0,0,0.05)!important;
-  margin-bottom:1.5rem!important;
+/* === CONTAINER UTAMA MODUL (SUPER ADMIN / ADMIN / SISWA) === */
+#contentArea {
+    padding: 2rem !important;
+}
+
+/* === ROUNDED LUAR UTAMA SEMUA MODUL === */
+#contentArea > div,
+#contentArea > main {
+    background: #ffffff;
+    border-radius: 1.5rem !important;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+/* === CARD DI DALAM TETAP NORMAL === */
+#contentArea .card,
+#contentArea .item,
+#contentArea .student-card,
+#contentArea .kelas-card,
+#contentArea .inner-box {
+    border-radius: 0.75rem !important;
+}
+
+/* === TABEL TETAP KOTAK === */
+#contentArea table,
+#contentArea table thead,
+#contentArea table tbody {
+    border-radius: 0 !important;
+    overflow: visible !important;
 }
 </style>
+<style>
+/* ==== PATCH: Sidebar putih + teks hitam + hover abu soft ==== */
+aside.w-64 {
+    background: #ffffff !important;
+    color: #000 !important;
+}
+#sidebarMenu button {
+    color: #000 !important;
+    text-shadow: none !important;
+}
+#sidebarMenu button:hover {
+    background: #e5e5e5 !important;
+    color: #000 !important;
+}
+.sidebar-active {
+    background: #e5e5e5 !important;
+    color: #000 !important;
+}
+</style>
+
 </head>
 <body class="bg-white">
 <style>
@@ -137,14 +179,12 @@
   z-index: 10;
 }
 </style>
-
-    
-<div id="loginPage" class="login-bg min-h-screen flex items-center justify-center py-15 px-4 relative">
-  <div class="login-overlay"></div>
-  <div class="login-container max-w-md  w-full space-y-8 bg-white/90 p-8 rounded-2xl shadow-2xl backdrop-blur-md">
+<div class="login-bg min-h-screen flex items-center justify-center py-15 px-4 relative" id="loginPage">
+<div class="login-overlay"></div>
+<div class="login-container max-w-md w-full space-y-8 bg-white/90 p-8 rounded-2xl shadow-2xl backdrop-blur-md">
 <div class="max-w-md w-full space-y-8">
 <div class="text-center">
-<div class="bg-white-600 w-24 h-24 mx-auto rounded-lg flex items-center justify-center mb-4 shadow-lg">
+<div class="bg-white-600 w-24 h-24 mx-auto rounded-lg flex items-center justify-center mb-4 shadow-lg rounded-xl">
 <img alt="Logo Bimbel Gambar Villa Merah" class="w-50 h-20 p-2" src="https://www.villamerah.com/assets/images/logo/logo-2.png"/>
 </div>
 <h2 class="text-2xl text-center font-bold text-gray-900 mb-2" style="color: red;">Bimbel Gambar Villa Merah</h2>
@@ -165,12 +205,12 @@
 <div class="mt-4 text-center text-sm text-gray-600">
 </div>
 </div>
-</div>
+
 <div class="hidden min-h-full" id="dashboardPage">
 <header class="bg-white border-b border-gray-200 fixed w-full top-0 z-10 shadow-sm">
 <div class="flex items-center justify-between px-6 py-4">
 <div class="flex items-center space-x-4">
-<div class="bg-white-600 w-12 h-12 rounded-lg flex items-center justify-center shadow-lg">
+<div class="bg-white-600 w-12 h-12 rounded-lg flex items-center justify-center shadow-lg rounded-xl">
 <img alt="Logo Bimbel Gambar Villa Merah" class="w-10 h-10 p-1" src="https://bimbelgambar.id/wp-content/uploads/2023/06/favicon-20200601113259.png"/>
 </div>
 <div>
@@ -183,8 +223,8 @@
 </div>
 </header>
 <div class="flex pt-20">
-<aside class="w-64 fixed left-0 min-h-full bg-white text-gray-900 shadow-xl border-r border-gray-200 transition-all duration-300">
-<nav class="p-4 space-y-2" id="sidebarMenu"></nav>
+<aside class="w-64 fixed left-0 min-h-full text-white bg-gradient-to-b from-blue-700 to-blue-900 shadow-xl border-r border-blue-950/20 transition-all duration-300">
+<nav class="p-4 rounded-xl space-y-2" id="sidebarMenu"></nav>
 </aside>
 <main class="ml-64 flex-1 p-8 w-full">
 <div class="fade-in" id="contentArea"></div>
@@ -192,10 +232,10 @@
 </div>
 </div>
 <div class="hidden fixed inset-0 z-50 overflow-y-auto" id="modal">
-<div class="flex items-center justify-center min-h-full p-4">
+<div class="flex items-center justify-center min-h-full p-4 rounded-xl">
 <div class="modal-backdrop fixed inset-0" onclick="closeModal()"></div>
 <div class="bg-white rounded-lg shadow-xl relative z-10 max-w-4xl w-full max-h-full overflow-y-auto">
-<div class="p-6">
+<div class="p-6 rounded-xl">
 <div class="flex justify-between items-center mb-4">
 <h3 class="text-xl font-bold text-gray-900" id="modalTitle"></h3><button class="text-gray-400 hover:text-gray-600" onclick="closeModal()"> <span class="text-2xl">×</span> </button>
 </div>
@@ -680,9 +720,10 @@ let activityScheduleData = [
             let menuItems = [
                 { id: 'home', label: 'Home', icon: '🏠' },
                 { id: 'artProgress', label: 'Kemajuan Gambar', icon: '🎨' },
+                { id: 'attendance', label: 'Data Kehadiran', icon: '🗓️' },
                 { id: 'skolastikProgress', label: 'Kemajuan Tes Skolastik', icon: '📊' },
                 // PERUBAHAN NAMA MODUL: 'Kemajuan TKA'
-                { id: 'tkaProgress', label: 'Kemajuan TKA', icon: '📈' }, 
+                { id: 'tkaProgress', label: 'Kemajuan TKA', icon: '📈' },
                 { id: 'schedule', label: 'Jadwal Belajar', icon: '📅' }, 
                 { id: 'activitySchedule', label: 'Jadwal Kegiatan', icon: '📆' },
                 { id: 'materials', label: 'Materi Kelas', icon: '📚' },
@@ -702,7 +743,7 @@ let activityScheduleData = [
         ];
     }
     sidebar.innerHTML = menuItems.map(item => `
-                <button onclick="loadModule('${item.id}')" id="menu-${item.id}" class="w-full text-left px-5 py-3 rounded-xl hover:bg-blue-800 hover:shadow-lg hover:shadow-blue-900/30 transition-all duration-300 flex items-center space-x-3 tracking-wide font-medium" style="text-shadow: 0 1px 2px rgba(0,0,0,0.4);">
+                <button onclick="loadModule('${item.id}')" id="menu-${item.id}" class="w-full text-left px-5 py-3 rounded-xl hover:bg-blue-800 hover:shadow-lg hover:shadow-blue-900/30 transition-all duration-300 flex items-center space-x-3 tracking-wide font-medium rounded-xl" style="text-shadow: 0 1px 2px rgba(0,0,0,0.4);">
                     <span class="text-xl">${item.icon}</span>
                     <span>${item.label}</span>
                 </button>
@@ -723,13 +764,6 @@ let activityScheduleData = [
 
         function loadModule(moduleId) {
     const ca = document.getElementById('contentArea');
-    // PATCH: add admin-view class
-    if (currentUser.role === 'Admin') {
-        ca.classList.add('admin-view');
-    } else {
-        ca.classList.remove('admin-view');
-    }
-
     if (currentUser.role === 'Siswa' && moduleId !== 'home') {
         ca.classList.add('student-view');
     } else {
@@ -780,6 +814,10 @@ let activityScheduleData = [
                 case 'manageAdmins': // MODUL BARU
                     loadManageAdmins();
                     break;
+                case 'attendance':
+                    loadAttendance();
+                    break;
+
             }
         }
 
@@ -829,39 +867,39 @@ if (role === 'Super Admin') {
         const totalKelas = [...new Set(studentsData.map(s => (s.class||'').toString().trim()).filter(Boolean))].length;
 
 content.innerHTML = `
-        <div class="fade-in ml-6 mr-6">
-            <div class="bg-gradient-to-r from-blue-600 to-blue-800 rounded-lg p-6 mb-6 text-white shadow-lg">
-                <h2 class="text-4xl font-bold mb-2">Selamat Datang ${currentUser.name}</h2>
+        <div class="fade-in ml-2 mr-6">
+            <div class="bg-gradient-to-r from-blue-600 to-blue-800  p-6 rounded-xl mb-6 text-white shadow-lg rounded-xl">
+                <h2 class="text-4xl font-bold mb-2 rounded-xl">Selamat Datang ${currentUser.name}</h2>
                 <p class="text-blue-100 text-lg">Dashboard Kontrol Pusat - Semua Regional</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-4 gap-5 mb-6">
-                <div class="p-6 rounded-2xl shadow-lg bg-gradient-to-br from-blue-500 to-blue-700 border border-blue-200 text-center">
+                <div class="p-6 rounded-xl  shadow-lg bg-gradient-to-br from-blue-700 to-blue-900 border border-blue-200 text-center rounded-xl">
                     <h4 class="font-semibold text-white mb-2 text-lg">📘 Total Siswa</h4>
                     <p class="text-4xl font-extrabold text-white">${totalStudents}</p>
                     <p class="text-sm text-blue-100 mt-2">Total seluruh regional</p>
                 </div>
 
-                <div class="p-6 rounded-2xl shadow-lg bg-gradient-to-br from-green-500 to-green-700 border border-green-200 text-white text-center">
+                <div class="p-6 rounded-xl  shadow-lg bg-gradient-to-br from-green-500 to-green-700 border border-green-200 text-white text-center rounded-xl">
                     <h4 class="font-semibold mb-2 text-lg">🏫 Total Kelas</h4>
     <p class="text-4xl font-bold text-white">${totalKelas}</p>
     <p class="text-sm text-green-100 mt-2">Total seluruh regional</p>
 </div>
 
-                <div class="p-6 rounded-2xl shadow-lg bg-gradient-to-br from-purple-500 to-purple-700 border border-purple-200 text-center text-white">
+                <div class="p-6 rounded-xl  shadow-lg bg-gradient-to-br from-purple-500 to-purple-700 border border-purple-200 text-center text-white rounded-xl">
                     <h4 class="font-semibold text-lg mb-2">🎨 Siswa Seni Rupa</h4>
                     <p class="text-4xl font-extrabold text-white">${seniRupaCount}</p>
                     <p class="text-sm text-white mt-2">Total seluruh regional</p>
                 </div>
 
-                <div class="p-6 rounded-2xl shadow-lg bg-gradient-to-br from-orange-500 to-orange-700 border border-orange-200 text-center text-white">
+                <div class="p-6 rounded-xl  shadow-lg bg-gradient-to-br from-orange-500 to-orange-700 border border-orange-200 text-center text-white rounded-xl">
                     <h4 class="font-semibold text-lg mb-2">🏗️ Siswa Arsitektur</h4>
                     <p class="text-4xl font-extrabold text-white">${arsitekturCount}</p>
                     <p class="text-sm text-white mt-2">Total seluruh regional</p>
                 </div>
             </div>
 
-            <div class="bg-white/80 backdrop-blur-sm border border-gray-200 rounded-2xl shadow-xl p-6">
+            <div class="bg-white/80 backdrop-blur-sm border border-gray-200  shadow-xl p-6 rounded-xl">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="text-2xl font-bold text-gray-900">📋 Data Kelas Aktif</h3>
                     
@@ -1014,25 +1052,25 @@ else if (role === 'Admin') {
     const content = document.getElementById('contentArea');
     content.innerHTML = `
       <main class='max-w-8xl mx-auto py-4 px-8 fade-in ml-1 mr-8'>
-        <div class='bg-gradient-to-r from-blue-600 to-blue-800 rounded-xl p-8 mb-5 text-white shadow-lg'>
+        <div class='bg-gradient-to-r from-blue-600 to-blue-800  p-8 mb-5 text-white shadow-lg rounded-xl'>
           <h2 class='text-3xl font-bold mb-2'>Selamat Datang ${currentUser.name}</h2>
           <p class='text-blue-100'>Informasi Laporan Kemajuan Siswa - ${currentUser.region}</p>
         </div>
 
         <div class='grid grid-cols-1 md:grid-cols-4 gap-6 mb-8'>
-          <div class='rounded-xl p-6 shadow-md text-white bg-gradient-to-br from-blue-500 to-blue-700'>
+          <div class=' p-6 rounded-xl shadow-md rounded-xl text-white bg-gradient-to-br from-blue-700 to-blue-900'>
             <p class='text-sm text-center text-blue-100 mb-1'>Total Siswa</p>
             <p class='text-3xl text-center font-bold text-white'>${totalStudents}</p>
           </div>
-          <div class='rounded-xl p-6 shadow-md text-white bg-gradient-to-br from-green-500 to-green-700'>
+          <div class=' p-6 rounded-xl shadow-md text-white bg-gradient-to-br from-green-500 to-green-700'>
             <p class='text-sm text-center text-green-100 mb-1'>Total Kelas</p>
             <p class='text-3xl text-center font-semibold text-white'>${[...new Set(adminStudents.map(s=> (s.class||'').toString().trim()).filter(Boolean))].length}</p>
           </div>
-          <div class='rounded-xl p-6 shadow-md text-white bg-gradient-to-br from-purple-500 to-purple-700'>
+          <div class=' p-6 rounded-xl shadow-md text-white bg-gradient-to-br from-purple-500 to-purple-700'>
             <p class='text-sm text-center text-purple-100 mb-1'>Siswa Seni Rupa</p>
             <p class='text-3xl text-center font-bold text-white'>${seniRupaCount}</p>
           </div>
-          <div class='rounded-xl p-6 shadow-md text-white bg-gradient-to-br from-orange-500 to-orange-700'>
+          <div class=' p-6 rounded-xl shadow-md text-white bg-gradient-to-br from-orange-500 to-orange-700'>
             <p class='text-sm text-center text-orange-100 mb-1'>Siswa Arsitektur</p>
             <p class='text-3xl text-center font-bold text-white'>${arsitekturCount}</p>
           </div>
@@ -1042,7 +1080,7 @@ else if (role === 'Admin') {
           <span class='text-2xl text-center mr-2'>📋</span> Data Kelas Aktif
         </h3>
 
-        <div class='bg-white/80 backdrop-blur-sm border border-gray-200 rounded-2xl shadow-xl overflow-hidden'>
+        <div class='bg-white/80 backdrop-blur-sm border border-gray-200  shadow-xl overflow-hidden'>
           <div class='overflow-x-auto'>
             <table class='min-w-full divide-y divide-gray-200'>
               <thead class='bg-blue-800 text-white'>
@@ -1066,7 +1104,7 @@ else if (role === 'Admin') {
     // Student Home (Fixed UI) - UPDATED with 3 realtime statistic cards above the original 3 cards
     const studentData = studentsData.find(s => s.name === currentUser.name);
     if (!studentData) {
-        content.innerHTML = '<div class="text-center text-gray-500">Data siswa tidak ditemukan</div>';
+        content.innerHTML = '<div class= rounded-xl"text-center text-gray-500">Data siswa tidak ditemukan</div>';
         return;
     }
 
@@ -1082,9 +1120,9 @@ else if (role === 'Admin') {
     const avgTKA = tkaScores.length > 0 ? Math.round(tkaScores.reduce((a,b)=>a+b,0) / tkaScores.length) : 0;
 
     content.innerHTML = `
-    <div class="fade-in ml-6 mr-6">
-        <div class="bg-gradient-to-r from-blue-600 to-blue-800 rounded-lg p-6 mb-4 text-white shadow-lg">
-            <h2 class="text-4xl font-bold mb-3">Selamat Datang ${currentUser.name}</h2>
+    <div class="fade-in ml-2 mr-6">
+        <div class="bg-gradient-to-r from-blue-600 to-blue-800  p-6 rounded-xl mb-4 text-white shadow-lg rounded-xl">
+            <h2 class="text-4xl font-bold mb-3 rounded-xl">Selamat Datang ${currentUser.name}</h2>
             <p class="text-blue-100 text-2xl mt-1">Pantau terus perkembangan belajar Anda</p>
         </div>
 
@@ -1092,21 +1130,21 @@ else if (role === 'Admin') {
 <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mt-6 mb-6">
 
     <!-- Kehadiran -->
-    <div class="text-center p-8 rounded-2xl shadow-md bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 flex flex-col justify-center items-center space-y-2 hover:shadow-2xl transition-all">
+    <div class="text-center p-8  shadow-md rounded-xl bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 flex flex-col justify-center items-center space-y-2 hover:shadow-2xl transition-all">
         <h4 class="font-semibold text-gray-900 text-xl">📘 Kehadiran</h4>
         <p class="text-5xl font-extrabold text-blue-600">${hadirPercent}%</p>
         <p class="text-sm text-gray-600">${hadirCount} dari ${totalAttendance} pertemuan</p>
     </div>
 
     <!-- Tes Skolastik -->
-    <div class="text-center p-8 rounded-2xl shadow-md bg-gradient-to-br from-green-50 to-green-100 border border-green-200 flex flex-col justify-center items-center space-y-2 hover:shadow-2xl transition-all">
+    <div class="text-center p-8  shadow-md rounded-xl bg-gradient-to-br from-green-50 to-green-100 border border-green-200 flex flex-col justify-center items-center space-y-2 hover:shadow-2xl transition-all">
         <h4 class="font-semibold text-gray-900 text-xl">📊 Tes Skolastik</h4>
         <p class="text-5xl font-extrabold text-green-600">${avgSkolastik}</p>
         <p class="text-sm text-gray-600">Rata-rata skor</p>
     </div>
 
     <!-- TKA -->
-    <div class="text-center p-8 rounded-2xl shadow-md bg-gradient-to-br from-purple-50 to-purple-100 border border-purple-200 flex flex-col justify-center items-center space-y-2 hover:shadow-2xl transition-all">
+    <div class="text-center p-8  shadow-md rounded-xl bg-gradient-to-br from-purple-50 to-purple-100 border border-purple-200 flex flex-col justify-center items-center space-y-2 hover:shadow-2xl transition-all">
         <h4 class="font-semibold text-gray-900 text-xl">📈 Kemajuan TKA</h4>
         <p class="text-5xl font-extrabold text-purple-600">${avgTKA}</p>
         <p class="text-sm text-gray-600">Rata-rata skor</p>
@@ -1116,16 +1154,16 @@ else if (role === 'Admin') {
 
 <!-- ===== Bottom: original 3 cards   (kept intact) ===== -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mt-6 mb-12">
-            <div class="text-center p-8 rounded-2xl shadow-md bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 hover:shadow-2xl transition-all duration-300 min-h-[380px] flex flex-col justify-center items-center space-y-4">
-                <div class="bg-blue-500 rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-4 shadow-md">
+            <div class="text-center p-8  shadow-md rounded-xl bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 hover:shadow-2xl transition-all duration-300 min-h-[380px] flex flex-col justify-center items-center space-y-4">
+                <div class="bg-blue-500  w-24 h-24 flex items-center justify-center mx-auto mb-4 shadow-md rounded-xl">
                     <span class="text-4xl text-white">🎨</span>
                 </div>
                 <h4 class="font-semibold text-center text-gray-900 mb-2 text-xl">Total Karya</h4>
                 <p class="text-5xl text-center font-extrabold text-blue-600">${studentData.artworks.length}</p>
             </div>
 
-            <div class="text-center p-8 rounded-2xl shadow-md bg-gradient-to-br from-green-50 to-green-100 border border-green-200 hover:shadow-2xl transition-all duration-300 min-h-[380px] flex flex-col justify-center items-center space-y-4">
-                <div class="bg-green-500 rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-4 shadow-md">
+            <div class="text-center p-8  shadow-md rounded-xl bg-gradient-to-br from-green-50 to-green-100 border border-green-200 hover:shadow-2xl transition-all duration-300 min-h-[380px] flex flex-col justify-center items-center space-y-4">
+                <div class="bg-green-500  w-24 h-24 flex items-center justify-center mx-auto mb-4 shadow-md rounded-xl">
                     <span class="text-4xl text-center text-white">📅</span>
                 </div>
                 <h4 class="font-semibold text-center text-gray-900 mb-2 text-xl">Karya Terbaru</h4>
@@ -1135,8 +1173,8 @@ else if (role === 'Admin') {
                 ` : `<p class="text-2xl font-bold text-gray-500">Belum ada</p>`}
             </div>
 
-            <div class="text-center p-8 rounded-2xl shadow-md bg-gradient-to-br from-purple-50 to-purple-100 border border-purple-200 hover:shadow-2xl transition-all duration-300 min-h-[380px] flex flex-col justify-center items-center space-y-4">
-                <div class="bg-purple-500 rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-4 shadow-md">
+            <div class="text-center p-8  shadow-md rounded-xl bg-gradient-to-br from-purple-50 to-purple-100 border border-purple-200 hover:shadow-2xl transition-all duration-300 min-h-[380px] flex flex-col justify-center items-center space-y-4">
+                <div class="bg-purple-500  w-24 h-24 flex items-center justify-center mx-auto mb-4 shadow-md rounded-xl">
                     <span class="text-4xl text-white">🏠</span>
                 </div>
                 <h4 class="font-semibold text-gray-900 mb-2 text-xl">Kelas Saat Ini</h4>
@@ -1182,10 +1220,10 @@ else if (role === 'Admin') {
                 <div class='fade-in'>
                     <div class='flex justify-between items-center mb-6'>
                         <h2 class='text-2xl font-bold text-gray-900'>📜 Log Aktivitas Login</h2>
-                        <button onclick='clearActivityLogs()' class='px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all shadow-md'>Hapus Log</button>
+                        <button onclick='clearActivityLogs()' class='px-4 py-2 bg-red-600 text-white  hover:bg-red-700 transition-all shadow-md rounded-xl'>Hapus Log</button>
                     </div>
 
-                    <div class='bg-white border border-gray-200 rounded-xl shadow-md overflow-hidden'>
+                    <div class='bg-white border border-gray-200  shadow-md overflow-hidden'>
                         <table class='min-w-full divide-y divide-gray-200'>
                             <thead class='bg-blue-800 text-white'>
                                 <tr>
@@ -1224,10 +1262,10 @@ else if (role === 'Admin') {
                 <div class="fade-in">
                     <div class="flex justify-between items-center mb-6">
                         <h2 class="text-2xl font-bold text-gray-900">🛡️ Kelola Admin Regional</h2>
-                        <button onclick="addRegionalAdmin()" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 shadow-sm">+ Tambah Admin Regional</button>
+                        <button onclick="addRegionalAdmin()" class="px-4 py-2 bg-red-600 text-white  hover:bg-red-700 shadow-sm">+ Tambah Admin Regional</button>
                     </div>
 
-                    <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                    <div class="bg-white border border-gray-200  p-6 rounded-xl shadow-sm">
                         <h3 class="text-xl font-semibold text-gray-900 mb-4">Daftar Akun Admin Regional (${regionalAdmins.length})</h3>
                         <div class="overflow-x-auto">
                             <table class="w-full">
@@ -1480,7 +1518,7 @@ function confirmDeleteRegionalAdmin(username) {
             });
 
             return `
-                <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm mb-6">
+                <div class="bg-white border border-gray-200 rounded-lg p-6 rounded-xl shadow-sm mb-6">
                     <h4 class="text-lg font-semibold text-gray-900 mb-3">Filter Regional</h4>
                     <select onchange="${filterFunctionName}(this.value)" class="w-full md:w-64 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
                         <option value="all" ${currentRegionFilter === 'all' ? 'selected' : ''}>Semua Regional</option>
@@ -1547,7 +1585,7 @@ function confirmDeleteRegionalAdmin(username) {
         // NEW: Function to render student list grouped by class
         function renderStudentGroupedByClass(displayData, isAdminOrSuperAdmin, currentModule) {
             if (displayData.length === 0) {
-                return `<div class="text-center p-6 text-gray-500">Tidak ada data siswa yang ditemukan di regional ini atau filter kelas yang dipilih.</div>`;
+                return `<div class="text-center p-6 rounded-xl text-gray-500">Tidak ada data siswa yang ditemukan di regional ini atau filter kelas yang dipilih.</div>`;
             }
 
             // Get available classes for the current region
@@ -1565,7 +1603,7 @@ function confirmDeleteRegionalAdmin(username) {
             }, {});
 
             if (Object.keys(groupedStudents).length === 0) {
-                 return `<div class="text-center p-6 text-gray-500">Tidak ada siswa yang terdaftar di kelas yang tersedia atau filter kelas yang dipilih.</div>`;
+                 return `<div class="text-center p-6 rounded-xl text-gray-500">Tidak ada siswa yang terdaftar di kelas yang tersedia atau filter kelas yang dipilih.</div>`;
             }
 
             let contentHtml = '';
@@ -1598,12 +1636,12 @@ function confirmDeleteRegionalAdmin(username) {
                 }
 
                 contentHtml += `
-                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6 shadow-md">
+                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 rounded-xl mb-6 shadow-md rounded-xl">
                         <h3 class="text-xl font-bold text-blue-800 mb-2">Kelas ${className} (${studentsInClass.length} Siswa)</h3>
                         ${classStatHtml}
                         <div class="mt-4 space-y-3">
                             ${studentsInClass.map(student => `
-                                <div class="flex justify-between items-center p-4 bg-white border border-gray-200 rounded-lg shadow-sm">
+                                <div class="flex justify-between items-center p-4 rounded-xl bg-white border border-gray-200 rounded-lg shadow-sm">
                                     <div>
                                         <p class="font-semibold text-gray-900">${student.name}</p>
                                         <p class="text-sm text-gray-600">${student.school || 'Sekolah belum ditentukan'}</p>
@@ -1666,7 +1704,7 @@ function confirmDeleteRegionalAdmin(username) {
                                     const artworksInMonth = groupedArtworks[monthYear];
                                     
                                     return `
-                                        <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 shadow-sm">
+                                        <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 rounded-xl shadow-sm">
                                             <details>
                                                 <summary class="font-bold text-gray-800 cursor-pointer p-2 -m-2">
                                                     📁 ${monthName} ${year} (${artworksInMonth.length} Karya)
@@ -1675,7 +1713,7 @@ function confirmDeleteRegionalAdmin(username) {
                                                     ${artworksInMonth.map(art => `
                                                         <div class="border border-gray-200 rounded-lg overflow-hidden shadow-sm">
                                                             <img src="${art.image}" alt="${art.title}" class="w-full h-48 object-cover ${isAdminOrSuperAdmin ? 'editable-image cursor-pointer' : ''}" ${isAdminOrSuperAdmin ? `onclick="editArtworkImage(${student.id}, ${art.id})"` : ''}>
-                                                            <div class="p-4">
+                                                            <div class="p-4 rounded-xl">
                                                                 <h5 class="font-semibold text-gray-900">${art.title}</h5>
                                                                 <p class="text-sm text-gray-600 mt-1">${art.description}</p>
                                                                 <p class="text-sm text-gray-500 mt-1">📅 ${art.date}</p>
@@ -1700,39 +1738,7 @@ function confirmDeleteRegionalAdmin(username) {
                             ` : '<p class="text-gray-500">Belum ada karya yang dibuat</p>'}
                         </div>
 
-                        <div>
-                            <div class="flex justify-between items-center">
-                                <h4 class="font-semibold text-gray-900 mb-3">📋 Data Kehadiran (${student.attendance.length})</h4>
-                                ${isAdminOrSuperAdmin && currentUser.role !== 'Siswa' ? `<button onclick="addAttendance(${student.id})" class="mb-3 px-3 py-1 bg-green-600 text-white rounded-lg hover:bg-green-700 shadow-sm text-sm">+ Tambah</button>` : ''}
-                            </div>
-                            <div class="overflow-x-auto">
-                                <table class="w-full">
-                                    <thead class="bg-blue-800 text-white">
-                                        <tr>
-                                            <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Tanggal</th>
-                                            <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Status</th>
-                                            ${isAdminOrSuperAdmin ? '<th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Aksi</th>' : ''}
-                                        </tr>
-                                    </thead>
-                                    <tbody class="bg-white">
-                                        ${student.attendance.map((att, idx) => `
-                                            <tr class="border-t border-gray-200">
-                                                <td class="px-4 py-3 text-sm text-gray-900">${att.date}</td>
-                                                <td class="px-4 py-3 text-sm">
-                                                    <span class="px-2 py-1 rounded ${att.status === 'Hadir' ? 'bg-green-100 text-green-800' : att.status === 'Izin' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'}">${att.status}</span>
-                                                </td>
-                                                ${isAdminOrSuperAdmin ? `
-                                                    <td class="px-4 py-3 text-sm">
-                                                        <button onclick="editAttendance(${student.id}, ${idx})" class="text-blue-600 hover:text-blue-800 mr-2">Edit</button>
-                                                        <button onclick="deleteAttendance(${student.id}, ${idx})" class="text-red-600 hover:text-red-800">Hapus</button>
-                                                    </td>
-                                                ` : ''}
-                                            </tr>
-                                        `).join('')}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+                        
                     </div>
                 `;
             }).join(''); // Join back the outer array
@@ -1874,7 +1880,7 @@ function confirmDeleteRegionalAdmin(username) {
             if (currentUser.role === 'Super Admin') {
                 // --- SUPER ADMIN VIEW: SUMMARY ONLY ---
                 moduleContent = `
-                    <div class="bg-gradient-to-r from-red-600 to-red-800 rounded-lg p-6 mb-8 text-white shadow-lg">
+                    <div class="bg-gradient-to-r from-red-600 to-red-800 rounded-lg p-6 rounded-xl mb-8 text-white shadow-lg rounded-xl">
                         <h3 class="text-xl font-bold">Ringkasan Kemajuan Gambar ${displayTitle}</h3>
                         <p class="text-sm text-red-100 mt-1">Status terbaru dari karya siswa di seluruh regional/regional terpilih</p>
                     </div>
@@ -1882,15 +1888,15 @@ function confirmDeleteRegionalAdmin(username) {
                     ${renderRegionDropdown(selectedAdminRegion, 'filterArtProgressByRegion')}
 
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-6">
-                        <div class="super-admin-card-3 rounded-lg p-6 text-white shadow-xl">
+                        <div class="super-admin-card-3 rounded-xl bg-gradient-to-br from-blue-700 to-blue-900" rounded-lg p-6 rounded-xl text-white shadow-xl">
                             <p class="text-blue-100">Total Siswa</p>
                             <p class="text-4xl font-bold">${totalStudents}</p>
                         </div>
-                        <div class="bg-green-500 rounded-lg p-6 text-white shadow-xl">
+                        <div class="bg-green-500 rounded-lg p-6 rounded-xl text-white shadow-xl">
                             <p class="text-green-100">Total Karya Seni</p>
                             <p class="text-4xl font-bold">${totalArtworks}</p>
                         </div>
-                        <div class="bg-yellow-500 rounded-lg p-6 text-white shadow-xl">
+                        <div class="bg-yellow-500 rounded-lg p-6 rounded-xl text-white shadow-xl">
                             <p class="text-yellow-100">Rata-rata Kehadiran</p>
                             <p class="text-4xl font-bold">${avgAttendanceRate}%</p>
                         </div>
@@ -1902,7 +1908,7 @@ function confirmDeleteRegionalAdmin(username) {
                              ${renderStudentGroupedByClass(displayData, isAdminOrSuperAdmin, 'artProgress')}
                         </div>
                     ` : `
-                        <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                        <div class="bg-white border border-gray-200 rounded-lg p-6 rounded-xl shadow-sm">
                             <h4 class="text-xl font-bold text-gray-900 mb-3">Update Terbaru Karya Siswa</h4>
                             <p class="text-gray-600">Fitur ini menampilkan ringkasan data global. Untuk detail siswa, silakan filter berdasarkan regional di atas.</p>
                             </div>
@@ -1914,7 +1920,7 @@ function confirmDeleteRegionalAdmin(username) {
 
                 // --- ADMIN REGIONAL VIEW: GROUPED BY CLASS ---
                 moduleContent = `
-                    <div class="bg-white border border-gray-200 rounded-lg p-4 mb-6 shadow-sm">
+                    <div class="bg-white border border-gray-200 rounded-lg p-4 rounded-xl mb-6 shadow-sm">
                         <h3 class="text-lg font-semibold text-gray-900 mb-3">Filter Kelas</h3>
                         
 <!-- Filter Kelas (Dropdown versi clean) -->
@@ -2003,7 +2009,7 @@ function confirmDeleteRegionalAdmin(username) {
             if (currentUser.role === 'Super Admin') {
                 // --- SUPER ADMIN VIEW: SUMMARY ONLY ---
                 moduleContent = `
-                    <div class="bg-gradient-to-r from-red-600 to-red-800 rounded-lg p-6 mb-8 text-white shadow-lg">
+                    <div class="bg-gradient-to-r from-red-600 to-red-800 rounded-lg p-6 rounded-xl mb-8 text-white shadow-lg rounded-xl">
                         <h3 class="text-xl font-bold">Ringkasan Kemajuan Tes Skolastik ${displayTitle}</h3>
                         <p class="text-sm text-red-100 mt-1">Status terbaru dari tes skolastik siswa di seluruh regional/regional terpilih</p>
                     </div>
@@ -2011,15 +2017,15 @@ function confirmDeleteRegionalAdmin(username) {
                     ${renderRegionDropdown(selectedAdminRegion, 'filterSkolastikByRegion')}
 
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-6">
-                        <div class="super-admin-card-3 rounded-lg p-6 text-white shadow-xl">
+                        <div class="super-admin-card-3 rounded-xl bg-gradient-to-br from-blue-700 to-blue-900" rounded-lg p-6 rounded-xl text-white shadow-xl">
                             <p class="text-blue-100">Total Siswa</p>
                             <p class="text-4xl font-bold">${totalStudents}</p>
                         </div>
-                        <div class="bg-purple-500 rounded-lg p-6 text-white shadow-xl">
+                        <div class="bg-purple-500 rounded-lg p-6 rounded-xl text-white shadow-xl">
                             <p class="text-purple-100">Total Tes Dilakukan</p>
                             <p class="text-4xl font-bold">${totalTests}</p>
                         </div>
-                        <div class="bg-blue-500 rounded-lg p-6 text-white shadow-xl">
+                        <div class="bg-blue-500 rounded-lg p-6 rounded-xl text-white shadow-xl">
                             <p class="text-blue-100">Rata-rata Nilai Skolastik</p>
                             <p class="text-4xl font-bold">${avgScore}</p>
                         </div>
@@ -2031,7 +2037,7 @@ function confirmDeleteRegionalAdmin(username) {
                              ${renderStudentGroupedByClass(displayData, isAdminOrSuperAdmin, 'skolastikProgress')}
                         </div>
                     ` : `
-                        <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                        <div class="bg-white border border-gray-200 rounded-lg p-6 rounded-xl shadow-sm">
                             <h4 class="text-xl font-bold text-gray-900 mb-3">Update Terbaru Tes Skolastik</h4>
                             <p class="text-gray-600">Fitur ini menampilkan ringkasan data global. Untuk detail siswa, silakan filter berdasarkan regional di atas.</p>
                             <p class="text-sm text-gray-500 mt-2">Tes Terbaru: ${latestTestDate}</p>
@@ -2044,7 +2050,7 @@ function confirmDeleteRegionalAdmin(username) {
 
                  // --- ADMIN REGIONAL VIEW: GROUPED BY CLASS ---
                  moduleContent = `
-                    <div class="bg-white border border-gray-200 rounded-lg p-4 mb-6 shadow-sm">
+                    <div class="bg-white border border-gray-200 rounded-lg p-4 rounded-xl mb-6 shadow-sm">
                         <h3 class="text-lg font-semibold text-gray-900 mb-3">Filter Kelas</h3>
                         
 <!-- Filter Kelas (Dropdown versi clean) -->
@@ -2130,7 +2136,7 @@ function confirmDeleteRegionalAdmin(username) {
             if (currentUser.role === 'Super Admin') {
                 // --- SUPER ADMIN VIEW: SUMMARY ONLY ---
                 moduleContent = `
-                    <div class="bg-gradient-to-r from-red-600 to-red-800 rounded-lg p-6 mb-8 text-white shadow-lg">
+                    <div class="bg-gradient-to-r from-red-600 to-red-800 rounded-lg p-6 rounded-xl mb-8 text-white shadow-lg rounded-xl">
                         <h3 class="text-xl font-bold">Ringkasan Kemajuan Tes TKA ${displayTitle}</h3>
                         <p class="text-sm text-red-100 mt-1">Status terbaru dari tes TKA siswa di seluruh regional/regional terpilih</p>
                     </div>
@@ -2138,15 +2144,15 @@ function confirmDeleteRegionalAdmin(username) {
                     ${renderRegionDropdown(selectedAdminRegion, 'filterTkaByRegion')}
 
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-6">
-                        <div class="super-admin-card-3 rounded-lg p-6 text-white shadow-xl">
+                        <div class="super-admin-card-3 rounded-xl bg-gradient-to-br from-blue-700 to-blue-900" rounded-lg p-6 rounded-xl text-white shadow-xl">
                             <p class="text-blue-100">Total Siswa</p>
                             <p class="text-4xl font-bold">${totalStudents}</p>
                         </div>
-                        <div class="bg-purple-500 rounded-lg p-6 text-white shadow-xl">
+                        <div class="bg-purple-500 rounded-lg p-6 rounded-xl text-white shadow-xl">
                             <p class="text-purple-100">Total Tes Dilakukan</p>
                             <p class="text-4xl font-bold">${totalTests}</p>
                         </div>
-                        <div class="bg-blue-500 rounded-lg p-6 text-white shadow-xl">
+                        <div class="bg-blue-500 rounded-lg p-6 rounded-xl text-white shadow-xl">
                             <p class="text-blue-100">Rata-rata Nilai TKA</p>
                             <p class="text-4xl font-bold">${avgScore}</p>
                         </div>
@@ -2158,7 +2164,7 @@ function confirmDeleteRegionalAdmin(username) {
                              ${renderStudentGroupedByClass(displayData, isAdminOrSuperAdmin, 'tkaProgress')}
                         </div>
                     ` : `
-                        <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                        <div class="bg-white border border-gray-200 rounded-lg p-6 rounded-xl shadow-sm">
                             <h4 class="text-xl font-bold text-gray-900 mb-3">Update Terbaru Tes TKA</h4>
                             <p class="text-gray-600">Fitur ini menampilkan ringkasan data global. Untuk detail siswa, silakan filter berdasarkan regional di atas.</p>
                             <p class="text-sm text-gray-500 mt-2">Tes Terbaru: ${latestTestDate}</p>
@@ -2171,7 +2177,7 @@ function confirmDeleteRegionalAdmin(username) {
 
                 // --- ADMIN REGIONAL VIEW: GROUPED BY CLASS ---
                  moduleContent = `
-                    <div class="bg-white border border-gray-200 rounded-lg p-4 mb-6 shadow-sm">
+                    <div class="bg-white border border-gray-200 rounded-lg p-4 rounded-xl mb-6 shadow-sm">
                         <h3 class="text-lg font-semibold text-gray-900 mb-3">Filter Kelas</h3>
                         
 <!-- Filter Kelas (Dropdown versi clean) -->
@@ -2230,7 +2236,7 @@ function confirmDeleteRegionalAdmin(username) {
 
                     <div class="space-y-6">
                         ${educationInfo.map(info => `
-                            <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                            <div class="bg-white border border-gray-200 rounded-lg p-6 rounded-xl shadow-sm">
                                 <div class="flex justify-between items-start">
                                     <div class="flex-1">
                                         <h3 class="text-lg font-semibold text-gray-900 mb-2">${info.title}</h3>
@@ -2340,7 +2346,7 @@ function confirmDeleteRegionalAdmin(username) {
                         ${isAdminOrSuperAdmin ? '<button onclick="openAddMaterialModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow transition">+ Tambah Materi</button>' : ''}
                     </div>
 
-                    <div class=" p-6 ">
+                    <div class=" p-6 rounded-xl ">
                         <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center">
                             <span class="text-3xl mr-3">📚</span> Daftar Materi Kelas ${currentUser.role !== 'Siswa' ? `(${regionFilterTitle})` : ''}
                         </h2>
@@ -2588,7 +2594,7 @@ function confirmDeleteRegionalAdmin(username) {
                     ${currentUser.role === 'Super Admin' ? renderRegionDropdown(selectedAdminRegion, 'filterScheduleByRegion') : ''}
 
                     ${isAdminOrSuperAdmin ? `
-                        <div class="bg-white border border-gray-200 rounded-lg p-4 mb-6 shadow-sm">
+                        <div class="bg-white border border-gray-200 rounded-lg p-4 rounded-xl mb-6 shadow-sm">
                             <h3 class="text-lg font-semibold text-gray-900 mb-3">Filter Kelas</h3>
                             
 <!-- Filter Kelas (Dropdown versi clean) -->
@@ -2680,7 +2686,7 @@ function loadAddStudent() {
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-6">
-        <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+        <div class="bg-white border border-gray-200 rounded-lg p-6 rounded-xl shadow-sm">
           <h3 class="text-xl font-semibold text-gray-900 mb-4">Form Tambah Siswa</h3>
           <form id="addStudentForm" class="space-y-4">
             <div>
@@ -2721,7 +2727,7 @@ function loadAddStudent() {
           </form>
         </div>
 
-        <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+        <div class="bg-white border border-gray-200 rounded-lg p-6 rounded-xl shadow-sm">
           <h3 class="text-xl font-semibold text-gray-900 mb-4">Siswa Terdaftar</h3>
 
           <!-- Filter Kelas (vertikal, di atas tabel) -->
@@ -3226,7 +3232,8 @@ function openAddStudentModal() {
                 };
                 student.attendance.push(newAttendance);
                 closeModal();
-                loadArtProgress();
+                try{ saveAllData(); }catch(e){}
+                if (typeof loadAttendance === 'function' && currentModule === 'attendance') { loadAttendance(); } else { loadArtProgress(); }
                 showNotification('Data kehadiran berhasil ditambahkan!');
             });
         }
@@ -3259,7 +3266,8 @@ function openAddStudentModal() {
                 attendance.date = document.getElementById('editAttendanceDate').value;
                 attendance.status = document.getElementById('editAttendanceStatus').value;
                 closeModal();
-                loadArtProgress();
+                try{ saveAllData(); }catch(e){}
+                if (typeof loadAttendance === 'function' && currentModule === 'attendance') { loadAttendance(); } else { loadArtProgress(); }
                 showNotification('Data kehadiran berhasil diupdate!');
             });
         }
@@ -3291,7 +3299,8 @@ function openAddStudentModal() {
             student.attendance.splice(attendanceIndex, 1);
             
             closeModal();
-            loadArtProgress(); // Reload the module to reflect the change
+            try{ saveAllData(); }catch(e){}
+            if (typeof loadAttendance === 'function' && currentModule === 'attendance') { loadAttendance(); } else { loadArtProgress(); }
             showNotification('Data kehadiran berhasil dihapus!', 'success');
         }
 
@@ -4201,7 +4210,7 @@ function loadManageClasses() {
       </div>
 
       <!-- 🔽 Daftar Kelas -->
-      <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm overflow-x-auto">
+      <div class="bg-white border border-gray-200 rounded-lg p-6 rounded-xl shadow-sm overflow-x-auto">
         <table class="min-w-full divide-y divide-gray-200">
           <thead class="bg-blue-800 text-white">
             <tr>
@@ -4407,7 +4416,7 @@ function filterClasses() {
                         </div>
                         <h3 class="text-lg font-semibold text-gray-900 mb-2">Kelas Tidak Dapat Dihapus</h3>
                         <p class="text-gray-700 mb-4">Kelas <strong>${classItem.name}</strong> di regional <strong>${targetRegion}</strong> masih memiliki <strong>${studentsInClass.length} siswa</strong> yang terdaftar.</p>
-                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4 text-left">
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-xl mb-4 text-left">
                             <h4 class="font-semibold text-yellow-800 mb-2">Siswa yang terdaftar:</h4>
                             <ul class="text-sm text-yellow-700 space-y-1">
                                 ${studentsInClass.map(student => `<li>• ${student.name}</li>`).join('')}
@@ -4555,7 +4564,7 @@ function loadActivitySchedule() {
                     `<button onclick="openAddActivity()" class='px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-sm'>+ Tambah Kegiatan</button>` : ''}
             </div>
 
-            <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+            <div class="bg-white border border-gray-200 rounded-lg p-6 rounded-xl shadow-sm">
                 <div class="overflow-x-auto">
                     <table class="w-full">
                         <thead class="bg-blue-800 text-white">
@@ -5234,8 +5243,6 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 </script>
-
-
 <!-- === FITUR ZOOM INTERAKTIF PRO (KHUSUS SISWA) 
 <style>
   #zoomModal {
@@ -5434,13 +5441,11 @@ document.addEventListener('DOMContentLoaded', () => {
   #zoomPrev { left: 20px; }
   #zoomNext { right: 20px; }
 </style>
-
 <div id="zoomModal" onclick="closeZoom(event)">
-  <span id="zoomPrev" onclick="prevZoom(event)">&#10094;</span>
-  <img id="zoomImage" src="" alt="Zoomed Artwork" />
-  <span id="zoomNext" onclick="nextZoom(event)">&#10095;</span>
+<span id="zoomPrev" onclick="prevZoom(event)">❮</span>
+<img alt="Zoomed Artwork" id="zoomImage" src=""/>
+<span id="zoomNext" onclick="nextZoom(event)">❯</span>
 </div>
-
 <script>
   let currentZoomIndex = 0;
   let zoomImages = [];
@@ -5499,8 +5504,6 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 </script>
 <!-- === AKHIR FITUR ZOOM INTERAKTIF PRO === -->
-
-
 <!-- === FITUR FILTER KELAS & BATASAN VISIBILITAS SISWA === -->
 <script>
   // Daftar kelas contoh (bisa diganti dari database nanti)
@@ -5562,8 +5565,6 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 </script>
 <!-- === AKHIR FITUR FILTER KELAS === -->
-
-
 <!-- === PENYEMPURNAAN FILTER KELAS UNTUK SEMUA MODUL === -->
 <script>
   window.daftarKelas = window.daftarKelas || ['SR GOLD A', 'SR GOLD B', 'SR SILVER', 'SR PLATINUM'];
@@ -5623,8 +5624,6 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 </script>
 <!-- === AKHIR PENYEMPURNAAN FILTER KELAS === -->
-
-
 <!-- === FINAL FILTER DROPDOWN + CHECKLIST UNTUK SEMUA MODUL === -->
 <script>
   window.daftarKelas = window.daftarKelas || [
@@ -5691,8 +5690,6 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 </script>
 <!-- === AKHIR FILTER DROPDOWN + CHECKLIST FINAL === -->
-
-
 <!-- === PERBAIKAN FINAL MODUL JADWAL BELAJAR (FILTER KELAS AKTIF) === -->
 <script>
   const daftarKelasBelajar = [
@@ -5743,8 +5740,6 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 </script>
 <!-- === AKHIR PERBAIKAN MODUL JADWAL BELAJAR === -->
-
-
 <!-- === PERBAIKAN AKHIR MODUL JADWAL BELAJAR (SAMA DENGAN JADWAL KEGIATAN) === -->
 <script>
   const daftarKelasSchedule = [
@@ -5799,8 +5794,6 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 </script>
 <!-- === AKHIR PERBAIKAN MODUL JADWAL BELAJAR === -->
-
-
 <!-- BEGIN: Injected Fix — Regionalize Jadwal Belajar (LKS_141_ScheduleFix) -->
 <script>
 (function(){
@@ -5881,7 +5874,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <h2 class="text-2xl font-bold text-gray-900 flex items-center"><span class="text-3xl mr-2">📚</span> Jadwal Belajar ${regionTitle ? '('+regionTitle+')' : ''}</h2>
           ${(currentUser && (currentUser.role === 'Admin' || currentUser.role === 'Super Admin')) ? '<button onclick="openAddScheduleModal()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition shadow-sm">+ Tambah Jadwal</button>' : ''}
         </div>
-        <div class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
+        <div class="bg-white border border-gray-200 rounded-lg p-4 rounded-xl shadow-sm">
           <div class="overflow-x-auto">
             <table class="w-full">
               <thead class="bg-blue-800 text-white">
@@ -6065,8 +6058,6 @@ document.addEventListener('DOMContentLoaded', () => {
 })();
 </script>
 <!-- END: Injected Fix — Regionalize Jadwal Belajar -->
-
-
 <script>
 // --- FIX: Modul Kelola Kelas ---
 function loadManageClasses() {
@@ -6084,7 +6075,7 @@ function loadManageClasses() {
         <button onclick="addClass()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-sm">+ Tambah Kelas</button>
       </div>
 
-      <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+      <div class="bg-white border border-gray-200 rounded-lg p-6 rounded-xl shadow-sm">
         <h3 class="text-xl font-semibold text-gray-900 mb-4">Daftar Kelas (${filteredClasses.length})</h3>
         <div class="overflow-x-auto">
           <table class="w-full">
@@ -6216,8 +6207,6 @@ window.deleteClass = function(id) {
   });
 };
 </script>
-
-
 <script>
 // Real-time sync: listener untuk memperbarui dropdown di modul Jadwal Kegiatan / Jadwal Kegiatan (Activity)
 function buildClassOptionsForRegion(region, includeAllOption = true) {
@@ -6254,11 +6243,6 @@ document.addEventListener('DOMContentLoaded', function(){
     refreshActivityClassDropdown();
 });
 </script>
-
-
-
-
-
 <script>
 // === FILTER REGIONAL FIX v2 ===
 
@@ -6320,7 +6304,7 @@ function loadManageClasses() {
         </div>
         <button onclick="addClass()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-sm">+ Tambah Kelas</button>
       </div>
-      <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+      <div class="bg-white border border-gray-200 rounded-lg p-6 rounded-xl shadow-sm">
         <h3 class="text-xl font-semibold text-gray-900 mb-4">Daftar Kelas (${filteredClasses.length})</h3>
         <div class="overflow-x-auto">
           <table class="w-full">
@@ -6385,8 +6369,6 @@ window.loadActivitySchedule = function() {
   patchScheduleModules();
 };
 </script>
-
-
 <!-- BEGIN: Injected date-formatting helper (converts visible YYYY-MM-DD -> DD/MM/YYYY) -->
 <script>
 (function(){
@@ -6509,8 +6491,6 @@ window.loadActivitySchedule = function() {
 })();
 </script>
 <!-- END: Injected date-formatting helper -->
-
-
 <!-- BEGIN: Cleaned Kelola Kelas Module (injected by assistant) -->
 <script>
 (function(){
@@ -6560,10 +6540,14 @@ window.loadActivitySchedule = function() {
             <h2 class="text-2xl font-bold text-gray-900">🏫 Kelola Kelas</h2>
             ${regionFilterHTML}
           </div>
-          <button id="btnAddClass" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-sm">+ Tambah Kelas</button>
+          
+<div class="flex items-center">
+
+<button id="btnAddClass" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-sm">+ Tambah Kelas</button>
+</div>
         </div>
 
-        <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+        <div class="bg-white border border-gray-200 rounded-lg p-6 rounded-xl shadow-sm">
           <h3 class="text-xl font-semibold text-gray-900 mb-4">Daftar Kelas (${filteredClasses.length})</h3>
           <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
@@ -6754,7 +6738,356 @@ window.loadActivitySchedule = function() {
 })();
 </script>
 <!-- END: Cleaned Kelola Kelas Module -->
+<!-- BEGIN: Data Kehadiran Module (injected) -->
+<script>
+(function(){
+  // Utility: format date to DD-MM-YYYY and day name in Indonesian
+  function formatDateAndDay(dateStr) {
+    try {
+      const d = new Date(dateStr);
+      if (isNaN(d)) return { date: dateStr, day: '-' };
+      const optDay = { weekday: 'long' };
+      const dayName = d.toLocaleDateString('id-ID', optDay);
+      const day = ('0' + d.getDate()).slice(-2) + '-' + ('0' + (d.getMonth()+1)).slice(-2) + '-' + d.getFullYear();
+      return { date: day, dayName: dayName.charAt(0).toUpperCase() + dayName.slice(1) };
+    } catch(e) {
+      return { date: dateStr, day: '-' };
+    }
+  }
 
+  // Render attendance rows for a student
+  function renderAttendanceRows(attList, showActions, studentId) {
+    if (!attList) return "<tr><td colspan='5' class='text-center py-4'>Belum ada data kehadiran</td></tr>";
+    let rows = "";
+    attList.forEach((a, idx) => {
+      const fd = formatDateAndDay(a.date || a.tanggal || '');
+      if (showActions) {
+        rows += `<tr class="hover:bg-blue-50">
+          <td class="px-4 py-2 text-center">${idx+1}</td>
+          <td class="px-4 py-2 text-center">${fd.date}</td>
+          <td class="px-4 py-2 text-center">${fd.dayName}</td>
+          <td class="px-4 py-2 text-center font-medium">${a.status || '-'}</td>
+          <td class="px-4 py-2 text-center">
+            <button onclick="editAttendance(${studentId}, ${idx})" class="inline-block px-3 py-1 text-sm rounded-lg bg-blue-600 text-white hover:bg-blue-700 mr-2">Edit</button>
+            <button onclick="deleteAttendance(${studentId}, ${idx})" class="inline-block px-3 py-1 text-sm rounded-lg bg-red-500 text-white hover:bg-red-600">Hapus</button>
+          </td>
+        </tr>`;
+      } else {
+        rows += `<tr class="hover:bg-blue-50">
+          <td class="px-4 py-2 text-center">${idx+1}</td>
+          <td class="px-4 py-2 text-center">${fd.date}</td>
+          <td class="px-4 py-2 text-center">${fd.dayName}</td>
+          <td class="px-4 py-2 text-center font-medium">${a.status || '-'}</td>
+        </tr>`;
+      }
+    });
+    return rows;
+  }
+
+  // Load Attendance Module
+  window.loadAttendance = function() {
+    const content = document.getElementById('contentArea');
+    if (!content) return;
+
+    // Build month options
+    const monthOptions = [{v:'all',t:'Semua Bulan'}].concat(
+      Array.from({length:12}, (_,i)=>({v: (i+1), t: new Date(0, i).toLocaleString('id-ID',{month:'long'})}))
+    );
+
+    // If Admin -> show filters (kelas + bulan) and list of students (card) with a button to lihat tabel kehadiran per siswa
+    if (currentUser && currentUser.role === 'Admin') {
+      // classes for this region
+      const classes = [...new Set((studentsData.filter(s=>s.region===currentUser.region).map(s=>s.class).filter(Boolean)))];
+      const classOptionsHTML = ['<option value="all">Semua Kelas</option>'].concat(classes.map(c=>`<option value="${c}">${c}</option>`)).join('');
+      content.innerHTML = `
+        <div class="fade-in ml-2 mr-6">
+          <div class="bg-gradient-to-r from-blue-600 to-blue-800 rounded-lg p-6 rounded-xl mb-6 text-white shadow-lg rounded-xl">
+            <h2 class="text-2xl font-bold">Data Kehadiran - ${currentUser.region}</h2>
+            <p class="text-blue-100">Kelola data kehadiran siswa dan lakukan edit / hapus.</p>
+          </div>
+
+          <div class="bg-white rounded-2xl p-6 rounded-xl shadow-md rounded-xl mb-6 border border-blue-100">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Filter Kelas</label>
+                <select id="attendanceClassFilter" class="w-full px-3 py-2 border rounded-lg">${classOptionsHTML}</select>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Filter Bulan</label>
+                <select id="attendanceMonthFilter" class="w-full px-3 py-2 border rounded-lg">${monthOptions.map(m=>`<option value="${m.v}">${m.t}</option>`).join('')}</select>
+              </div>
+              <div class="flex space-x-2">
+                <button id="attendanceRefreshBtn" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Refresh</button>
+                <button id="attendanceAddBtn" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">Tambah Kehadiran</button>
+              </div>
+            </div>
+          </div>
+
+          <div id="attendanceStudentsWrapper" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+
+          <div id="attendanceTableCard" class="mt-6 bg-white rounded-xl p-4 rounded-xl shadow-md rounded-xl border border-blue-50 hidden">
+            <div class="mb-4 flex items-center justify-between">
+              <h3 class="text-lg font-bold" id="attendanceTableTitle">Tabel Kehadiran</h3>
+              <button id="attendanceBackBtn" class="px-3 py-1 border rounded-lg">Kembali</button>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-blue-800 text-white">
+                  <tr>
+                    <th class="px-4 py-2 text-center">No</th>
+                    <th class="px-4 py-2 text-center">Tanggal</th>
+                    <th class="px-4 py-2 text-center">Hari</th>
+                    <th class="px-4 py-2 text-center">Status</th>
+                    <th class="px-4 py-2 text-center">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="attendanceTableBody" class="bg-white"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      `;
+
+      // Render student cards
+      const wrapper = document.getElementById('attendanceStudentsWrapper');
+      const students = studentsData.filter(s => s.region === currentUser.region);
+      function renderStudentCards(filterClass) {
+        const list = filterClass==='all' ? students : students.filter(s=>s.class===filterClass);
+        wrapper.innerHTML = list.map(st => `
+          <div class="bg-white rounded-xl p-4 rounded-xl shadow-sm border border-blue-50 student-card">
+            <div class="flex items-center justify-between">
+              <div>
+                <h4 class="font-semibold text-gray-900">${st.name}</h4>
+                <p class="text-sm text-gray-600">${st.class} • ${st.school}</p>
+              </div>
+              <div class="text-right">
+                <p class="text-sm text-blue-600 font-semibold">${st.region}</p>
+                <button class="mt-2 px-3 py-1 bg-blue-600 text-white rounded-lg" onclick="window.showAttendanceForStudent(${st.id})">Lihat Kehadiran</button>
+              </div>
+            </div>
+          </div>
+        `).join('');
+      }
+      renderStudentCards('all');
+
+      // Event handlers
+      document.getElementById('attendanceClassFilter').addEventListener('change', function(){
+        renderStudentCards(this.value);
+      });
+      document.getElementById('attendanceRefreshBtn').addEventListener('click', function(){
+        renderStudentCards(document.getElementById('attendanceClassFilter').value);
+      });
+      document.getElementById('attendanceAddBtn').addEventListener('click', function(){
+        // call existing addAttendance modal (if defined)
+        if (typeof addAttendance === 'function') addAttendance(null);
+      });
+
+      // show/hide table for a student
+      window.showAttendanceForStudent = function(studentId) {
+        const card = document.getElementById('attendanceTableCard');
+        const tbody = document.getElementById('attendanceTableBody');
+        const st = studentsData.find(s=>s.id===studentId);
+        if (!st) return;
+        document.getElementById('attendanceTableTitle').textContent = 'Kehadiran: ' + st.name;
+        // filter by month
+        const mfilter = document.getElementById('attendanceMonthFilter').value;
+        const list = st.attendance || [];
+        const filtered = list.filter(a=>{
+          if (mfilter==='all') return true;
+          const dt = new Date(a.date);
+          return (dt.getMonth()+1) === Number(mfilter);
+        });
+        tbody.innerHTML = renderAttendanceRows(filtered, true, studentId);
+        card.classList.remove('hidden');
+        card.scrollIntoView({behavior:'smooth', block:'center'});
+      };
+
+      document.getElementById('attendanceBackBtn').addEventListener('click', function(){
+        document.getElementById('attendanceTableCard').classList.add('hidden');
+      });
+
+      // also update table when month filter changes
+      document.getElementById('attendanceMonthFilter').addEventListener('change', function(){
+        const visible = document.getElementById('attendanceTableCard');
+        if (!visible || visible.classList.contains('hidden')) return;
+        // if table visible, re-show for same student by reading title
+        const title = document.getElementById('attendanceTableTitle').textContent || '';
+        const name = title.replace('Kehadiran: ','');
+        const st = studentsData.find(s=>s.name===name);
+        if (st) window.showAttendanceForStudent(st.id);
+      });
+
+    } else {
+      // Student view
+      const student = studentsData.find(s => s.username === currentUser.username || s.name === currentUser.name || s.id === currentUser.id);
+      if (!student) {
+        content.innerHTML = '<div class="p-6 rounded-xl bg-white rounded-xl shadow-md rounded-xl text-center">Data siswa tidak ditemukan</div>';
+        return;
+      }
+      content.innerHTML = `
+        <div class="fade-in ml-2 mr-6">
+          <div class="bg-gradient-to-r from-blue-600 to-blue-800 rounded-lg p-6 rounded-xl mb-6 text-white shadow-lg rounded-xl">
+            <h2 class="text-2xl font-bold">${student.name}</h2>
+            <p class="text-blue-100">${student.school || "Nama sekolah tidak tersedia"}</p>
+          </div>
+
+          <div class="bg-white rounded-xl p-4 rounded-xl shadow-md rounded-xl border border-blue-50 mb-4">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Filter Bulan</label>
+            <select id="studentAttendanceMonth" class="w-1/2 px-3 py-2 border rounded-lg">
+              ${monthOptions.map(m=>`<option value="${m.v}">${m.t}</option>`).join('')}
+            </select>
+          </div>
+
+          <div class="bg-white rounded-xl p-4 rounded-xl shadow-md rounded-xl border border-blue-50">
+            <div class="overflow-x-auto">
+              <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-blue-800 text-white">
+                  <tr>
+                    <th class="px-4 py-2 text-center">No</th>
+                    <th class="px-4 py-2 text-center">Tanggal</th>
+                    <th class="px-4 py-2 text-center">Hari</th>
+                    <th class="px-4 py-2 text-center">Status</th>
+                  </tr>
+                </thead>
+                <tbody id="studentAttendanceBody" class="bg-white"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      `;
+
+      function renderStudentAttendance(monthFilter) {
+        const list = (student.attendance || []).filter(a=>{
+          if (monthFilter==='all') return true;
+          const dt = new Date(a.date);
+          return (dt.getMonth()+1) === Number(monthFilter);
+        });
+        document.getElementById('studentAttendanceBody').innerHTML = renderAttendanceRows(list, false, student.id);
+      }
+
+      renderStudentAttendance('all');
+      document.getElementById('studentAttendanceMonth').addEventListener('change', function(){
+        renderStudentAttendance(this.value);
+      });
+    }
+  }; // end loadAttendance
+
+  // Make sure functions are reachable globally
+  window.loadAttendance = window.loadAttendance;
+
+})();
+</script>
+<!-- END: Data Kehadiran Module (injected) -->
+
+<script>
+// === PATCH REMOVE ALL REGION TEXTS (FINAL AGGRESSIVE CLEAN) ===
+document.addEventListener("DOMContentLoaded", () => {
+    const banned = ["cabang", "regional", "pusat"];
+
+    function cleanNode(node) {
+        if (node.nodeType === Node.TEXT_NODE) {
+            let t = node.textContent;
+            banned.forEach(w => {
+                const rg = new RegExp("\\b" + w + "\\b", "gi");
+                t = t.replace(rg, "").trim();
+            });
+            node.textContent = t;
+        } else {
+            node.childNodes.forEach(cleanNode);
+        }
+    }
+
+    cleanNode(document.body);
+
+    const obs = new MutationObserver(muts => {
+        muts.forEach(m => {
+            m.addedNodes.forEach(n => {
+                try { cleanNode(n); } catch(e){}
+            });
+        });
+    });
+
+    obs.observe(document.body, { childList: true, subtree: true });
+});
+</script>
+
+
+<!-- AUTO-PATCH: Ensure class filter functions exist and read td[1] -->
+<script>
+(function(){
+  // avoid redefining if present
+  if (!window.applyClassFilterToTable) {
+    window.applyClassFilterToTable = function(){
+      try {
+        const prefix = (window.selectedClassPrefix || 'all').toString().toLowerCase();
+        const rows = document.querySelectorAll('#contentArea table tbody tr');
+        rows.forEach(r=>{
+          const tds = r.querySelectorAll('td');
+          const className = (tds[1]?.textContent || '').trim().toLowerCase();
+          if(prefix === 'all' || className.startsWith(prefix)) {
+            r.style.display = '';
+          } else {
+            r.style.display = 'none';
+          }
+        });
+      } catch(e) { console.warn('applyClassFilterToTable error', e); }
+    };
+  }
+
+  if (!window.applyClassFilter) {
+    window.applyClassFilter = function(prefix){
+      window.selectedClassPrefix = prefix;
+      setTimeout(function(){ if (typeof window.applyClassFilterToTable === 'function') window.applyClassFilterToTable(); }, 30);
+    };
+  }
+
+  function injectDropdown(){
+    const content = document.getElementById('contentArea');
+    if(!content) return;
+    const h2 = content.querySelector('h2');
+    if(!h2 || !h2.textContent.toLowerCase().includes('kelola kelas')) return;
+    if (document.getElementById('filterKelasDropdown')) return;
+    // build prefixes from table second column or from availableClasses
+    let prefixes = [];
+    const rows = content.querySelectorAll('table tbody tr');
+    if (rows.length > 0) {
+      const set = new Set();
+      rows.forEach(r=>{
+        const tds = r.querySelectorAll('td');
+        const name = (tds[1]?.textContent || '').trim();
+        if (name) set.add(name.split(/\s+/).slice(0,2).join(' '));
+      });
+      prefixes = Array.from(set).sort();
+    } else if (window.availableClasses) {
+      prefixes = Array.from(new Set(window.availableClasses.map(c => (c.name||'').split(/\s+/).slice(0,2).join(' ')))).filter(Boolean).sort();
+    }
+    const wrapper = document.createElement('div');
+    wrapper.style.display = 'inline-block';
+    wrapper.style.marginLeft = '12px';
+    const select = document.createElement('select');
+    select.id = 'filterKelasDropdown';
+    select.className = 'px-3 py-2 border border-gray-300 rounded-lg ml-3';
+    const optAll = document.createElement('option'); optAll.value='all'; optAll.textContent='Semua Kelas'; select.appendChild(optAll);
+    prefixes.forEach(p=>{
+      const o = document.createElement('option'); o.value = p; o.textContent = p; select.appendChild(o);
+    });
+    select.addEventListener('change', function(){ window.applyClassFilter(this.value); });
+    h2.parentNode.insertBefore(wrapper, h2.nextSibling);
+    wrapper.appendChild(select);
+  }
+
+  // attempt injection after DOM loads and on contentArea changes
+  document.addEventListener('DOMContentLoaded', function(){ setTimeout(injectDropdown, 300); });
+  const ca = document.getElementById('contentArea');
+  if (ca) {
+    const mo = new MutationObserver(function(){ setTimeout(injectDropdown, 100); });
+    mo.observe(ca, { childList: true, subtree: true });
+  }
+  window.addEventListener('click', function(){ setTimeout(injectDropdown, 150); });
+
+})();
+</script>
+<!-- END AUTO-PATCH -->
 </body>
 </html>
 <!-- === Materi Kelas UI Override (FINAL FIX) 
@@ -6790,7 +7123,7 @@ function loadMaterials() {
                     </button>` : ''}
             </div>
 
-            <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+            <div class="bg-white border border-gray-200 rounded-lg p-6 rounded-xl shadow-sm">
                 <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center">
                     <span class="text-3xl mr-3">📚</span> Daftar Materi Kelas
                 </h2>
@@ -6885,7 +7218,7 @@ function loadMaterials() {
                 ${addButton}
             </div>
 
-            <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+            <div class="bg-white border border-gray-200 rounded-lg p-6 rounded-xl shadow-sm">
                 <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center">
                     <span class="text-3xl mr-3">📚</span> Daftar Materi Kelas
                 </h2>
@@ -7033,7 +7366,7 @@ function loadManageAdmins() {
                 <div class='fade-in'>
                     <div class='flex justify-between items-center mb-6'>
                         <h2 class='text-2xl font-bold text-gray-900'>📜 Log Aktivitas Login</h2>
-                        <button onclick='clearActivityLogs()' class='px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all shadow-md'>Hapus Log</button>
+                        <button onclick='clearActivityLogs()' class='px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all shadow-md rounded-xl'>Hapus Log</button>
                     </div>
 
                     <div class='bg-white border border-gray-200 rounded-xl shadow-md overflow-hidden'>
@@ -7078,7 +7411,7 @@ function loadManageAdmins() {
                 <button onclick="addRegionalAdmin()" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 shadow-sm">+ Tambah Admin Regional</button>
             </div>
 
-            <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+            <div class="bg-white border border-gray-200 rounded-lg p-6 rounded-xl shadow-sm">
                 <h3 class="text-xl font-semibold text-gray-900 mb-4">Daftar Akun Admin Regional (${regionalAdmins.length})</h3>
                 <div class="overflow-x-auto">
                     <table class="w-full">
@@ -7183,36 +7516,3 @@ if (typeof window.saveMaterial === 'undefined') {
 
 </script>
 <!-- === END PATCH === -->
-
-<style>
-    /* Sidebar white background */
-    aside.w-64 {
-        background: white !important;
-        color: #1e293b !important; /* slate-800 */
-    }
-
-    /* Sidebar text and icon color change */
-    #sidebarMenu button span {
-        color: #1e293b !important; /* black */
-    }
-
-    /* Sidebar button default state */
-    #sidebarMenu button {
-        background: white !important;
-        color: #1e293b !important;
-        text-shadow: none !important;
-        border-radius: 0.75rem !important;
-    }
-
-    /* Sidebar button hover state */
-    #sidebarMenu button:hover {
-        background: #f3f4f6 !important; /* light gray */
-        color: #1e40af !important;      /* blue */
-    }
-
-    /* Active state for sidebar menu items */
-    .sidebar-active {
-        background: #e0e7ff !important; /* soft blue */
-        color: #1e40af !important;
-    }
-</style>
