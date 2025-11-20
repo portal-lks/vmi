@@ -1146,7 +1146,7 @@ else if (role === 'Admin') {
     <!-- TKA -->
     <div class="text-center p-8  shadow-md rounded-xl bg-gradient-to-br from-purple-50 to-purple-100 border border-purple-200 flex flex-col justify-center items-center space-y-2 hover:shadow-2xl transition-all">
         <h4 class="font-semibold text-gray-900 text-xl">📈 Kemajuan TKA</h4>
-        <p class="text-5xl font-extrabold text-purple-600">${avgTKA}</p>
+        <p class="text-3xl font-extrabold text-purple-600">${avgTKA}</p>
         <p class="text-sm text-gray-600">Rata-rata skor</p>
     </div>
 
@@ -1178,7 +1178,7 @@ else if (role === 'Admin') {
                     <span class="text-4xl text-white">🏠</span>
                 </div>
                 <h4 class="font-semibold text-gray-900 mb-2 text-xl">Kelas Saat Ini</h4>
-                <p class="text-5xl font-extrabold text-purple-600">${studentData.class}</p>
+                <p class="text-3xl font-extrabold text-purple-600">${studentData.class}</p>
             </div>
         </div>
     </div>`;
@@ -1712,7 +1712,7 @@ function confirmDeleteRegionalAdmin(username) {
                                                 <div class="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                                                     ${artworksInMonth.map(art => `
                                                         <div class="border border-gray-200 rounded-lg overflow-hidden shadow-sm">
-                                                            <img src="${art.image}" alt="${art.title}" class="w-full h-48 object-cover ${isAdminOrSuperAdmin ? 'editable-image cursor-pointer' : ''}" ${isAdminOrSuperAdmin ? `onclick="editArtworkImage(${student.id}, ${art.id})"` : ''}>
+                                                            <img style="max-width:800px;width:100%;height:auto;display:block;margin:auto;" src="${art.image}" alt="${art.title}" class="w-full h-48 object-cover ${isAdminOrSuperAdmin ? 'editable-image cursor-pointer' : ''}" ${isAdminOrSuperAdmin ? `onclick="editArtworkImage(${student.id}, ${art.id})"` : ''}>
                                                             <div class="p-4 rounded-xl">
                                                                 <h5 class="font-semibold text-gray-900">${art.title}</h5>
                                                                 <p class="text-sm text-gray-600 mt-1">${art.description}</p>
@@ -1941,7 +1941,6 @@ function confirmDeleteRegionalAdmin(username) {
                     <div class="flex justify-between items-center mb-6">
                         <h3 class="text-2xl font-bold text-gray-900">Data Siswa ${displayTitle} (${displayData.length} siswa)</h3>
                          ${selectedClass === 'all' ? `
-                            <button onclick="addArtwork(null)" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-sm">+ Tambah Karya</button>
                          ` : ''}
                     </div>
 
@@ -1954,9 +1953,7 @@ function confirmDeleteRegionalAdmin(username) {
                  moduleContent = `
                     <div class="flex justify-between items-center mb-6">
                         <h2 class="text-2xl font-bold text-gray-900">🎨 Kemajuan Gambar</h2>
-                        <button onclick="generatePDF('artProgressContent', '${pdfFilename}')" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 shadow-sm">
-                            <span class="text-lg mr-2">⬇️</span> Download PDF
-                        </button>
+                        <!-- PDF BUTTON REMOVED -->
                     </div>
                     <div id="artProgressContent">
                          ${renderArtProgressStudent(displayData, isAdminOrSuperAdmin)}
@@ -2081,9 +2078,7 @@ function confirmDeleteRegionalAdmin(username) {
                  moduleContent = `
                     <div class="flex justify-between items-center mb-6">
                         <h2 class="text-2xl font-bold text-gray-900">📊 Kemajuan Tes Skolastik</h2>
-                        <button onclick="generatePDF('skolastikContent', '${pdfFilename}')" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 shadow-sm">
-                            <span class="text-lg mr-2">⬇️</span> Download PDF
-                        </button>
+                        <!-- PDF BUTTON REMOVED -->
                     </div>
                     <div id="skolastikContent">
                         ${renderSkolastikProgressStudent(displayData, isAdminOrSuperAdmin)}
@@ -2208,9 +2203,7 @@ function confirmDeleteRegionalAdmin(username) {
                  moduleContent = `
                     <div class="flex justify-between items-center mb-6">
                         <h2 class="text-2xl font-bold text-gray-900">📈 Kemajuan TKA</h2>
-                        <button onclick="generatePDF('tkaContent', '${pdfFilename}')" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 shadow-sm">
-                            <span class="text-lg mr-2">⬇️</span> Download PDF
-                        </button>
+                        <!-- PDF BUTTON REMOVED -->
                     </div>
                     <div id="tkaContent">
                         ${renderTkaProgressStudent(displayData, isAdminOrSuperAdmin)}
@@ -3125,7 +3118,7 @@ function openAddStudentModal() {
                 <div class="space-y-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Gambar Saat Ini</label>
-                        <img src="${artwork.image}" alt="${artwork.title}" class="w-full h-64 object-cover rounded-lg border border-gray-300">
+                        <img style="max-width:800px;width:100%;height:auto;display:block;margin:auto;" src="${artwork.image}" alt="${artwork.title}" class="w-full h-64 object-cover rounded-lg border border-gray-300">
                     </div>
                     <form id="editImageForm">
                         <div>
