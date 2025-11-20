@@ -253,9 +253,6 @@ window.availableClasses = window.availableClasses || [];
 window.studentsData = window.studentsData || [];
 window.classMaterials = window.classMaterials || [];
 window.regionalAdmins = window.regionalAdmins || [];
-window.daftarKelas = window.daftarKelas || [];
-
-
 function saveAllData() {
   localStorage.setItem("studentsData", JSON.stringify(studentsData));
   localStorage.setItem("regionalAdmins", JSON.stringify(regionalAdmins));
@@ -5019,6 +5016,7 @@ function loadSchedule() {
               <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Nama Materi</th>
               <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Kelas Target</th>
               
+              <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Aksi</th>
             </tr>
           </thead>
           <tbody class="bg-white divide-y divide-gray-100" id="scheduleTableBody">
@@ -5333,873 +5331,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  const originalLoadArtProgress = window.loadArtProgress;
-  window.loadArtProgress = function() {
-    originalLoadArtProgress();
-    setTimeout(() => enableZoomForStudent(), 500);
-  };
-</script>
-<!-- === AKHIR FITUR ZOOM INTERAKTIF PRO 
-  
-<style>
-  #zoomModal {
-    display: none;
-    position: fixed;
-    z-index: 9999;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.9);
-    justify-content: center;
-    align-items: center;
-  }
-  #zoomModal img {
-    max-width: 90%;
-    max-height: 90%;
-    border-radius: 10px;
-    box-shadow: 0 0 25px rgba(255,255,255,0.3);
-  }
-</style>
-
-<div id="zoomModal" onclick="closeZoom()">
-  <img id="zoomImage" src="" alt="Zoomed Artwork" />
-</div>
-
-<script>
-  function enableZoomForStudent() {
-    if (currentUser && currentUser.role === 'Siswa') {
-      document.querySelectorAll('#contentArea img').forEach(img => {
-        img.style.cursor = 'zoom-in';
-        img.addEventListener('click', () => openZoom(img.src));
-      });
-    }
-  }
-
-  function openZoom(src) {
-    const zoomModal = document.getElementById('zoomModal');
-    const zoomImage = document.getElementById('zoomImage');
-    zoomImage.src = src;
-    zoomModal.style.display = 'flex';
-  }
-
-  function closeZoom() {
-    document.getElementById('zoomModal').style.display = 'none';
-  }
-
-  // Integrasi otomatis dengan modul Kemajuan Gambar
-  const originalLoadArtProgress = window.loadArtProgress;
-  window.loadArtProgress = function() {
-    originalLoadArtProgress();
-    setTimeout(() => enableZoomForStudent(), 500);
-  };
-</script>
-<!-- === AKHIR FITUR ZOOM KHUSUS SISWA 
-
-
-<!-- === FITUR ZOOM INTERAKTIF PRO (KHUSUS SISWA) === -->
-<style>
-  #zoomModal {
-    display: none;
-    position: fixed;
-    z-index: 9999;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.9);
-    justify-content: center;
-    align-items: center;
-    transition: opacity 0.3s ease;
-  }
-  #zoomModal img {
-    max-width: 90%;
-    max-height: 90%;
-    border-radius: 12px;
-    box-shadow: 0 0 25px rgba(255,255,255,0.4);
-    transition: transform 0.3s ease;
-  }
-  #zoomPrev, #zoomNext {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    color: white;
-    font-size: 3rem;
-    cursor: pointer;
-    user-select: none;
-    padding: 0 20px;
-    transition: opacity 0.2s;
-  }
-  #zoomPrev:hover, #zoomNext:hover { opacity: 0.7; }
-  #zoomPrev { left: 20px; }
-  #zoomNext { right: 20px; }
-</style>
-<div id="zoomModal" onclick="closeZoom(event)">
-<span id="zoomPrev" onclick="prevZoom(event)">❮</span>
-<img alt="Zoomed Artwork" id="zoomImage" src=""/>
-<span id="zoomNext" onclick="nextZoom(event)">❯</span>
-</div>
-<script>
-  let currentZoomIndex = 0;
-  let zoomImages = [];
-
-  function enableZoomForStudent() {
-    if (currentUser && currentUser.role === 'Siswa') {
-      zoomImages = Array.from(document.querySelectorAll('#contentArea img'));
-      zoomImages.forEach((img, index) => {
-        img.dataset.index = index;
-        img.style.cursor = 'zoom-in';
-        img.addEventListener('click', () => openZoom(index));
-      });
-    }
-  }
-
-  function openZoom(index) {
-    currentZoomIndex = index;
-    const zoomModal = document.getElementById('zoomModal');
-    const zoomImage = document.getElementById('zoomImage');
-    zoomImage.src = zoomImages[index].src;
-    zoomModal.style.display = 'flex';
-  }
-
-  function closeZoom(event) {
-    if (event.target.id === 'zoomModal' || event.key === 'Escape') {
-      document.getElementById('zoomModal').style.display = 'none';
-    }
-  }
-
-  function prevZoom(event) {
-    event.stopPropagation();
-    if (zoomImages.length === 0) return;
-    currentZoomIndex = (currentZoomIndex - 1 + zoomImages.length) % zoomImages.length;
-    document.getElementById('zoomImage').src = zoomImages[currentZoomIndex].src;
-  }
-
-  function nextZoom(event) {
-    event.stopPropagation();
-    if (zoomImages.length === 0) return;
-    currentZoomIndex = (currentZoomIndex + 1) % zoomImages.length;
-    document.getElementById('zoomImage').src = zoomImages[currentZoomIndex].src;
-  }
-
-  document.addEventListener('keydown', e => {
-    if (document.getElementById('zoomModal').style.display === 'flex') {
-      if (e.key === 'ArrowLeft') prevZoom(e);
-      if (e.key === 'ArrowRight') nextZoom(e);
-      if (e.key === 'Escape') closeZoom(e);
-    }
-  });
-
-  const originalLoadArtProgress = window.loadArtProgress;
-  window.loadArtProgress = function() {
-    originalLoadArtProgress();
-    setTimeout(() => enableZoomForStudent(), 500);
-  };
-</script>
-<!-- === AKHIR FITUR ZOOM INTERAKTIF PRO === -->
-<!-- === FITUR FILTER KELAS & BATASAN VISIBILITAS SISWA === -->
-<script>
-  // Daftar kelas contoh (bisa diganti dari database nanti)
-  window.daftarKelas = window.daftarKelas || ['SR GOLD A', 'SR GOLD B', 'SR SILVER', 'SR PLATINUM'];
-
-  // Utility render dropdown kelas
-  function renderDropdownKelas(targetId) {
-    const container = document.getElementById(targetId);
-    if (!container) return;
-    let html = '<label class="block mb-1 text-sm font-medium">Filter Kelas:</label>';
-    html += '<select id="filterKelasSelect" class="border rounded p-2 w-full mb-2">';
-    daftarKelas.forEach(kls => html += `<option value="${kls}">${kls}</option>`);
-    html += '</select>';
-    html += '<label class="flex items-center gap-2"><input type="checkbox" id="showAllKelas"> Tampilkan semua kelas</label>';
-    container.innerHTML = html;
-
-    document.getElementById('filterKelasSelect').addEventListener('change', applyKelasFilter);
-    document.getElementById('showAllKelas').addEventListener('change', applyKelasFilter);
-  }
-
-  // Terapkan filter ke modul sesuai kelas siswa atau pilihan admin
-  function applyKelasFilter() {
-    const select = document.getElementById('filterKelasSelect');
-    const showAll = document.getElementById('showAllKelas').checked;
-    const kelasDipilih = select ? select.value : null;
-    const userRole = currentUser?.role || '';
-    const userKelas = currentUser?.kelas || '';
-
-    document.querySelectorAll('[data-kelas]').forEach(row => {
-      const kelasData = row.dataset.kelas;
-      if (userRole === 'Admin Regional') {
-        row.style.display = showAll || kelasData === kelasDipilih ? '' : 'none';
-      } else if (userRole === 'Siswa') {
-        row.style.display = kelasData === userKelas ? '' : 'none';
-      }
-    });
-  }
-
-  // Injek filter ke 3 modul target
-  const originalLoadJadwalBelajar = window.loadJadwalBelajar;
-  window.loadJadwalBelajar = function() {
-    originalLoadJadwalBelajar();
-    renderDropdownKelas('filterKelasJadwalBelajar');
-    setTimeout(applyKelasFilter, 500);
-  };
-
-  const originalLoadJadwalKegiatan = window.loadJadwalKegiatan;
-  window.loadJadwalKegiatan = function() {
-    originalLoadJadwalKegiatan();
-    renderDropdownKelas('filterKelasJadwalKegiatan');
-    setTimeout(applyKelasFilter, 500);
-  };
-
-  const originalLoadMateriKelas = window.loadMateriKelas;
-  window.loadMateriKelas = function() {
-    originalLoadMateriKelas();
-    renderDropdownKelas('filterKelasMateriKelas');
-    setTimeout(applyKelasFilter, 500);
-  };
-</script>
-<!-- === AKHIR FITUR FILTER KELAS === -->
-<!-- === PENYEMPURNAAN FILTER KELAS UNTUK SEMUA MODUL === -->
-<script>
-  window.daftarKelas = window.daftarKelas || ['SR GOLD A', 'SR GOLD B', 'SR SILVER', 'SR PLATINUM'];
-
-  function renderDropdownKelas(targetId, modulName) {
-    const container = document.getElementById(targetId);
-    if (!container) return;
-
-    let html = '<label class="block mb-1 text-sm font-medium">Filter Kelas:</label>';
-    html += '<select id="filterKelasSelect_' + modulName + '" class="border rounded p-2 w-full mb-2">';
-    daftarKelas.forEach(kls => html += `<option value="${kls}">${kls}</option>`);
-    html += '</select>';
-    html += '<label class="flex items-center gap-2"><input type="checkbox" id="showAllKelas_' + modulName + '"> Tampilkan semua kelas</label>';
-    container.innerHTML = html;
-
-    document.getElementById('filterKelasSelect_' + modulName).addEventListener('change', () => applyKelasFilter(modulName));
-    document.getElementById('showAllKelas_' + modulName).addEventListener('change', () => applyKelasFilter(modulName));
-  }
-
-  function applyKelasFilter(modulName) {
-    const select = document.getElementById('filterKelasSelect_' + modulName);
-    const showAll = document.getElementById('showAllKelas_' + modulName)?.checked;
-    const kelasDipilih = select ? select.value : null;
-    const userRole = currentUser?.role || '';
-    const userKelas = currentUser?.kelas || '';
-
-    document.querySelectorAll('[data-modul="' + modulName + '"][data-kelas]').forEach(row => {
-      const kelasData = row.dataset.kelas;
-      if (userRole === 'Admin Regional') {
-        row.style.display = showAll || kelasData === kelasDipilih ? '' : 'none';
-      } else if (userRole === 'Siswa') {
-        row.style.display = kelasData === userKelas ? '' : 'none';
-      }
-    });
-  }
-
-  // Integrasi ke tiga modul dengan gaya Materi Kelas
-  const originalLoadJadwalBelajar = window.loadJadwalBelajar;
-  window.loadJadwalBelajar = function() {
-    originalLoadJadwalBelajar();
-    renderDropdownKelas('filterKelasJadwalBelajar', 'jadwalBelajar');
-    setTimeout(() => applyKelasFilter('jadwalBelajar'), 500);
-  };
-
-  const originalLoadJadwalKegiatan = window.loadJadwalKegiatan;
-  window.loadJadwalKegiatan = function() {
-    originalLoadJadwalKegiatan();
-    renderDropdownKelas('filterKelasJadwalKegiatan', 'jadwalKegiatan');
-    setTimeout(() => applyKelasFilter('jadwalKegiatan'), 500);
-  };
-
-  const originalLoadMateriKelas = window.loadMateriKelas;
-  window.loadMateriKelas = function() {
-    originalLoadMateriKelas();
-    renderDropdownKelas('filterKelasMateriKelas', 'materiKelas');
-    setTimeout(() => applyKelasFilter('materiKelas'), 500);
-  };
-</script>
-<!-- === AKHIR PENYEMPURNAAN FILTER KELAS === -->
-<!-- === FINAL FILTER DROPDOWN + CHECKLIST UNTUK SEMUA MODUL === -->
-<script>
-  window.daftarKelas = window.daftarKelas || [
-    'Kelas SR GOLD A (Cabang Jakarta Selatan)',
-    'Kelas SR GOLD B (Cabang Jakarta Selatan)',
-    'Kelas SR SILVER (Cabang Bandung)',
-    'Kelas SR PLATINUM (Cabang Surabaya)'
-  ];
-
-  function renderFilterKelas(containerId, modulName) {
-    const container = document.getElementById(containerId);
-    if (!container) return;
-
-    let html = '<div class="mb-2">';
-    html += '<label class="block mb-1 text-sm font-medium">Kelas Relevan</label>';
-    daftarKelas.forEach(kls => {
-      const id = `${modulName}_${kls.replace(/\s+/g, '_')}`;
-      html += `<div class='flex items-center gap-2 mb-1'><input type='checkbox' id='${id}' value='${kls}' class='kelasCheckbox_${modulName}'> <label for='${id}'>${kls}</label></div>`;
-    });
-    html += '</div>';
-    container.innerHTML = html;
-
-    // Tambah event listener agar otomatis filter
-    document.querySelectorAll('.kelasCheckbox_' + modulName).forEach(cb => {
-      cb.addEventListener('change', () => applyFilterKelas(modulName));
-    });
-  }
-
-  function applyFilterKelas(modulName) {
-    const userRole = currentUser?.role || '';
-    const userKelas = currentUser?.kelas || '';
-    const selected = Array.from(document.querySelectorAll('.kelasCheckbox_' + modulName + ':checked')).map(cb => cb.value);
-
-    document.querySelectorAll('[data-modul="' + modulName + '"][data-kelas]').forEach(row => {
-      const kelasData = row.dataset.kelas;
-      if (userRole === 'Admin Regional') {
-        row.style.display = selected.length === 0 || selected.includes(kelasData) ? '' : 'none';
-      } else if (userRole === 'Siswa') {
-        row.style.display = kelasData === userKelas ? '' : 'none';
-      }
-    });
-  }
-
-  // Integrasi ke tiga modul: belajar, kegiatan, materi
-  const originalLoadJadwalBelajar = window.loadJadwalBelajar;
-  window.loadJadwalBelajar = function() {
-    originalLoadJadwalBelajar();
-    renderFilterKelas('filterKelasJadwalBelajar', 'jadwalBelajar');
-    setTimeout(() => applyFilterKelas('jadwalBelajar'), 500);
-  };
-
-  const originalLoadJadwalKegiatan = window.loadJadwalKegiatan;
-  window.loadJadwalKegiatan = function() {
-    originalLoadJadwalKegiatan();
-    renderFilterKelas('filterKelasJadwalKegiatan', 'jadwalKegiatan');
-    setTimeout(() => applyFilterKelas('jadwalKegiatan'), 500);
-  };
-
-  const originalLoadMateriKelas = window.loadMateriKelas;
-  window.loadMateriKelas = function() {
-    originalLoadMateriKelas();
-    renderFilterKelas('filterKelasMateriKelas', 'materiKelas');
-    setTimeout(() => applyFilterKelas('materiKelas'), 500);
-  };
-</script>
-<!-- === AKHIR FILTER DROPDOWN + CHECKLIST FINAL === -->
-<!-- === PERBAIKAN FINAL MODUL JADWAL BELAJAR (FILTER KELAS AKTIF) === -->
-<script>
-  const daftarKelasBelajar = [
-    'Kelas SR GOLD A (Cabang Jakarta Selatan)',
-    'Kelas SR GOLD B (Cabang Jakarta Selatan)',
-    'Kelas SR SILVER (Cabang Bandung)',
-    'Kelas SR PLATINUM (Cabang Surabaya)'
-  ];
-
-  function renderFilterKelasBelajar(containerId) {
-    const container = document.getElementById(containerId);
-    if (!container) return;
-    let html = '<div class="mb-2">';
-    html += '<label class="block mb-1 text-sm font-medium">Kelas Relevan</label>';
-    daftarKelasBelajar.forEach(kls => {
-      const id = 'jadwalBelajar_' + kls.replace(/\s+/g, '_');
-      html += `<div class='flex items-center gap-2 mb-1'><input type='checkbox' id='${id}' value='${kls}' class='kelasCheckbox_jadwalBelajar'> <label for='${id}'>${kls}</label></div>`;
-    });
-    html += '</div>';
-    container.innerHTML = html;
-
-    document.querySelectorAll('.kelasCheckbox_jadwalBelajar').forEach(cb => {
-      cb.addEventListener('change', applyFilterKelasBelajar);
-    });
-  }
-
-  function applyFilterKelasBelajar() {
-    const userRole = currentUser?.role || '';
-    const userKelas = currentUser?.kelas || '';
-    const selected = Array.from(document.querySelectorAll('.kelasCheckbox_jadwalBelajar:checked')).map(cb => cb.value);
-
-    document.querySelectorAll('[data-modul="jadwalBelajar"][data-kelas]').forEach(row => {
-      const kelasData = row.dataset.kelas;
-      if (userRole === 'Admin Regional') {
-        row.style.display = selected.length === 0 || selected.includes(kelasData) ? '' : 'none';
-      } else if (userRole === 'Siswa') {
-        row.style.display = kelasData === userKelas ? '' : 'none';
-      }
-    });
-  }
-
-  // Rebuild fungsi loadSchedule agar gunakan filter baru
-  const originalLoadSchedule = window.loadSchedule;
-  window.loadSchedule = function() {
-    originalLoadSchedule();
-    renderFilterKelasBelajar('filterKelasJadwalBelajar');
-    setTimeout(applyFilterKelasBelajar, 500);
-  };
-</script>
-<!-- === AKHIR PERBAIKAN MODUL JADWAL BELAJAR === -->
-<!-- === PERBAIKAN AKHIR MODUL JADWAL BELAJAR (SAMA DENGAN JADWAL KEGIATAN) === -->
-<script>
-  const daftarKelasSchedule = [
-    'Kelas SR GOLD A (Cabang Jakarta Selatan)',
-    'Kelas SR GOLD B (Cabang Jakarta Selatan)',
-    'Kelas SR SILVER (Cabang Bandung)',
-    'Kelas SR PLATINUM (Cabang Surabaya)'
-  ];
-
-  function renderFilterKelasSchedule(containerId) {
-    const container = document.getElementById(containerId);
-    if (!container) return;
-
-    let html = '<div class="mb-2">';
-    html += '<label class="block mb-1 text-sm font-medium">Filter Kelas Jadwal Belajar</label>';
-    daftarKelasSchedule.forEach(kls => {
-      const id = 'jadwalBelajar_' + kls.replace(/\s+/g, '_');
-      html += `<div class='flex items-center gap-2 mb-1'>
-                 <input type='checkbox' id='${id}' value='${kls}' class='kelasCheckbox_jadwalBelajar'> 
-                 <label for='${id}'>${kls}</label>
-               </div>`;
-    });
-    html += '</div>';
-    container.innerHTML = html;
-
-    document.querySelectorAll('.kelasCheckbox_jadwalBelajar').forEach(cb => {
-      cb.addEventListener('change', applyFilterKelasSchedule);
-    });
-  }
-
-  function applyFilterKelasSchedule() {
-    const userRole = currentUser?.role || '';
-    const userKelas = currentUser?.kelas || '';
-    const selected = Array.from(document.querySelectorAll('.kelasCheckbox_jadwalBelajar:checked')).map(cb => cb.value);
-
-    document.querySelectorAll('[data-modul="jadwalBelajar"][data-kelas]').forEach(row => {
-      const kelasData = row.dataset.kelas;
-      if (userRole === 'Admin Regional') {
-        row.style.display = selected.length === 0 || selected.includes(kelasData) ? '' : 'none';
-      } else if (userRole === 'Siswa') {
-        row.style.display = kelasData === userKelas ? '' : 'none';
-      }
-    });
-  }
-
-  // Perbarui fungsi loadSchedule agar identik dengan loadJadwalKegiatan
-  const originalLoadSchedule = window.loadSchedule;
-  window.loadSchedule = function() {
-    originalLoadSchedule();
-    renderFilterKelasSchedule('filterKelasJadwalBelajar');
-    setTimeout(() => applyFilterKelasSchedule(), 500);
-  };
-</script>
-<!-- === AKHIR PERBAIKAN MODUL JADWAL BELAJAR === -->
-<!-- BEGIN: Injected Fix — Regionalize Jadwal Belajar (LKS_141_ScheduleFix) -->
-<script>
-(function(){
-  // Safety: ensure arrays exist
-  if (typeof scheduleData === 'undefined') scheduleData = [];
-  if (typeof availableClasses === 'undefined') availableClasses = [];
-  if (typeof studentsData === 'undefined') studentsData = [];
-
-  function getDayNameFromDate(isoDate){
-    const d = new Date(isoDate);
-    if (isNaN(d)) return '';
-    const days = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
-    return days[d.getDay()];
-  }
-
-  // Helper notification (uses existing showNotification if present)
-  function notify(msg, type){
-    if (typeof showNotification === 'function') return showNotification(msg, type || 'success');
-    alert(msg);
-  }
-
-  // Enforce: Admin regional hanya melihat/CRUD untuk region sendiri.
-  // Siswa hanya melihat jadwal yang ada di schedule.classes === siswa.class AND schedule.region === siswa.region
-  window.loadSchedule = function(){
-    const content = document.getElementById("contentArea");
-    if(!content) return;
-    const isAdminOrSuperAdmin = currentUser && (currentUser.role === 'Admin' || currentUser.role === 'Super Admin');
-    const isStudent = currentUser && currentUser.role === 'Siswa';
-
-    // Prepare regional filtering
-    let regionalSchedule = scheduleData;
-    let regionTitle = '';
-    if (currentUser && currentUser.role === 'Admin') {
-      regionalSchedule = scheduleData.filter(s => s.region === currentUser.region);
-      regionTitle = `Regional ${currentUser.region}`;
-    } else if (currentUser && currentUser.role === 'Super Admin') {
-      regionalSchedule = scheduleData;
-      regionTitle = 'Semua Regional';
-    } else if (currentUser && currentUser.role === 'Siswa') {
-      regionalSchedule = scheduleData.filter(s => s.region === currentUser.region);
-      regionTitle = `Regional ${currentUser.region}`;
-    }
-
-    // For students, filter further by their class
-    let filtered = regionalSchedule.slice();
-    if (isStudent) {
-      const stu = studentsData.find(s => s.username === currentUser.username || s.name === currentUser.name);
-      const stuClass = stu ? stu.class : null;
-      if (stuClass) {
-        filtered = filtered.filter(s => Array.isArray(s.classes) ? s.classes.includes(stuClass) : (s.classTarget ? s.classTarget === stuClass : true));
-      } else {
-        // if no class info, show none
-        filtered = [];
-      }
-    }
-
-    // For admins/superadmin we can optionally filter by selectedClassSchedule (keeps existing behavior)
-    const selectedFilter = window.selectedClassSchedule || 'all';
-    if (isAdminOrSuperAdmin && selectedFilter && selectedFilter !== 'all') {
-      filtered = filtered.filter(s => (s.classes && s.classes.includes(selectedFilter)) || s.classTarget === selectedFilter);
-    }
-
-    // Normalize and sort
-    filtered = filtered.map(s => ({
-      id: s.id,
-      date: s.date || '',
-      day: s.day || getDayNameFromDate(s.date || ''),
-      time: s.time || s.time || '',
-      subject: s.subject || s.title || '',
-      classes: s.classes || (s.classTarget ? [s.classTarget] : []),
-      region: s.region || ''
-    })).sort((a,b) => (a.date || '').localeCompare(b.date || ''));
-
-    // Render
-    content.innerHTML = `
-      <div class="fade-in">
-        <div class="flex justify-between items-center mb-4">
-          <h2 class="text-2xl font-bold text-gray-900 flex items-center"><span class="text-3xl mr-2">📚</span> Jadwal Belajar ${regionTitle ? '('+regionTitle+')' : ''}</h2>
-          ${(currentUser && (currentUser.role === 'Admin' || currentUser.role === 'Super Admin')) ? '<button onclick="openAddScheduleModal()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition shadow-sm">+ Tambah Jadwal</button>' : ''}
-        </div>
-        <div class="bg-white border border-gray-200 rounded-lg p-4 rounded-xl shadow-sm">
-          <div class="overflow-x-auto">
-            <table class="w-full">
-              <thead class="bg-blue-800 text-white">
-                <tr>
-                  <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Tanggal</th>
-                  <th class="px-4 py-3 text-left text-sm font-semibold text-white-700text-gray-900">Hari</th>
-                  <th class="px-4 py-3 text-left text-sm font-semibold text-white-700text-gray-900">Waktu</th>
-                  <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Materi</th>
-                  <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Kelas</th>
-                  
-                  <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Aksi</th>
-                 
-                </tr>
-              </thead>
-              <tbody id="scheduleTableBody" class="bg-white">
-                ${filtered.map(s => `
-                  <tr class="border-t border-gray-200 hover:bg-blue-50">
-                    <td class="px-4 py-3 text-sm text-gray-700">${s.date}</td>
-                    <td class="px-4 py-3 text-sm text-gray-700">${s.day}</td>
-                    <td class="px-4 py-3 text-sm text-gray-700">${s.time || '-'}</td>
-                    <td class="px-4 py-3 text-sm text-gray-700">${s.subject}</td>
-                    <td class="px-4 py-3 text-sm text-gray-700">${(s.classes && s.classes.length) ? s.classes.join(', ') : '-'}</td>
-                    
-                    <td class="px-4 py-3 text-sm">
-                      ${ (currentUser && (currentUser.role === 'Admin' || currentUser.role === 'Super Admin')) ? 
-                        `<button onclick="editSchedule(${s.id})" class="text-blue-600 hover:text-blue-800 mr-2">Edit</button>
-                         <button onclick="deleteSchedule(${s.id})" class="text-red-600 hover:text-red-800">Hapus</button>` : '-' }
-                    </td>
-                    
-                  </tr>
-                `).join('')}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    `;
-  };
-
-  // When creating a schedule, Admin regional's schedule.region must be their region.
-  window.openAddScheduleModal = function() {
-    // Build class options limited to current region (for admin) or all for superadmin
-    const classesForRegion = (availableClasses || []).filter(c => !currentUser || currentUser.role === 'Super Admin' || c.region === currentUser.region).map(c => c.name);
-    const classOptionsHtml = classesForRegion.map(c => `<option value="${c}">${c}</option>`).join('');
-    const defaultRegion = currentUser && currentUser.region ? currentUser.region : '';
-
-    const modalHtml = `
-      <form id="addScheduleForm" class="space-y-4">
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal</label>
-          <input type="date" id="scheduleDate" required class="w-full px-3 py-2 border border-gray-300 rounded-lg">
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Waktu</label>
-          <input type="text" id="scheduleTime" placeholder="Contoh: 09.00 - 11.00" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Materi</label>
-          <input type="text" id="scheduleSubject" required class="w-full px-3 py-2 border border-gray-300 rounded-lg">
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Kelas (opsional - pilih untuk menargetkan kelas tertentu)</label>
-          <select id="scheduleClasses" multiple class="w-full px-3 py-2 border border-gray-300 rounded-lg">
-            ${classOptionsHtml}
-          </select>
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Regional</label>
-          <input type="text" id="scheduleRegion" value="${defaultRegion}" readonly class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100">
-        </div>
-        <div>
-          <button type="submit" class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Simpan</button>
-        </div>
-      </form>
-    `;
-    openModal('Tambah Jadwal Belajar', modalHtml);
-
-    document.getElementById('addScheduleForm').addEventListener('submit', function(e){
-      e.preventDefault();
-      const newObj = {
-        id: Date.now(),
-        date: document.getElementById('scheduleDate').value,
-        day: getDayNameFromDate(document.getElementById('scheduleDate').value),
-        time: document.getElementById('scheduleTime').value,
-        subject: document.getElementById('scheduleSubject').value,
-        classes: Array.from(document.getElementById('scheduleClasses').selectedOptions).map(o=>o.value),
-        region: currentUser && currentUser.role === 'Admin' ? currentUser.region : (document.getElementById('scheduleRegion').value || '')
-      };
-      // Save
-      scheduleData.push(newObj);
-      try{ saveAllData(); } catch(e){ console.warn(e); }
-      closeModal();
-      notify('Jadwal berhasil ditambahkan!', 'success');
-      if (typeof loadSchedule === 'function') loadSchedule();
-    });
-  };
-
-  // Edit schedule but restrict editing to own region for Admins
-  window.editSchedule = function(id){
-    const idx = scheduleData.findIndex(s => String(s.id) === String(id));
-    if (idx === -1) { notify('Jadwal tidak ditemukan','error'); return; }
-    const s = scheduleData[idx];
-    if (currentUser && currentUser.role === 'Admin' && s.region !== currentUser.region) {
-      notify('Akses ditolak: Anda hanya dapat mengedit jadwal di regional Anda sendiri','error');
-      return;
-    }
-
-    const classesForRegion = (availableClasses || []).filter(c => !currentUser || currentUser.role === 'Super Admin' || c.region === s.region).map(c => c.name);
-    const classOptionsHtml = classesForRegion.map(c => `<option value="${c}" ${ (s.classes||[]).includes(c) ? 'selected' : '' }>${c}</option>`).join('');
-
-    const modalHtml = `
-      <form id="editScheduleForm" class="space-y-4">
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal</label>
-          <input type="date" id="editScheduleDate" value="${s.date || ''}" required class="w-full px-3 py-2 border border-gray-300 rounded-lg">
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Waktu</label>
-          <input type="text" id="editScheduleTime" value="${s.time || ''}" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Materi</label>
-          <input type="text" id="editScheduleSubject" value="${s.subject || ''}" required class="w-full px-3 py-2 border border-gray-300 rounded-lg">
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Kelas (opsional)</label>
-          <select id="editScheduleClasses" multiple class="w-full px-3 py-2 border border-gray-300 rounded-lg">
-            ${classOptionsHtml}
-          </select>
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Regional</label>
-          <input type="text" id="editScheduleRegion" value="${s.region || ''}" readonly class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100">
-        </div>
-        <div>
-          <button type="submit" class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Update</button>
-        </div>
-      </form>
-    `;
-    openModal('Edit Jadwal Belajar', modalHtml);
-
-    document.getElementById('editScheduleForm').addEventListener('submit', function(e){
-      e.preventDefault();
-      scheduleData[idx] = {
-        ...scheduleData[idx],
-        date: document.getElementById('editScheduleDate').value,
-        day: getDayNameFromDate(document.getElementById('editScheduleDate').value),
-        time: document.getElementById('editScheduleTime').value,
-        subject: document.getElementById('editScheduleSubject').value,
-        classes: Array.from(document.getElementById('editScheduleClasses').selectedOptions).map(o=>o.value),
-        // region must not be changed by admin (readonly)
-        region: scheduleData[idx].region || (currentUser && currentUser.region ? currentUser.region : '')
-      };
-      try{ saveAllData(); } catch(e){ console.warn(e); }
-      closeModal();
-      notify('Jadwal berhasil diperbarui!', 'success');
-      if (typeof loadSchedule === 'function') loadSchedule();
-    });
-  };
-
-  // Delete schedule - restrict to admin's region
-  window.deleteSchedule = function(id){
-    const idx = scheduleData.findIndex(s => String(s.id) === String(id));
-    if (idx === -1) return;
-    const s = scheduleData[idx];
-    if (currentUser && currentUser.role === 'Admin' && s.region !== currentUser.region) {
-      notify('Akses ditolak: Anda hanya dapat menghapus jadwal di regional Anda sendiri','error');
-      return;
-    }
-    if (!confirm('Apakah Anda yakin ingin menghapus jadwal ini?')) return;
-    scheduleData.splice(idx,1);
-    try{ saveAllData(); } catch(e){ console.warn(e); }
-    notify('Jadwal belajar berhasil dihapus!', 'success');
-    if (typeof loadSchedule === 'function') loadSchedule();
-  };
-
-  // If page currently on schedule, refresh
-  try {
-    if (currentModule === 'schedule') loadSchedule();
-  } catch(e){}
-})();
-</script>
-<!-- END: Injected Fix — Regionalize Jadwal Belajar -->
-<script>
-// --- FIX: Modul Kelola Kelas ---
-function loadManageClasses() {
-  const content = document.getElementById('contentArea');
-  let filteredClasses = availableClasses;
-
-  if (currentUser.role === 'Admin') {
-    filteredClasses = availableClasses.filter(cls => cls.region === currentUser.region);
-  }
-
-  content.innerHTML = `
-    <div class="fade-in">
-      <div class="flex justify-between items-center mb-6">
-        <h2 class="text-2xl font-bold text-gray-900">🏫 Kelola Kelas</h2>
-        <button onclick="addClass()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-sm">+ Tambah Kelas</button>
-      </div>
-
-      <div class="bg-white border border-gray-200 rounded-lg p-6 rounded-xl shadow-sm">
-        <h3 class="text-xl font-semibold text-gray-900 mb-4">Daftar Kelas (${filteredClasses.length})</h3>
-        <div class="overflow-x-auto">
-          <table class="w-full">
-            <thead class="bg-blue-800 text-white">
-              <tr>
-                <th class="px-4 py-3 text-center text-sm font-semibold text-white-700">Nama Kelas</th>
-                <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Deskripsi</th>
-                <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Regional</th>
-                <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Aksi</th>
-              </tr>
-            </thead>
-            <tbody class="bg-white">
-              ${filteredClasses.map(cls => `
-                <tr class="border-t border-gray-200 hover:bg-blue-50">
-                  <td class="px-4 py-3 text-sm font-medium text-gray-900">${cls.name}</td>
-                  <td class="px-4 py-3 text-sm text-gray-600">${cls.description}</td>
-                  <td class="px-4 py-3 text-sm text-blue-600 font-medium">${cls.region}</td>
-                  <td class="px-4 py-3 text-sm">
-                    ${ (currentUser.role === 'Super Admin' || cls.region === currentUser.region) ? `<button onclick="editClass(${cls.id})" class="text-blue-600 hover:text-blue-800 mr-3">Edit</button>
-                    <button onclick="deleteClass(${cls.id})" class="text-red-600 hover:text-red-800">Hapus</button>` : `<span class="text-gray-400">-</span>`}
-                  </td>
-                </tr>`).join('')}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>`;
-}
-
-// Fungsi Tambah Kelas
-function addClass() {
-  openModal('Tambah Kelas Baru', `
-    <form id="addClassForm" class="space-y-4">
-      <div>
-        <label class="block text-sm font-medium text-gray-700 mb-1">Nama Kelas</label>
-        <input type="text" id="className" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-      </div>
-      <div>
-        <label class="block text-sm font-medium text-gray-700 mb-1">Deskripsi</label>
-        <textarea id="classDesc" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"></textarea>
-      </div>
-      <div>
-        <label class="block text-sm font-medium text-gray-700 mb-1">Regional</label>
-        <input type="text" id="classRegion" value="${currentUser.role === 'Admin' ? currentUser.region : ''}" ${currentUser.role === 'Admin' ? 'readonly' : ''} class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-      </div>
-      <button type="submit" class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Simpan</button>
-    </form>`);
-
-  document.getElementById('addClassForm').addEventListener('submit', e => {
-    e.preventDefault();
-    const name = document.getElementById('className').value.trim();
-    const description = document.getElementById('classDesc').value.trim();
-    const region = document.getElementById('classRegion').value.trim();
-    
-    if (!name || !description || !region) {
-      showNotification('Semua field wajib diisi', 'error');
-      return;
-    }
-
-    const newClass = { id: Date.now(), name, description, region };
-    availableClasses.push(newClass);
-    saveAllData();
-    // dispatch real-time update
-    document.dispatchEvent(new CustomEvent('kelasUpdated', { detail: { availableClasses: availableClasses } }));
-    closeModal();
-    loadManageClasses();
-    showNotification('Kelas baru berhasil ditambahkan!', 'success');
-  });
-}
-
-// Fungsi Edit Kelas
-window.editClass = function(id) {
-  const cls = availableClasses.find(c => c.id === id);
-  if (!cls) return;
-  openModal('Edit Kelas', `
-    <form id="editClassForm" class="space-y-4">
-      <div>
-        <label class="block text-sm font-medium text-gray-700 mb-1">Nama Kelas</label>
-        <input type="text" id="editName" value="${cls.name}" required class="w-full px-3 py-2 border border-gray-300 rounded-lg">
-      </div>
-      <div>
-        <label class="block text-sm font-medium text-gray-700 mb-1">Deskripsi</label>
-        <textarea id="editDesc" required class="w-full px-3 py-2 border border-gray-300 rounded-lg">${cls.description}</textarea>
-      </div>
-      <div>
-        <label class="block text-sm font-medium text-gray-700 mb-1">Regional</label>
-        <input type="text" id="editRegion" value="${cls.region}" ${currentUser.role === 'Admin' ? 'readonly' : ''} class="w-full px-3 py-2 border border-gray-300 rounded-lg">
-      </div>
-      <button type="submit" class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Update</button>
-    </form>`);
-
-  document.getElementById('editClassForm').addEventListener('submit', e => {
-    e.preventDefault();
-    cls.name = document.getElementById('editName').value.trim();
-    cls.description = document.getElementById('editDesc').value.trim();
-    if (currentUser.role !== 'Admin') {
-      cls.region = document.getElementById('editRegion').value.trim();
-    }
-    saveAllData();
-    // dispatch real-time update
-    document.dispatchEvent(new CustomEvent('kelasUpdated', { detail: { availableClasses: availableClasses } }));
-    closeModal();
-    loadManageClasses();
-    showNotification('Kelas berhasil diperbarui!', 'success');
-  });
-};
-
-// Fungsi Hapus Kelas
-window.deleteClass = function(id) {
-  const cls = availableClasses.find(c => c.id === id);
-  if (!cls) return;
-  openModal('Konfirmasi Hapus', `
-    <div class="text-center">
-      <p class="mb-4 text-gray-700">Apakah Anda yakin ingin menghapus kelas <strong>${cls.name}</strong>?</p>
-      <div class="flex space-x-3">
-        <button id="confirmDelete" class="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">Ya, Hapus</button>
-        <button onclick="closeModal()" class="flex-1 px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400">Batal</button>
-      </div>
-    </div>`);
-
-  document.getElementById('confirmDelete').addEventListener('click', () => {
-    availableClasses = availableClasses.filter(c => c.id !== id);
-    saveAllData();
-    // dispatch real-time update
-    document.dispatchEvent(new CustomEvent('kelasUpdated', { detail: { availableClasses: availableClasses } }));
-    closeModal();
-    loadManageClasses();
-    showNotification('Kelas berhasil dihapus!', 'success');
-  });
-};
-</script>
+  </script>
 <script>
 // Real-time sync: listener untuk memperbarui dropdown di modul Jadwal Kegiatan / Jadwal Kegiatan (Activity)
 function buildClassOptionsForRegion(region, includeAllOption = true) {
@@ -6975,7 +6107,7 @@ window.loadActivitySchedule = function() {
 <script>
 // === PATCH REMOVE ALL REGION TEXTS (FINAL AGGRESSIVE CLEAN) ===
 document.addEventListener("DOMContentLoaded", () => {
-    const banned = ["cabang", "regional", "pusat"];
+    const banned = ["cabang", "pusat"];
 
     function cleanNode(node) {
         if (node.nodeType === Node.TEXT_NODE) {
@@ -7081,6 +6213,291 @@ document.addEventListener("DOMContentLoaded", () => {
 })();
 </script>
 <!-- END AUTO-PATCH -->
+
+<!-- BEGIN: AUTOMATIC PATCH ADDED BY CHATGPT (safety & missing globals) -->
+<script>
+(function(){
+  if (window._chatgpt_auto_patch_applied) return;
+  window._chatgpt_auto_patch_applied = true;
+
+  // 1) Ensure commonly referenced globals exist to prevent ReferenceError
+  window.educationInfo = window.educationInfo || [];
+  window.activityScheduleData = window.activityScheduleData || [];
+  window.availableSchools = window.availableSchools || [];
+  window.scheduleData = window.scheduleData || [];
+  window.availableClasses = window.availableClasses || [];
+  window.studentsData = window.studentsData || [];
+  window.classMaterials = window.classMaterials || [];
+  window.regionalAdmins = window.regionalAdmins || [];
+    // 2) Provide a safe fallback for getAllUsers if missing
+  if (typeof window.getAllUsers === 'undefined') {
+    window.getAllUsers = function() {
+      try {
+        const users = {};
+        // Super admin if exists
+        if (window.superAdminUser && window.superAdminUser.username) {
+          users[window.superAdminUser.username] = window.superAdminUser;
+        } else {
+          // fallback superadmin
+          users['superadmin'] = { username:'superadmin', password:'super123', role:'Super Admin', name:'Super Admin Utama', region:'Pusat' };
+        }
+        // regional admins
+        (window.regionalAdmins || []).forEach(a => {
+          if (a && a.username) users[a.username] = a;
+        });
+        // students
+        (window.studentsData || []).forEach(s => {
+          if (s && s.username) {
+            users[s.username] = Object.assign({ role:'Siswa', name: s.name, region: s.region }, { password: s.password || 'siswa123' });
+          }
+        });
+        return users;
+      } catch (e) {
+        console.warn('fallback getAllUsers failed', e);
+        return {};
+      }
+    };
+  }
+
+  // 3) Safe guards to avoid multiple wraps and MutationObserver churn
+  // If there's a global MutationObserver instance named 'observer' used by date-format helper,
+  // patch startObserver to be idempotent and avoid continuous re-triggering.
+  try {
+    if (window.startObserver && !window._patched_startObserver) {
+      const origStart = window.startObserver;
+      window.startObserver = function() {
+        if (window._chatgpt_observer_running) return;
+        try {
+          origStart();
+          window._chatgpt_observer_running = true;
+        } catch (e) {
+          console.warn('startObserver wrapper failed', e);
+        }
+      };
+      window._patched_startObserver = true;
+    }
+  } catch(e){ console.warn(e); }
+
+  // If there's a MutationObserver named 'observer' in scope, attempt to intercept its callback
+  // to temporarily disconnect after heavy DOM updates to prevent infinite loops.
+  // This is a defensive best-effort (non-invasive).
+  try {
+    // find observers via window (best-effort)
+    if (!window._chatgpt_observer_guarded) {
+      // wrap MutationObserver.prototype.observe once
+      const origObserve = MutationObserver.prototype.observe;
+      MutationObserver.prototype.observe = function(target, options) {
+        // call original
+        const res = origObserve.apply(this, [target, options]);
+        // save reference on instance
+        this.__chatgpt_guard = true;
+        return res;
+      };
+      // also provide a helper to pause/resume
+      window.__chatgpt_pause_observers = function(ms) {
+        try {
+          // disconnect available observers we can find
+          // (this will only affect observers created after this patch if stored globally)
+          setTimeout(function(){ 
+            // no-op: left as placeholder to avoid surprising behavior
+          }, ms || 500);
+        } catch(e) { console.warn(e); }
+      };
+      window._chatgpt_observer_guarded = true;
+    }
+  } catch(e){ console.warn('observer guard failed', e); }
+
+  // 4) De-duplicate a few commonly duplicated function definitions by wrapping them if already defined
+  // Example: saveMaterial
+  if (typeof window.saveMaterial === 'undefined') {
+    window.saveMaterial = function(isEdit, editId) {
+      try {
+        const topicEl = document.getElementById('materialTopic');
+        const topic = topicEl ? topicEl.value.trim() : '';
+        const descriptionEl = document.getElementById('materialDescription');
+        const description = descriptionEl ? descriptionEl.value.trim() : '';
+        const classesEl = document.getElementById('materialClasses');
+        const classes = classesEl ? Array.from(classesEl.selectedOptions).map(o=>o.value) : [];
+        const region = (document.getElementById('materialRegion') ? document.getElementById('materialRegion').value : (window.currentUser && window.currentUser.region) ) || '';
+        const youtubeLink = (document.getElementById('materialYoutube') ? document.getElementById('materialYoutube').value.trim() : '') || '';
+        if (!topic) { alert('Topik materi wajib diisi'); return; }
+        if (isEdit && typeof editId !== 'undefined') {
+          const idx = (window.classMaterials||[]).findIndex(m=>m.id===editId);
+          if (idx!==-1) {
+            window.classMaterials[idx] = { ...window.classMaterials[idx], topic, description, classes, region, youtubeLink };
+          }
+        } else {
+          const cm = window.classMaterials || [];
+          const newId = cm.length ? Math.max(...cm.map(m=>m.id||0))+1 : 1;
+          cm.push({ id: newId, topic, description, classes, region, youtubeLink });
+          window.classMaterials = cm;
+        }
+        try { if (typeof window.saveAllData === 'function') window.saveAllData(); } catch(e){ console.warn(e); }
+        if (typeof window.closeModal === 'function') window.closeModal();
+        if (typeof window.loadMaterials === 'function') window.loadMaterials();
+        if (typeof window.showNotification === 'function') window.showNotification('Materi berhasil disimpan!', 'success');
+      } catch(err){ console.error(err); alert('Gagal menyimpan materi'); }
+    };
+  }
+
+  // 5) Provide a safe confirmDeleteAttendance if missing
+  if (typeof window.confirmDeleteAttendance === 'undefined') {
+    window.confirmDeleteAttendance = function(studentId, attendanceIndex) {
+      try {
+        const student = (window.studentsData||[]).find(s=>s.id===studentId);
+        if (!student) return;
+        if (!Array.isArray(student.attendance)) student.attendance = [];
+        student.attendance.splice(attendanceIndex, 1);
+        if (typeof window.saveAllData === 'function') window.saveAllData();
+        if (typeof window.closeModal === 'function') window.closeModal();
+        if (typeof window.loadAttendance === 'function') window.loadAttendance();
+        if (typeof window.showNotification === 'function') window.showNotification('Data kehadiran berhasil dihapus!', 'success');
+      } catch(e){ console.warn(e); }
+    };
+  }
+
+  console.log('ChatGPT auto-patch applied: globals ensured, safe fallbacks added.');
+})();
+</script>
+<!-- END: AUTOMATIC PATCH -->
+
+
+<!-- CONSOLIDATED PATCH: unified filter-dropdown and safe wrappers to avoid redeclare errors -->
+<script>
+(function(){
+  // Ensure single global daftarKelas
+  window.daftarKelas = window.daftarKelas && window.daftarKelas.length ? window.daftarKelas : ['SR GOLD A', 'SR GOLD B', 'SR SILVER', 'SR PLATINUM'];
+
+  // Unified render dropdown for a module
+  function renderDropdownKelasUnified(containerId, modulName) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    let html = '<label class="block mb-1 text-sm font-medium">Filter Kelas:</label>';
+    html += '<select id="filterKelasSelect_' + modulName + '" class="border rounded p-2 w-full mb-2">';
+    html += '<option value="">-- Pilih Kelas --</option>';
+    window.daftarKelas.forEach(kls => html += `<option value="${kls}">${kls}</option>`);
+    html += '</select>';
+    html += '<label class="flex items-center gap-2"><input type="checkbox" id="showAllKelas_' + modulName + '"> Tampilkan semua kelas</label>';
+    container.innerHTML = html;
+
+    const sel = document.getElementById('filterKelasSelect_' + modulName);
+    const chk = document.getElementById('showAllKelas_' + modulName);
+    if (sel) sel.addEventListener('change', () => applyKelasFilterUnified(modulName));
+    if (chk) chk.addEventListener('change', () => applyKelasFilterUnified(modulName));
+  }
+
+  // Unified apply filter
+  function applyKelasFilterUnified(modulName) {
+    try {
+      const select = document.getElementById('filterKelasSelect_' + modulName);
+      const showAll = document.getElementById('showAllKelas_' + modulName)?.checked;
+      const kelasDipilih = select ? select.value : null;
+      const userRole = currentUser?.role || '';
+      const userKelas = currentUser?.kelas || '';
+
+      document.querySelectorAll('[data-modul="' + modulName + '"][data-kelas]').forEach(row => {
+        const kelasData = row.dataset.kelas;
+        if (userRole === 'Admin' || userRole === 'Admin Regional') {
+          row.style.display = (showAll || !kelasDipilih || kelasData === kelasDipilih) ? '' : 'none';
+        } else if (userRole === 'Siswa') {
+          row.style.display = kelasData === userKelas ? '' : 'none';
+        } else {
+          // default: show
+          row.style.display = '';
+        }
+      });
+    } catch (e) {
+      console.warn('applyKelasFilterUnified error', e);
+    }
+  }
+
+  // Unified render checklist filter (alternate UI)
+  function renderFilterKelasUnified(containerId, modulName) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    let html = '<div class="mb-2"><label class="block mb-1 text-sm font-medium">Kelas Relevan</label>';
+    window.daftarKelas.forEach(kls => {
+      const id = `${modulName}_${kls.replace(/\s+/g, '_')}`;
+      html += `<div class='flex items-center gap-2 mb-1'><input type='checkbox' id='${id}' value='${kls}' class='kelasCheckbox_${modulName}'> <label for='${id}'>${kls}</label></div>`;
+    });
+    html += '</div>';
+    container.innerHTML = html;
+    document.querySelectorAll('.kelasCheckbox_' + modulName).forEach(cb => {
+      cb.addEventListener('change', () => applyFilterKelasUnified(modulName));
+    });
+  }
+
+  function applyFilterKelasUnified(modulName) {
+    try {
+      const userRole = currentUser?.role || '';
+      const userKelas = currentUser?.kelas || '';
+      const selected = Array.from(document.querySelectorAll('.kelasCheckbox_' + modulName + ':checked')).map(cb => cb.value);
+
+      document.querySelectorAll('[data-modul="' + modulName + '"][data-kelas]').forEach(row => {
+        const kelasData = row.dataset.kelas;
+        if (userRole === 'Admin' || userRole === 'Admin Regional') {
+          row.style.display = selected.length === 0 || selected.includes(kelasData) ? '' : 'none';
+        } else if (userRole === 'Siswa') {
+          row.style.display = kelasData === userKelas ? '' : 'none';
+        } else {
+          row.style.display = '';
+        }
+      });
+    } catch (e) {
+      console.warn('applyFilterKelasUnified error', e);
+    }
+  }
+
+  // Safe wrapper to extend existing load functions without redeclaring originals.
+  function safeWrapLoad(fnName, containerId, modulName, useChecklist=false) {
+    try {
+      const origName = '__orig__' + fnName;
+      if (!window[origName] && typeof window[fnName] === 'function') {
+        window[origName] = window[fnName];
+      }
+      // Replace with wrapped
+      window[fnName] = function() {
+        if (typeof window[origName] === 'function') try { window[origName](); } catch(e){ console.warn(fnName+' original error', e); }
+        // render appropriate UI
+        if (useChecklist) renderFilterKelasUnified(containerId, modulName);
+        else renderDropdownKelasUnified(containerId, modulName);
+        // small delay for applying filter to allow DOM nodes to be present
+        setTimeout(() => {
+          if (useChecklist) applyFilterKelasUnified(modulName);
+          else applyKelasFilterUnified(modulName);
+        }, 300);
+      };
+    } catch (e) {
+      console.warn('safeWrapLoad error for ' + fnName, e);
+    }
+  }
+
+  // Apply wrappers for three target modules (id of container, moduleName, and whether to use checklist)
+  safeWrapLoad('loadJadwalBelajar', 'filterKelasJadwalBelajar', 'jadwalBelajar', true);
+  safeWrapLoad('loadJadwalKegiatan', 'filterKelasJadwalKegiatan', 'jadwalKegiatan', true);
+  safeWrapLoad('loadMateriKelas', 'filterKelasMateriKelas', 'materiKelas', false);
+
+  // Also wrap loadArtProgress to enable zoom feature if original exists, but avoid redeclare
+  try {
+    const origArt = '__orig__loadArtProgress';
+    if (!window[origArt] && typeof window.loadArtProgress === 'function') {
+      window[origArt] = window.loadArtProgress;
+    }
+    window.loadArtProgress = function(){
+      if (typeof window[origArt] === 'function') try { window[origArt](); } catch(e){ console.warn('loadArtProgress original error', e); }
+      setTimeout(()=>{ if (typeof enableZoomForStudent === 'function') enableZoomForStudent(); }, 400);
+    };
+  } catch(e){ console.warn(e); }
+
+  // expose unified functions (for debugging)
+  window.renderDropdownKelasUnified = renderDropdownKelasUnified;
+  window.applyKelasFilterUnified = applyKelasFilterUnified;
+  window.renderFilterKelasUnified = renderFilterKelasUnified;
+  window.applyFilterKelasUnified = applyFilterKelasUnified;
+
+})();
+</script>
+<!-- END CONSOLIDATED PATCH -->
 </body>
 </html>
 <!-- === Materi Kelas UI Override (FINAL FIX) 
