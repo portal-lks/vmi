@@ -159,6 +159,7 @@ aside.w-64 {
     color: #000 !important;
 }
 </style>
+<style>div:empty{display:none !important;}</style>
 </head>
 <body class="bg-white">
 <style>
@@ -714,8 +715,8 @@ let activityScheduleData = [
             const sidebar = document.getElementById('sidebarMenu');
             let menuItems = [
                 { id: 'home', label: 'Home', icon: '🏠' },
-                { id: 'artProgress', label: 'Kemajuan Gambar', icon: '🎨' },
                 { id: 'attendance', label: 'Data Kehadiran', icon: '🗓️' },
+{ id: 'artProgress', label: 'Kemajuan Gambar', icon: '🎨' },
                 { id: 'skolastikProgress', label: 'Kemajuan Tes Skolastik', icon: '📊' },
                 // PERUBAHAN NAMA MODUL: 'Kemajuan TKA'
                 { id: 'tkaProgress', label: 'Kemajuan TKA', icon: '📈' },
@@ -904,11 +905,11 @@ content.innerHTML = `
                     <table id="superAdminClassesTable" class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-blue-800 text-white">
                             <tr>
-                                <th class="px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider">No</th>
-                                <th class="px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider">Nama Kelas</th>
-                                <th class="px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider">Jumlah Siswa</th>
-                                <th class="px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider">Jumlah Kelas</th>
-                                <th class="px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider">Status Kelas</th>
+                                <th class="px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider text-center text-sm min-w-[120px] py-3 min-w-[60px]">NO</th>
+                                <th class="px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider text-center text-sm min-w-[120px] py-3">NAMA KELAS</th>
+                                <th class="px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider text-center text-sm min-w-[120px] py-3">JUMLAH SISWA</th>
+                                <th class="px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider text-center text-sm min-w-[120px] py-3">JUMLAH KELAS</th>
+                                <th class="px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider text-center text-sm min-w-[120px] py-3">STATUS KELAS</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-100" id="superAdminClassesBody"></tbody>
@@ -1080,11 +1081,11 @@ else if (role === 'Admin') {
             <table class='min-w-full divide-y divide-gray-200'>
               <thead class='bg-blue-800 text-white'>
                 <tr>
-                  <th class='px-6 py-4 text-center text-xs font-semibold text-white-700 uppercase tracking-wider'>No</th>
-                  <th class='px-6 py-4 text-center text-xs font-semibold text-white-700 uppercase tracking-wider'>Nama Kelas</th>
-                  <th class='px-6 py-4 text-center text-xs font-semibold text-white-700 uppercase tracking-wider'>Jumlah Siswa</th>
-                  <th class='px-6 py-4 text-center text-xs font-semibold text-white-700 uppercase tracking-wider'>Jumlah Kelas</th>
-                  <th class='px-6 py-4 text-center text-xs font-semibold text-white-700 uppercase tracking-wider'>Status Kelas</th>
+                  <th class="text-center text-sm min-w-[120px] py-3 min-w-[60px]" class='px-6 py-4 text-center text-xs font-semibold text-white-700 uppercase tracking-wider'>NO</th>
+                  <th class="text-center text-sm min-w-[120px] py-3" class='px-6 py-4 text-center text-xs font-semibold text-white-700 uppercase tracking-wider'>NAMA KELAS</th>
+                  <th class="text-center text-sm min-w-[120px] py-3" class='px-6 py-4 text-center text-xs font-semibold text-white-700 uppercase tracking-wider'>JUMLAH SISWA</th>
+                  <th class="text-center text-sm min-w-[120px] py-3" class='px-6 py-4 text-center text-xs font-semibold text-white-700 uppercase tracking-wider'>JUMLAH KELAS</th>
+                  <th class="text-center text-sm min-w-[120px] py-3" class='px-6 py-4 text-center text-xs font-semibold text-white-700 uppercase tracking-wider'>STATUS KELAS</th>
                 </tr>
               </thead>
               <tbody class='bg-white divide-y divide-gray-100'>
@@ -1222,11 +1223,11 @@ else if (role === 'Admin') {
                         <table class='min-w-full divide-y divide-gray-200'>
                             <thead class='bg-blue-800 text-white'>
                                 <tr>
-                                    <th class='px-6 py-3 text-center text-xs font-semibold text-white-700 uppercase tracking-wider'>No</th>
-                                    <th class='px-6 py-3 text-center text-xs font-semibold text-white-700 uppercase tracking-wider'>Nama</th>
-                                    <th class='px-6 py-3 text-center text-xs font-semibold text-white-700 uppercase tracking-wider'>Role</th>
-                                    <th class='px-6 py-3 text-center text-xs font-semibold text-white-700 uppercase tracking-wider'>Regional</th>
-                                    <th class='px-6 py-3 text-center text-xs font-semibold text-white-700 uppercase tracking-wider'>Waktu Login</th>
+                                    <th class="text-center text-sm min-w-[120px] py-3 min-w-[60px]" class='px-6 py-3 text-center text-xs font-semibold text-white-700 uppercase tracking-wider'>NO</th>
+                                    <th class="text-center text-sm min-w-[120px] py-3" class='px-6 py-3 text-center text-xs font-semibold text-white-700 uppercase tracking-wider'>NAMA</th>
+                                    <th class="text-center text-sm min-w-[120px] py-3" class='px-6 py-3 text-center text-xs font-semibold text-white-700 uppercase tracking-wider'>ROLE</th>
+                                    <th class="text-center text-sm min-w-[120px] py-3" class='px-6 py-3 text-center text-xs font-semibold text-white-700 uppercase tracking-wider'>REGIONAL</th>
+                                    <th class="text-center text-sm min-w-[120px] py-3" class='px-6 py-3 text-center text-xs font-semibold text-white-700 uppercase tracking-wider'>WAKTU LOGIN</th>
                                 </tr>
                             </thead>
                             <tbody class='bg-white divide-y divide-gray-100'>
@@ -1266,11 +1267,11 @@ else if (role === 'Admin') {
                             <table class="w-full">
                                 <thead class="bg-blue-800 text-white">
                                     <tr>
-                                        <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Nama Admin</th>
-                                        <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Username</th>
-                                        <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Regional</th>
-                                        <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Jml Siswa</th>
-                                        <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Aksi</th>
+                                        <th class="px-4 py-3 text-left text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">NAMA ADMIN</th>
+                                        <th class="px-4 py-3 text-left text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">USERNAME</th>
+                                        <th class="px-4 py-3 text-left text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">REGIONAL</th>
+                                        <th class="px-4 py-3 text-left text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">JUMLAH SISWA</th>
+                                        <th class="px-4 py-3 text-left text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">AKSI</th>
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white">
@@ -1282,7 +1283,7 @@ else if (role === 'Admin') {
                                                 <td class="px-4 py-3 text-sm text-gray-600">${admin.username}</td>
                                                 <td class="px-4 py-3 text-sm text-red-600 font-medium">${admin.region}</td>
                                                 <td class="px-4 py-3 text-sm text-blue-600 font-bold">${studentsInRegion}</td>
-                                                <td class="px-4 py-3 text-sm">
+                                                <td class="text-center px-4 py-3 text-sm">
                                                     <button onclick="editRegionalAdmin('${admin.username}')" class="text-blue-600 hover:text-blue-800 mr-3">Edit</button>
                                                     <button onclick="deleteRegionalAdmin('${admin.username}')" class="text-red-600 hover:text-red-800">Hapus</button>
                                                 </td>
@@ -1755,24 +1756,23 @@ function confirmDeleteRegionalAdmin(username) {
                         <table class="w-full">
                             <thead class="bg-blue-800 text-white">
                                 <tr>
-                                    <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Tanggal Tes</th>
-                                    <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Materi</th>
-                                    <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Nilai</th>
-                                    <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Keterangan</th>
-                                    ${isAdminOrSuperAdmin ? '<th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Aksi</th>' : ''}
+                                    <th class="px-4 py-3 text-left text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">TANGGAL TES</th>
+                                    <th class="px-4 py-3 text-left text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">MATERI</th>
+                                    <th class="px-4 py-3 text-left text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">NILAI</th>
+                                    <th class="px-4 py-3 text-left text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">KETERANGAN</th>
+                                    ${isAdminOrSuperAdmin ? '<th class="px-4 py-3 text-left text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">AKSI</th>' : ''}
                                 </tr>
                             </thead>
                             <tbody class="bg-white">
                                 ${student.skolastikTests.map((test, idx) => `
                                     <tr class="border-t border-gray-200">
-                                        <td class="px-4 py-3 text-sm text-gray-900">${test.date}</td>
+                                        <td class="px-4 py-3 text-sm text-gray-900 text-center">${test.date}</td>
                                         <td class="px-4 py-3 text-sm text-gray-900">${test.subject}</td>
-                                        <td class="px-4 py-3 text-sm">
-                                            <span class="px-2 py-1 rounded ${test.score >= 85 ? 'bg-green-100 text-green-800' : test.score >= 70 ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'}">${test.score}</span>
+                                        <td class="px-4 py-3 text-sm text-center"><span class="px-2 py-1 rounded ${test.score >= 85 ? 'bg-green-100 text-green-800' : test.score >= 70 ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'}">${test.score}</span>
                                         </td>
                                         <td class="px-4 py-3 text-sm text-gray-600">${test.comment}</td>
                                         ${isAdminOrSuperAdmin ? `
-                                            <td class="px-4 py-3 text-sm">
+                                            <td class="text-center px-4 py-3 text-sm">
                                                 <button onclick="editSkolastikTest(${student.id}, ${idx})" class="text-blue-600 hover:text-blue-800 mr-2">Edit</button>
                                                 <button onclick="deleteSkolastikTest(${student.id}, ${idx})" class="text-red-600 hover:text-red-800">Hapus</button>
                                             </td>
@@ -1802,24 +1802,23 @@ function confirmDeleteRegionalAdmin(username) {
                         <table class="w-full">
                             <thead class="bg-blue-800 text-white">
                                 <tr>
-                                    <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Tanggal Tes</th>
-                                    <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Materi</th>
-                                    <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Nilai</th>
-                                    <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Keterangan</th>
-                                    ${isAdminOrSuperAdmin ? '<th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Aksi</th>' : ''}
+                                    <th class="px-4 py-3 text-left text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">TANGGAL TES</th>
+                                    <th class="px-4 py-3 text-left text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">MATERI</th>
+                                    <th class="px-4 py-3 text-left text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">NILAI</th>
+                                    <th class="px-4 py-3 text-left text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">KETERANGAN</th>
+                                    ${isAdminOrSuperAdmin ? '<th class="px-4 py-3 text-left text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">AKSI</th>' : ''}
                                 </tr>
                             </thead>
                             <tbody class="bg-white">
                                 ${student.tkaTests.map((test, idx) => `
                                     <tr class="border-t border-gray-200">
-                                        <td class="px-4 py-3 text-sm text-gray-900">${test.date}</td>
+                                        <td class="px-4 py-3 text-sm text-gray-900 text-center">${test.date}</td>
                                         <td class="px-4 py-3 text-sm text-gray-900">${test.subject}</td>
-                                        <td class="px-4 py-3 text-sm">
-                                            <span class="px-2 py-1 rounded ${test.score >= 85 ? 'bg-green-100 text-green-800' : test.score >= 70 ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'}">${test.score}</span>
+                                        <td class="px-4 py-3 text-sm text-center"><span class="px-2 py-1 rounded ${test.score >= 85 ? 'bg-green-100 text-green-800' : test.score >= 70 ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'}">${test.score}</span>
                                         </td>
                                         <td class="px-4 py-3 text-sm text-gray-600">${test.comment}</td>
                                         ${isAdminOrSuperAdmin ? `
-                                            <td class="px-4 py-3 text-sm">
+                                            <td class="text-center px-4 py-3 text-sm">
                                                 <button onclick="editTkaTest(${student.id}, ${idx})" class="text-blue-600 hover:text-blue-800 mr-2">Edit</button>
                                                 <button onclick="deleteTkaTest(${student.id}, ${idx})" class="text-red-600 hover:text-red-800">Hapus</button>
                                             </td>
@@ -2343,12 +2342,12 @@ function confirmDeleteRegionalAdmin(username) {
                             <table class="w-full">
                                 <thead class="bg-blue-800 text-white">
                                     <tr>
-                                        <th class="px-6 py-3 text-left text-sm font-semibold text-white-700">Topik</th>
-                                        <th class="px-6 py-3 text-left text-sm font-semibold text-white-700">Penjelasan Materi</th>
-                                        <th class="px-6 py-3 text-left text-sm font-semibold text-white-700">Video</th>
-                                        ${currentUser.role === 'Super Admin' ? '<th class="px-6 py-3 text-left text-sm font-semibold text-white-700">Regional</th>' : ''}
-                                        ${isAdminOrSuperAdmin ? '<th class="px-6 py-3 text-left text-sm font-semibold text-white-700">Kelas Target</th>' : ''}
-                                        ${isAdminOrSuperAdmin ? '<th class="px-6 py-3 text-left text-sm font-semibold text-white-700">Aksi</th>' : ''}
+                                        <th class="px-6 py-3 text-left text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">TOPIK</th>
+                                        <th class="px-6 py-3 text-left text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">PENJELASAN MATERI</th>
+                                        <th class="px-6 py-3 text-left text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">VIDEO</th>
+                                        ${currentUser.role === 'Super Admin' ? '<th class="px-6 py-3 text-left text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">REGIONAL</th>' : ''}
+                                        ${isAdminOrSuperAdmin ? '<th class="px-6 py-3 text-left text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">KELAS TARGET</th>' : ''}
+                                        ${isAdminOrSuperAdmin ? '<th class="px-6 py-3 text-left text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">AKSI</th>' : ''}
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y divide-gray-100">
@@ -2362,7 +2361,7 @@ function confirmDeleteRegionalAdmin(username) {
                                             ${currentUser.role === 'Super Admin' ? `<td class="px-6 py-4 text-sm text-red-600 font-medium">${material.region}</td>` : ''}
                                             ${isAdminOrSuperAdmin ? `<td class="px-6 py-4 text-sm text-blue-600 font-medium">${displayClasses}</td>` : ''}
                                             ${isAdminOrSuperAdmin ? `
-                                                <td class="px-6 py-4 text-sm">
+                                                <td class="text-center px-6 py-4 text-sm">
                                                     <button onclick="editMaterial(${material.id})" class="text-blue-600 hover:text-blue-800 mr-3">Edit</button>
                                                     <button onclick="deleteMaterial(${material.id})" class="text-red-600 hover:text-red-800">Hapus</button>
                                                 </td>
@@ -2610,12 +2609,12 @@ function confirmDeleteRegionalAdmin(username) {
                             <table class="w-full">
                                 <thead class="bg-blue-800 text-white">
                                     <tr>
-                                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-900">Tanggal</th>
-                                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-900">Hari</th>
-                                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-900">Nama Materi</th>
-                                        ${currentUser.role === 'Super Admin' ? '<th class="px-6 py-3 text-left text-sm font-semibold text-gray-900">Regional</th>' : ''}
-                                        ${isAdminOrSuperAdmin ? '<th class="px-6 py-3 text-left text-sm font-semibold text-gray-900">Kelas Target</th>' : ''}
-                                        ${isAdminOrSuperAdmin ? '<th class="px-6 py-3 text-left text-sm font-semibold text-gray-900">Aksi</th>' : ''}
+                                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-900 text-center text-sm min-w-[120px]">TANGGAL</th>
+                                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-900 text-center text-sm min-w-[120px]">HARI</th>
+                                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-900 text-center text-sm min-w-[120px]">NAMA MATERI</th>
+                                        ${currentUser.role === 'Super Admin' ? '<th class="px-6 py-3 text-left text-sm font-semibold text-gray-900 text-center text-sm min-w-[120px]">REGIONAL</th>' : ''}
+                                        ${isAdminOrSuperAdmin ? '<th class="px-6 py-3 text-left text-sm font-semibold text-gray-900 text-center text-sm min-w-[120px]">KELAS TARGET</th>' : ''}
+                                        ${isAdminOrSuperAdmin ? '<th class="px-6 py-3 text-left text-sm font-semibold text-gray-900 text-center text-sm min-w-[120px]">AKSI</th>' : ''}
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white">
@@ -2627,7 +2626,7 @@ function confirmDeleteRegionalAdmin(username) {
                                             ${currentUser.role === 'Super Admin' ? `<td class="px-6 py-4 text-sm text-red-600 font-medium">${schedule.region}</td>` : ''}
                                             ${isAdminOrSuperAdmin ? `<td class="px-6 py-4 text-sm text-blue-600 font-medium">${schedule.classes.join(', ')}</td>` : ''}
                                             ${isAdminOrSuperAdmin ? `
-                                                <td class="px-6 py-4 text-sm">
+                                                <td class="text-center px-6 py-4 text-sm">
                                                     <button onclick="editSchedule(${schedule.id})" class="text-blue-600 hover:text-blue-800 mr-3">Edit</button>
                                                     <button onclick="deleteSchedule(${schedule.id})" class="text-red-600 hover:text-red-800">Hapus</button>
                                                 </td>
@@ -2671,7 +2670,7 @@ function loadAddStudent() {
     <div class="fade-in">
       <div class="flex justify-between items-center mb-6">
         <h2 class="text-2xl font-bold text-gray-900">👤 Tambah Siswa</h2>
-        <button onclick="openAddStudentModal()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-sm">+ Tambah Siswa</button>
+        
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-6">
@@ -2732,11 +2731,11 @@ function loadAddStudent() {
             <table class="min-w-full divide-y divide-gray-200">
               <thead class="bg-blue-800 text-white">
                 <tr>
-                  <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Nama</th>
-                  <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Username</th>
-                  <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Kelas</th>
-                  <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Regional</th>
-                  <th class="px-4 py-3 text-center text-sm font-semibold text-white-700">Aksi</th>
+                  <th class="px-4 py-3 text-left text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">NAMA</th>
+                  <th class="px-4 py-3 text-left text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">USERNAME</th>
+                  <th class="px-4 py-3 text-left text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">KELAS</th>
+                  <th class="px-4 py-3 text-left text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">REGIONAL</th>
+                  <th class="px-4 py-3 text-center text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">AKSI</th>
                 </tr>
               </thead>
               <tbody id="studentTableBody" class="bg-white divide-y divide-gray-100">
@@ -4203,10 +4202,10 @@ function loadManageClasses() {
         <table class="min-w-full divide-y divide-gray-200">
           <thead class="bg-blue-800 text-white">
             <tr>
-              <th class="px-4 py-3 text-center text-sm font-semibold text-white-700">Nama Kelas</th>
-              <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Deskripsi</th>
-              <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Regional</th>
-              <th class="px-4 py-3 text-center text-sm font-semibold text-white-700">Aksi</th>
+              <th class="px-4 py-3 text-center text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">NAMA KELAS</th>
+              <th class="px-4 py-3 text-left text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">DESKRIPSI</th>
+              <th class="px-4 py-3 text-left text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">REGIONAL</th>
+              <th class="px-4 py-3 text-center text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">AKSI</th>
             </tr>
           </thead>
           <tbody id="classTableBody" class="bg-white divide-y divide-gray-100">
@@ -4558,11 +4557,11 @@ function loadActivitySchedule() {
                     <table class="w-full">
                         <thead class="bg-blue-800 text-white">
                             <tr>
-                                <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Tanggal</th>
-                                <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Nama Kegiatan</th>
-                                <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Tujuan</th>
-                                <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Kelas</th>
-                                <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Aksi</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">TANGGAL</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">NAMA KEGIATAN</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">TUJUAN</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">KELAS</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">AKSI</th>
                             </tr>
                         </thead>
                         <tbody id="activityTableBody">
@@ -4779,23 +4778,23 @@ function loadActivitySchedule() {
         <table class="min-w-full divide-y divide-gray-200">
           <thead class="bg-blue-800 text-white">
             <tr>
-              <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Tanggal</th>
-              <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Hari</th>
-              <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Waktu</th>
-              <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Nama Kegiatan</th>
-              <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Tempat</th>
-              ${canEdit ? '<th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Aksi</th>' : ''}
+              <th class="px-4 py-3 text-left text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">TANGGAL</th>
+              <th class="px-4 py-3 text-left text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">HARI</th>
+              <th class="px-4 py-3 text-left text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">WAKTU</th>
+              <th class="px-4 py-3 text-left text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">NAMA KEGIATAN</th>
+              <th class="px-4 py-3 text-left text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">TEMPAT</th>
+              ${canEdit ? '<th class="px-4 py-3 text-left text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">AKSI</th>' : ''}
             </tr>
           </thead>
           <tbody class="bg-white divide-y divide-gray-100" id="activityTableBody">
             ${filteredData.map(item => `
               <tr class="hover:bg-gray-50">
-                <td class="px-4 py-3 text-sm text-gray-700">${item.date || ''}</td>
-                <td class="px-4 py-3 text-sm text-gray-700">${item.day || ''}</td>
-                <td class="px-4 py-3 text-sm text-gray-700">${item.time || ''}</td>
+                <td class="px-4 py-3 text-sm text-gray-700 text-center">${item.date || ''}</td>
+                <td class="px-4 py-3 text-sm text-gray-700 text-center">${item.day || ''}</td>
+                <td class="px-4 py-3 text-sm text-gray-700 text-center">${item.time || ''}</td>
                 <td class="px-4 py-3 text-sm font-medium text-gray-900">${item.name || ''}</td>
                 <td class="px-4 py-3 text-sm text-gray-700">${item.place || ''}</td>
-                ${canEdit ? `<td class="px-4 py-3 text-sm">
+                ${canEdit ? `<td class="text-center px-4 py-3 text-sm">
                   <button onclick="editActivity('${item.id}')" class="text-blue-600 hover:text-blue-800 mr-3">Edit</button>
                   <button onclick="deleteActivity('${item.id}')" class="text-red-600 hover:text-red-800">Hapus</button>
                 </td>` : ''}
@@ -5009,24 +5008,24 @@ function loadSchedule() {
         <table class="min-w-full divide-y divide-gray-200">
           <thead class="bg-blue-800 text-white">
             <tr>
-              <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Tanggal</th>
-              <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Waktu</th>
-              <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Hari</th>
-              <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Nama Materi</th>
-              <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Kelas Target</th>
+              <th class="px-4 py-3 text-left text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">TANGGAL</th>
+              <th class="px-4 py-3 text-left text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">WAKTU</th>
+              <th class="px-4 py-3 text-left text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">HARI</th>
+              <th class="px-4 py-3 text-left text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">NAMA MATERI</th>
+              <th class="px-4 py-3 text-left text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">KELAS TARGET</th>
               
-              <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Aksi</th>
+              <th class="px-4 py-3 text-left text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">AKSI</th>
             </tr>
           </thead>
           <tbody class="bg-white divide-y divide-gray-100" id="scheduleTableBody">
             ${filtered.map(item => `
               <tr class="hover:bg-gray-50">
-                <td class="px-4 py-3 text-sm text-gray-700">${item.date || ''}</td>
-                <td class="px-4 py-3 text-sm text-gray-700">${item.time || ''}</td>
-                <td class="px-4 py-3 text-sm text-gray-700">${item.day || ''}</td>
+                <td class="px-4 py-3 text-sm text-gray-700 text-center">${item.date || ''}</td>
+                <td class="px-4 py-3 text-sm text-gray-700 text-center">${item.time || ''}</td>
+                <td class="px-4 py-3 text-sm text-gray-700 text-center">${item.day || ''}</td>
                 <td class="px-4 py-3 text-sm font-medium text-gray-900">${item.subject || ''}</td>
                 <td class="px-4 py-3 text-sm text-gray-700">${item.classTarget || ''}</td>
-                ${canEdit ? `<td class="px-4 py-3 text-sm">
+                ${canEdit ? `<td class="text-center px-4 py-3 text-sm">
                   <button onclick="editSchedule('${item.id}')" class="text-blue-600 hover:text-blue-800 mr-3">Edit</button>
                   <button onclick="deleteSchedule('${item.id}')" class="text-red-600 hover:text-red-800">Hapus</button>
                 </td>` : ''}
@@ -5434,10 +5433,10 @@ function loadManageClasses() {
           <table class="w-full">
             <thead class="bg-blue-800 text-white">
               <tr>
-                <th class="px-4 py-3 text-center text-sm font-semibold text-white-700">Nama Kelas</th>
-                <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Deskripsi</th>
-                <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Regional</th>
-                <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Aksi</th>
+                <th class="px-4 py-3 text-center text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">NAMA KELAS</th>
+                <th class="px-4 py-3 text-left text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">DESKRIPSI</th>
+                <th class="px-4 py-3 text-left text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">REGIONAL</th>
+                <th class="px-4 py-3 text-left text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">AKSI</th>
               </tr>
             </thead>
             <tbody class="bg-white">
@@ -5644,7 +5643,7 @@ window.loadActivitySchedule = function() {
       const status = jumlahSiswa > 0 ? `<span class="text-green-600 font-semibold">Aktif</span>` : `<span class="text-red-500 font-semibold">Tidak Aktif</span>`;
       return `
         <tr class="hover:bg-gray-50">
-          <td class="px-6 py-4 text-center">${idx+1}</td>
+          <td class="px-6 py-4 text-center text-center">${idx+1}</td>
           <td class="px-6 py-4 font-semibold">${cls.name}</td>
           <td class="px-6 py-4 text-center">${jumlahSiswa}</td>
           <td class="px-6 py-4 text-center">1</td>
@@ -5677,12 +5676,12 @@ window.loadActivitySchedule = function() {
             <table class="min-w-full divide-y divide-gray-200">
               <thead class="bg-blue-800 text-white">
                 <tr>
-                  <th class="px-6 py-3 text-center text-xs font-semibold uppercase tracking-wider">No</th>
-                  <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider">Nama Kelas</th>
-                  <th class="px-6 py-3 text-center text-xs font-semibold uppercase tracking-wider">Jumlah Siswa</th>
-                  <th class="px-6 py-3 text-center text-xs font-semibold uppercase tracking-wider">Jumlah Kelas</th>
-                  <th class="px-6 py-3 text-center text-xs font-semibold uppercase tracking-wider">Status Kelas</th>
-                  <th class="px-6 py-3 text-center text-xs font-semibold uppercase tracking-wider">Aksi</th>
+                  <th class="px-6 py-3 text-center text-xs font-semibold uppercase tracking-wider text-center text-sm min-w-[120px] min-w-[60px]">NO</th>
+                  <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-center text-sm min-w-[120px]">NAMA KELAS</th>
+                  <th class="px-6 py-3 text-center text-xs font-semibold uppercase tracking-wider text-center text-sm min-w-[120px]">JUMLAH SISWA</th>
+                  <th class="px-6 py-3 text-center text-xs font-semibold uppercase tracking-wider text-center text-sm min-w-[120px]">JUMLAH KELAS</th>
+                  <th class="px-6 py-3 text-center text-xs font-semibold uppercase tracking-wider text-center text-sm min-w-[120px]">STATUS KELAS</th>
+                  <th class="px-6 py-3 text-center text-xs font-semibold uppercase tracking-wider text-center text-sm min-w-[120px]">AKSI</th>
                 </tr>
               </thead>
               <tbody class="bg-white divide-y divide-gray-100">
@@ -5887,7 +5886,7 @@ window.loadActivitySchedule = function() {
       const fd = formatDateAndDay(a.date || a.tanggal || '');
       if (showActions) {
         rows += `<tr class="hover:bg-blue-50">
-          <td class="px-4 py-2 text-center">${idx+1}</td>
+          <td class="px-4 py-2 text-center text-center">${idx+1}</td>
           <td class="px-4 py-2 text-center">${fd.date}</td>
           <td class="px-4 py-2 text-center">${fd.dayName}</td>
           <td class="px-4 py-2 text-center font-medium">${a.status || '-'}</td>
@@ -5898,7 +5897,7 @@ window.loadActivitySchedule = function() {
         </tr>`;
       } else {
         rows += `<tr class="hover:bg-blue-50">
-          <td class="px-4 py-2 text-center">${idx+1}</td>
+          <td class="px-4 py-2 text-center text-center">${idx+1}</td>
           <td class="px-4 py-2 text-center">${fd.date}</td>
           <td class="px-4 py-2 text-center">${fd.dayName}</td>
           <td class="px-4 py-2 text-center font-medium">${a.status || '-'}</td>
@@ -5925,9 +5924,8 @@ window.loadActivitySchedule = function() {
       const classOptionsHTML = ['<option value="all">Semua Kelas</option>'].concat(classes.map(c=>`<option value="${c}">${c}</option>`)).join('');
       content.innerHTML = `
         <div class="fade-in ml-2 mr-6">
-          <div class="bg-gradient-to-r from-blue-600 to-blue-800 rounded-lg p-6 rounded-xl mb-6 text-white shadow-lg rounded-xl">
-            <h2 class="text-2xl font-bold">Data Kehadiran - ${currentUser.region}</h2>
-            <p class="text-blue-100">Kelola data kehadiran siswa dan lakukan edit / hapus.</p>
+          <div class="bg-white rounded-lg p-6 mb-6 text-black shadow-lg">
+            <h2 class="text-2xl font-bold">🗓️ Data Kehadiran - ${currentUser.region}</h2>
           </div>
 
           <div class="bg-white rounded-2xl p-6 rounded-xl shadow-md rounded-xl mb-6 border border-blue-100">
@@ -5958,11 +5956,11 @@ window.loadActivitySchedule = function() {
               <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-blue-800 text-white">
                   <tr>
-                    <th class="px-4 py-2 text-center">No</th>
-                    <th class="px-4 py-2 text-center">Tanggal</th>
-                    <th class="px-4 py-2 text-center">Hari</th>
-                    <th class="px-4 py-2 text-center">Status</th>
-                    <th class="px-4 py-2 text-center">Aksi</th>
+                    <th class="px-4 py-2 text-center text-center text-sm min-w-[120px] py-3 min-w-[60px]">NO</th>
+                    <th class="px-4 py-2 text-center text-center text-sm min-w-[120px] py-3">TANGGAL</th>
+                    <th class="px-4 py-2 text-center text-center text-sm min-w-[120px] py-3">HARI</th>
+                    <th class="px-4 py-2 text-center text-center text-sm min-w-[120px] py-3">STATUS</th>
+                    <th class="px-4 py-2 text-center text-center text-sm min-w-[120px] py-3">AKSI</th>
                   </tr>
                 </thead>
                 <tbody id="attendanceTableBody" class="bg-white"></tbody>
@@ -6050,9 +6048,9 @@ window.loadActivitySchedule = function() {
       }
       content.innerHTML = `
         <div class="fade-in ml-2 mr-6">
-          <div class="bg-gradient-to-r from-blue-600 to-blue-800 rounded-lg p-6 rounded-xl mb-6 text-white shadow-lg rounded-xl">
+          <div class="bg-white rounded-lg p-6 mb-6 text-black shadow-lg">
             <h2 class="text-2xl font-bold">${student.name}</h2>
-            <p class="text-blue-100">${student.school || "Nama sekolah tidak tersedia"}</p>
+            <p class="text-blue-800 font-semibold">${student.school || "Nama sekolah tidak tersedia"}</p>
           </div>
 
           <div class="bg-white rounded-xl p-4 rounded-xl shadow-md rounded-xl border border-blue-50 mb-4">
@@ -6067,10 +6065,10 @@ window.loadActivitySchedule = function() {
               <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-blue-800 text-white">
                   <tr>
-                    <th class="px-4 py-2 text-center">No</th>
-                    <th class="px-4 py-2 text-center">Tanggal</th>
-                    <th class="px-4 py-2 text-center">Hari</th>
-                    <th class="px-4 py-2 text-center">Status</th>
+                    <th class="px-4 py-2 text-center text-center text-sm min-w-[120px] py-3 min-w-[60px]">NO</th>
+                    <th class="px-4 py-2 text-center text-center text-sm min-w-[120px] py-3">TANGGAL</th>
+                    <th class="px-4 py-2 text-center text-center text-sm min-w-[120px] py-3">HARI</th>
+                    <th class="px-4 py-2 text-center text-center text-sm min-w-[120px] py-3">STATUS</th>
                   </tr>
                 </thead>
                 <tbody id="studentAttendanceBody" class="bg-white"></tbody>
@@ -6491,6 +6489,287 @@ document.addEventListener("DOMContentLoaded", () => {
 })();
 </script>
 <!-- END CONSOLIDATED PATCH -->
+
+<!-- BEGIN: Assistant PATCH - Override loadSchedule to strict Admin/Student table formats -->
+<script>
+/*
+  Overriding loadSchedule to:
+  - Render Admin table: NO | TANGGAL | HARI | WAKTU | NAMA MATERI | KELAS | AKSI
+  - Render Student table: NO | TANGGAL | HARI | WAKTU | NAMA MATERI
+  - Admin sees only their region schedules; Super Admin can filter by region (selectedAdminRegion)
+  - Student sees only their region + their class
+  - CRUD buttons rendered only for Admin/Super Admin
+  - Keeps existing add/edit/delete functions
+*/
+window.loadSchedule = function() {
+  try {
+    const content = document.getElementById('contentArea');
+    if (!content) return;
+    const role = currentUser && currentUser.role ? currentUser.role : 'Guest';
+    const isAdmin = role === 'Admin' || role === 'Super Admin';
+    // Prepare regional filtering
+    let regional = 'all';
+    if (role === 'Admin') regional = currentUser.region;
+    else if (role === 'Super Admin') regional = selectedAdminRegion || 'all';
+    // Prepare class filter for admin
+    const classFilter = selectedClassSchedule || 'all';
+    // Build base schedule list filtered by region (and for students further by class)
+    let list = Array.isArray(scheduleData) ? scheduleData.slice() : [];
+    if (role === 'Admin') {
+      list = list.filter(s => s.region === currentUser.region);
+    } else if (role === 'Super Admin' && regional !== 'all') {
+      list = list.filter(s => s.region === regional);
+    } else if (role === 'Siswa') {
+      // find student record to identify class and region
+      const stud = studentsData.find(s => s.username === currentUser.username || s.name === currentUser.name);
+      if (!stud) {
+        content.innerHTML = '<div class="p-6 bg-white rounded-xl shadow text-center text-gray-700">Data siswa tidak ditemukan.</div>';
+        return;
+      }
+      list = list.filter(s => (s.region === stud.region) && (Array.isArray(s.classes) ? s.classes.includes(stud.class) : (s.classTarget ? s.classTarget === stud.class : true)));
+    }
+
+    // Apply admin class filter (if any)
+    if (isAdmin && classFilter && classFilter !== 'all') {
+      list = list.filter(s => {
+        if (Array.isArray(s.classes)) return s.classes.includes(classFilter);
+        if (s.classTarget) return s.classTarget === classFilter;
+        return false;
+      });
+    }
+
+    // Normalize date sorting
+    list.sort((a,b) => {
+      const da = a.date || '';
+      const db = b.date || '';
+      return (new Date(da) - new Date(db));
+    });
+
+    // Build header area
+    let headerHtml = `<div class="fade-in mb-6">
+        <div class="flex justify-between items-center">
+          <h2 class="text-2xl font-bold text-gray-900">📅 Jadwal Belajar ${role === 'Siswa' ? '' : (role === 'Admin' ? '(' + (currentUser.region || '') + ')' : '(Semua Regional)')}</h2>
+          ${isAdmin ? '<button onclick="openAddScheduleModal()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-sm">+ Tambah Jadwal</button>' : ''}
+        </div>
+      </div>`;
+
+    // Region dropdown for Super Admin
+    let regionFilterHtml = '';
+    if (role === 'Super Admin') {
+      // build options from availableClasses and scheduleData
+      const regions = new Set();
+      (availableClasses || []).forEach(c => { if (c.region) regions.add(c.region); });
+      (scheduleData || []).forEach(s => { if (s.region) regions.add(s.region); });
+      const regs = Array.from(regions).sort();
+      regionFilterHtml = `<div class="mb-4 flex items-center space-x-3"><label class="text-sm font-medium">Filter Regional:</label>
+        <select id="assistant_region_filter" class="px-3 py-2 border rounded-lg">
+          <option value="all"${regional === 'all' ? ' selected' : ''}>Semua Regional</option>
+          ${regs.map(r => `<option value="${r}"${regional === r ? ' selected' : ''}>${r}</option>`).join('')}
+        </select></div>`;
+    }
+
+    // Class filter for Admin / Super Admin
+    let classFilterHtml = '';
+    if (isAdmin) {
+      // compute classes available for this admin view
+      let classesSet = new Set();
+      (availableClasses || []).forEach(c => {
+        if (role === 'Super Admin' && regional !== 'all') {
+          if (c.region === regional) classesSet.add(c.name);
+        } else if (role === 'Super Admin' && regional === 'all') {
+          classesSet.add(c.name);
+        } else if (role === 'Admin') {
+          if (c.region === currentUser.region) classesSet.add(c.name);
+        }
+      });
+      const classes = Array.from(classesSet).sort();
+      classFilterHtml = `<div class="mb-4">
+        <label class="text-sm font-medium mr-2">Filter Kelas:</label>
+        <select id="assistant_class_filter_schedule" class="px-3 py-2 border rounded-lg">
+          <option value="all"${classFilter === 'all' ? ' selected' : ''}>Semua Kelas</option>
+          ${classes.map(c => `<option value="${c}"${classFilter === c ? ' selected' : ''}>${c}</option>`).join('')}
+        </select>
+      </div>`;
+    }
+
+    // Build table HTML depending on role
+    let tableHtml = `<div class="bg-white border border-gray-200 rounded-lg shadow-sm overflow-x-auto">`;
+    if (role === 'Siswa') {
+      tableHtml += `
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-blue-800 text-white">
+            <tr>
+              <th class="px-4 py-3 text-left text-sm font-semibold text-center text-sm min-w-[120px] min-w-[60px]">NO</th>
+              <th class="px-4 py-3 text-left text-sm font-semibold text-center text-sm min-w-[120px]">TANGGAL</th>
+              <th class="px-4 py-3 text-left text-sm font-semibold text-center text-sm min-w-[120px]">HARI</th>
+              <th class="px-4 py-3 text-left text-sm font-semibold text-center text-sm min-w-[120px]">WAKTU</th>
+              <th class="px-4 py-3 text-left text-sm font-semibold text-center text-sm min-w-[120px]">NAMA MATERI</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white">`;
+      if (list.length === 0) {
+        tableHtml += `<tr><td colspan="5" class="px-6 py-4 text-center text-gray-500">Tidak ada jadwal untuk kelas/region Anda.</td></tr>`;
+      } else {
+        list.forEach((s, idx) => {
+          tableHtml += `<tr class="border-t border-gray-100 hover:bg-gray-50">
+            <td class="px-4 py-3 text-sm text-center">${idx+1}</td>
+            <td class="px-4 py-3 text-sm text-center">${s.date || ''}</td>
+            <td class="px-4 py-3 text-sm text-center">${s.day || ''}</td>
+            <td class="px-4 py-3 text-sm text-center">${s.time || ''}</td>
+            <td class="px-4 py-3 text-sm font-medium text-gray-900">${s.subject || ''}</td>
+          </tr>`;
+        });
+      }
+      tableHtml += `</tbody></table>`;
+    } else {
+      // Admin / Super Admin table (includes kelas and aksi)
+      tableHtml += `
+        <div class="p-4 flex flex-col md:flex-row md:items-center md:justify-between space-y-3 md:space-y-0">
+          <div>${regionFilterHtml || ''}${classFilterHtml || ''}</div>
+        </div>
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-blue-800 text-white">
+            <tr>
+              <th class="px-4 py-3 text-left text-sm font-semibold text-center text-sm min-w-[120px] min-w-[60px]">NO</th>
+              <th class="px-4 py-3 text-left text-sm font-semibold text-center text-sm min-w-[120px]">TANGGAL</th>
+              <th class="px-4 py-3 text-left text-sm font-semibold text-center text-sm min-w-[120px]">HARI</th>
+              <th class="px-4 py-3 text-left text-sm font-semibold text-center text-sm min-w-[120px]">WAKTU</th>
+              <th class="px-4 py-3 text-left text-sm font-semibold text-center text-sm min-w-[120px]">NAMA MATERI</th>
+              <th class="px-4 py-3 text-left text-sm font-semibold text-center text-sm min-w-[120px]">KELAS</th>
+              <th class="px-4 py-3 text-left text-sm font-semibold text-center text-sm min-w-[120px]">AKSI</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white">`;
+      if (list.length === 0) {
+        tableHtml += `<tr><td colspan="7" class="px-6 py-4 text-center text-gray-500">Tidak ada jadwal untuk regional/kelas terpilih.</td></tr>`;
+      } else {
+        list.forEach((s, idx) => {
+          const kelasText = Array.isArray(s.classes) ? s.classes.join(', ') : (s.classTarget || '');
+          tableHtml += `<tr class="border-t border-gray-100 hover:bg-gray-50">
+            <td class="px-4 py-3 text-sm text-center">${idx+1}</td>
+            <td class="px-4 py-3 text-sm text-center">${s.date || ''}</td>
+            <td class="px-4 py-3 text-sm text-center">${s.day || ''}</td>
+            <td class="px-4 py-3 text-sm text-center">${s.time || ''}</td>
+            <td class="px-4 py-3 text-sm font-medium text-gray-900">${s.subject || ''}</td>
+            <td class="px-4 py-3 text-sm text-blue-600">${kelasText}</td>
+            <td class="text-center px-4 py-3 text-sm">
+              <button onclick="editSchedule(${s.id})" class="text-blue-600 hover:text-blue-800 mr-3">Edit</button>
+              <button onclick="deleteSchedule(${s.id})" class="text-red-600 hover:text-red-800">Hapus</button>
+            </td>
+          </tr>`;
+        });
+      }
+      tableHtml += `</tbody></table>`;
+    }
+    tableHtml += `</div>`;
+
+    // Compose final HTML
+    content.innerHTML = headerHtml + (isAdmin ? '' : '') + '<div class="bg-white/0 p-1">' + (isAdmin ? '' : '') + '</div>' + (isAdmin ? '' : '') + (role === 'Super Admin' ? '' : '') + '<div class="fade-in">' + tableHtml + '</div>';
+
+    // Attach event listeners for filters if present
+    const regionSelect = document.getElementById('assistant_region_filter');
+    if (regionSelect) {
+      regionSelect.addEventListener('change', function(e) {
+        selectedAdminRegion = e.target.value;
+        // persist and reload
+        loadSchedule();
+      });
+    }
+    const classSelect = document.getElementById('assistant_class_filter_schedule');
+    if (classSelect) {
+      classSelect.addEventListener('change', function(e){
+        selectedClassSchedule = e.target.value;
+        loadSchedule();
+      });
+    }
+  } catch (err) {
+    console.error('Error in assistant overridden loadSchedule:', err);
+    // fallback to previous loadSchedule if exists and different
+    if (typeof window.loadScheduleOriginal === 'function') {
+      window.loadScheduleOriginal();
+    }
+  }
+};
+// END PATCH
+</script>
+
+
+<script>
+// === PATCH: Jadwal Belajar UI Fix ===
+// Wrapper rounded + hapus label "filter kelas:" di admin & siswa
+
+(function() {
+    const oldLoad = window.loadSchedule;
+
+    window.loadSchedule = function() {
+        if (typeof oldLoad === "function") oldLoad();
+
+        const content = document.getElementById('contentArea');
+        if (!content) return;
+
+        content.querySelectorAll("label").forEach(lab => {
+            if (lab.textContent.trim().toLowerCase().includes("filter kelas")) {
+                lab.remove();
+            }
+        });
+
+        const firstChild = content.firstElementChild;
+        if (!firstChild) return;
+
+        if (!firstChild.classList.contains("jadwal-wrapper")) {
+            const wrapper = document.createElement("div");
+            wrapper.className = "jadwal-wrapper bg-white shadow-md rounded-2xl p-6 mb-6";
+            while (content.firstChild) {
+                wrapper.appendChild(content.firstChild);
+            }
+            content.appendChild(wrapper);
+        }
+    };
+})();
+</script>
+
+
+<script>
+// === PATCH POSISI FILTER & TAMBAH MATERI PADA MODUL MATERI ===
+(function() {
+    const original = window.loadMaterials;
+
+    window.loadMaterials = function() {
+        if (typeof original === "function") original();
+
+        const content = document.getElementById("contentArea");
+        if (!content) return;
+
+        const wrapper = content.querySelector(".fade-in");
+        if (!wrapper) return;
+
+        const title = wrapper.querySelector("h2");
+        if (!title) return;
+
+        const filter = wrapper.querySelector("#filterClassMaterial");
+        if (!filter) return;
+
+        const btnAdd = wrapper.querySelector("button[onclick='openAddMaterialModal()']");
+        if (!btnAdd) return;
+
+        const newRow = document.createElement("div");
+        newRow.className = "flex justify-between items-center mt-2 mb-4";
+
+        const leftWrap = document.createElement("div");
+        leftWrap.className = "flex items-center";
+        leftWrap.appendChild(filter);
+
+        const rightWrap = document.createElement("div");
+        rightWrap.appendChild(btnAdd);
+
+        newRow.appendChild(leftWrap);
+        newRow.appendChild(rightWrap);
+
+        title.insertAdjacentElement("afterend", newRow);
+    };
+})();
+</script>
+
 </body>
 </html>
 <!-- === Materi Kelas UI Override (FINAL FIX) 
@@ -6534,12 +6813,12 @@ function loadMaterials() {
                     <table class="w-full">
                         <thead class="bg-blue-800 text-white">
                             <tr>
-                                <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Topik</th>
-                                <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Deskripsi</th>
-                                <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Kelas</th>
-                                <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Regional</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">TOPIK</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">DESKRIPSI</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">KELAS</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">REGIONAL</th>
                                 ${(currentUser.role === 'Admin' || currentUser.role === 'Super Admin') ? 
-                                    '<th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Aksi</th>' : ''}
+                                    '<th class="px-4 py-3 text-left text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">AKSI</th>' : ''}
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-100">
@@ -6550,7 +6829,7 @@ function loadMaterials() {
                                     <td class="px-4 py-3 text-sm text-blue-600 font-semibold">${m.classes.join(', ')}</td>
                                     <td class="px-4 py-3 text-sm text-gray-600">${m.region}</td>
                                     ${(currentUser.role === 'Admin' || currentUser.role === 'Super Admin') ? `
-                                        <td class="px-4 py-3 text-sm">
+                                        <td class="text-center px-4 py-3 text-sm">
                                             <button onclick="editMaterial(${m.id})" class="text-blue-600 hover:text-blue-800 mr-3">Edit</button>
                                             <button onclick="deleteMaterial(${m.id})" class="text-red-600 hover:text-red-800">Hapus</button>
                                         </td>` : ''}
@@ -6629,12 +6908,12 @@ function loadMaterials() {
                     <table class="w-full">
                         <thead class="bg-blue-800 text-white">
                             <tr>
-                                <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Topik</th>
-                                <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Deskripsi</th>
-                                <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Kelas</th>
-                                <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Regional</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">TOPIK</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">DESKRIPSI</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">KELAS</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">REGIONAL</th>
                                 ${(currentUser.role === 'Admin' || currentUser.role === 'Admin Regional' || currentUser.role === 'Super Admin') ? 
-                                    '<th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Aksi</th>' : ''}
+                                    '<th class="px-4 py-3 text-left text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">AKSI</th>' : ''}
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-100">
@@ -6645,7 +6924,7 @@ function loadMaterials() {
                                     <td class="px-4 py-3 text-sm text-blue-600 font-semibold">${m.classes.join(', ')}</td>
                                     <td class="px-4 py-3 text-sm text-gray-600">${m.region}</td>
                                     ${(currentUser.role === 'Admin' || currentUser.role === 'Admin Regional' || currentUser.role === 'Super Admin') ? `
-                                        <td class="px-4 py-3 text-sm">
+                                        <td class="text-center px-4 py-3 text-sm">
                                             <button onclick="editMaterial(${m.id})" class="text-blue-600 hover:text-blue-800 mr-3">Edit</button>
                                             <button onclick="deleteMaterial(${m.id})" class="text-red-600 hover:text-red-800">Hapus</button>
                                         </td>` : ''}
@@ -6776,11 +7055,11 @@ function loadManageAdmins() {
                         <table class='min-w-full divide-y divide-gray-200'>
                             <thead class='bg-blue-800 text-white'>
                                 <tr>
-                                    <th class='px-6 py-3 text-left text-xs font-semibold text-white-700 uppercase tracking-wider'>No</th>
-                                    <th class='px-6 py-3 text-left text-xs font-semibold text-white-700text-gray-600 uppercase tracking-wider'>Nama</th>
-                                    <th class='px-6 py-3 text-left text-xs font-semibold text-white-700 uppercase tracking-wider'>Role</th>
-                                    <th class='px-6 py-3 text-left text-xs font-semibold text-white-700 uppercase tracking-wider'>Regional</th>
-                                    <th class='px-6 py-3 text-left text-xs font-semibold text-white-700 uppercase tracking-wider'>Waktu Login</th>
+                                    <th class="text-center text-sm min-w-[120px] py-3 min-w-[60px]" class='px-6 py-3 text-left text-xs font-semibold text-white-700 uppercase tracking-wider'>NO</th>
+                                    <th class="text-center text-sm min-w-[120px] py-3" class='px-6 py-3 text-left text-xs font-semibold text-white-700text-gray-600 uppercase tracking-wider'>NAMA</th>
+                                    <th class="text-center text-sm min-w-[120px] py-3" class='px-6 py-3 text-left text-xs font-semibold text-white-700 uppercase tracking-wider'>ROLE</th>
+                                    <th class="text-center text-sm min-w-[120px] py-3" class='px-6 py-3 text-left text-xs font-semibold text-white-700 uppercase tracking-wider'>REGIONAL</th>
+                                    <th class="text-center text-sm min-w-[120px] py-3" class='px-6 py-3 text-left text-xs font-semibold text-white-700 uppercase tracking-wider'>WAKTU LOGIN</th>
                                 </tr>
                             </thead>
                             <tbody class='bg-white divide-y divide-gray-100'>
@@ -6820,12 +7099,12 @@ function loadManageAdmins() {
                     <table class="w-full">
                         <thead class="bg-blue-800 text-white">
                             <tr>
-                                <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">No</th>
-                                <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Nama Admin</th>
-                                <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Username</th>
-                                <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Regional</th>
-                                <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Jml Siswa</th>
-                                <th class="px-4 py-3 text-left text-sm font-semibold text-white-700">Aksi</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-white-700 text-center text-sm min-w-[120px] min-w-[60px]">NO</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">NAMA ADMIN</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">USERNAME</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">REGIONAL</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">JUMLAH SISWA</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">AKSI</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white">
@@ -6838,7 +7117,7 @@ function loadManageAdmins() {
                                         <td class="px-4 py-3 text-sm text-gray-600">${admin.username}</td>
                                         <td class="px-4 py-3 text-sm text-red-600 font-medium">${admin.region}</td>
                                         <td class="px-4 py-3 text-sm text-blue-600 font-bold">${studentsInRegion}</td>
-                                        <td class="px-4 py-3 text-sm">
+                                        <td class="text-center px-4 py-3 text-sm">
                                             <button onclick="editRegionalAdmin('${admin.username}')" class="text-blue-600 hover:text-blue-800 mr-3">Edit</button>
                                             <button onclick="deleteRegionalAdmin('${admin.username}')" class="text-red-600 hover:text-red-800">Hapus</button>
                                         </td>
