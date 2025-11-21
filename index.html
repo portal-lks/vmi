@@ -159,7 +159,6 @@ aside.w-64 {
     color: #000 !important;
 }
 </style>
-
 </head>
 <body class="bg-white">
 <style>
@@ -205,7 +204,6 @@ aside.w-64 {
 <div class="mt-4 text-center text-sm text-gray-600">
 </div>
 </div>
-
 <div class="hidden min-h-full" id="dashboardPage">
 <header class="bg-white border-b border-gray-200 fixed w-full top-0 z-10 shadow-sm">
 <div class="flex items-center justify-between px-6 py-4">
@@ -1918,11 +1916,11 @@ function confirmDeleteRegionalAdmin(username) {
                 // --- ADMIN REGIONAL VIEW: GROUPED BY CLASS ---
                 moduleContent = `
                     <div class="bg-white border border-gray-200 rounded-lg p-4 rounded-xl mb-6 shadow-sm">
-                        <h3 class="text-lg font-semibold text-gray-900 mb-3">Filter Kelas</h3>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-3"></h3>
                         
-<!-- Filter Kelas (Dropdown versi clean) -->
+<!--  (Dropdown versi clean) -->
 <div class="mt-3 mb-4">
-  <label class="block text-sm font-medium text-gray-700 mb-1">Filter Kelas</label>
+  
   <select onchange="filterArtProgressByClass(this.value)" 
     class="w-full max-w-xs px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
     <option value="all">Semua Kelas</option>
@@ -1941,7 +1939,8 @@ function confirmDeleteRegionalAdmin(username) {
                          ` : ''}
                     </div>
 
-                    <div id="artProgressContent">
+                    <div id="filterKelasArtProgress" class="mt-3 mb-5"></div>
+<div id="artProgressContent">
                         ${renderStudentGroupedByClass(displayData, isAdminOrSuperAdmin, 'artProgress')}
                     </div>
                 `;
@@ -2045,11 +2044,11 @@ function confirmDeleteRegionalAdmin(username) {
                  // --- ADMIN REGIONAL VIEW: GROUPED BY CLASS ---
                  moduleContent = `
                     <div class="bg-white border border-gray-200 rounded-lg p-4 rounded-xl mb-6 shadow-sm">
-                        <h3 class="text-lg font-semibold text-gray-900 mb-3">Filter Kelas</h3>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-3"></h3>
                         
-<!-- Filter Kelas (Dropdown versi clean) -->
+<!--  (Dropdown versi clean) -->
 <div class="mt-3 mb-4">
-  <label class="block text-sm font-medium text-gray-700 mb-1">Filter Kelas</label>
+  
   <select onchange="filterSkolastikByClass(this.value)" 
     class="w-full max-w-xs px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
     <option value="all">Semua Kelas</option>
@@ -2170,11 +2169,11 @@ function confirmDeleteRegionalAdmin(username) {
                 // --- ADMIN REGIONAL VIEW: GROUPED BY CLASS ---
                  moduleContent = `
                     <div class="bg-white border border-gray-200 rounded-lg p-4 rounded-xl mb-6 shadow-sm">
-                        <h3 class="text-lg font-semibold text-gray-900 mb-3">Filter Kelas</h3>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-3"></h3>
                         
-<!-- Filter Kelas (Dropdown versi clean) -->
+<!--  (Dropdown versi clean) -->
 <div class="mt-3 mb-4">
-  <label class="block text-sm font-medium text-gray-700 mb-1">Filter Kelas</label>
+  
   <select onchange="filterTkaByClass(this.value)" 
     class="w-full max-w-xs px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
     <option value="all">Semua Kelas</option>
@@ -2319,7 +2318,7 @@ function confirmDeleteRegionalAdmin(username) {
             const filterUI = isAdminOrSuperAdmin ? `
                 <div class="flex items-center gap-4">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Filter Kelas</label>
+                        
                         <select id="filterClassMaterial" onchange="filterMaterials()" 
                             class="border border-blue-500 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
                             <option value="all"${selectedClassMaterial==='all'?' selected':''}>Semua Kelas</option>
@@ -2585,11 +2584,11 @@ function confirmDeleteRegionalAdmin(username) {
 
                     ${isAdminOrSuperAdmin ? `
                         <div class="bg-white border border-gray-200 rounded-lg p-4 rounded-xl mb-6 shadow-sm">
-                            <h3 class="text-lg font-semibold text-gray-900 mb-3">Filter Kelas</h3>
+                            <h3 class="text-lg font-semibold text-gray-900 mb-3"></h3>
                             
-<!-- Filter Kelas (Dropdown versi clean) -->
+<!--  (Dropdown versi clean) -->
 <div class="mt-3 mb-4">
-  <label class="block text-sm font-medium text-gray-700 mb-1">Filter Kelas</label>
+  
   <select onchange="filterMaterialByClass(this.value)" 
     class="w-full max-w-xs px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
     <option value="all">Semua Kelas</option>
@@ -2720,9 +2719,9 @@ function loadAddStudent() {
         <div class="bg-white border border-gray-200 rounded-lg p-6 rounded-xl shadow-sm">
           <h3 class="text-xl font-semibold text-gray-900 mb-4">Siswa Terdaftar</h3>
 
-          <!-- Filter Kelas (vertikal, di atas tabel) -->
+          <!--  (vertikal, di atas tabel) -->
           <div class="mb-4">
-            <label for="filterStudentClass" class="block text-sm font-medium text-gray-700 mb-1">🏫 Filter Kelas</label>
+            <label for="filterStudentClass" class="block text-sm font-medium text-gray-700 mb-1">🏫 </label>
             <select id="filterStudentClass" onchange="filterStudentByClass()" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
               <option value="all">Semua Kelas</option>
               ${classOptions.map(c=>`<option value="${c.name}">${c.name} (${c.region})</option>`).join('')}
@@ -4190,7 +4189,7 @@ function loadManageClasses() {
         </div>` : ''}
 
         <div>
-          <label for="filterClass" class="block text-sm font-medium text-gray-700 mb-1">🏫 Filter Kelas</label>
+          <label for="filterClass" class="block text-sm font-medium text-gray-700 mb-1">🏫 </label>
           <select id="filterClass" onchange="filterClasses()" 
             class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
             <option value="all">Semua Kelas</option>
@@ -4769,7 +4768,7 @@ function loadActivitySchedule() {
       ${canEdit ? `
       <div class="mb-4 flex items-end space-x-4">
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Filter Kelas</label>
+          
           <select id="classFilterDropdownActivity" class="w-48 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
             ${classOptions.map(opt => `<option ${opt === currentFilter ? 'selected' : ''} value="${opt}">${opt}</option>`).join('')}
           </select>
@@ -5000,7 +4999,7 @@ function loadSchedule() {
 
       ${canEdit ? `
       <div class="mb-4">
-        <label class="block text-sm font-medium text-gray-700 mb-1">Filter Kelas</label>
+        
         <select id="classFilterSchedule" class="w-48 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
           ${classOptions.map(opt => `<option ${opt === currentFilter ? 'selected' : ''} value="${opt}">${opt}</option>`).join('')}
         </select>
@@ -5934,7 +5933,7 @@ window.loadActivitySchedule = function() {
           <div class="bg-white rounded-2xl p-6 rounded-xl shadow-md rounded-xl mb-6 border border-blue-100">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Filter Kelas</label>
+                
                 <select id="attendanceClassFilter" class="w-full px-3 py-2 border rounded-lg">${classOptionsHTML}</select>
               </div>
               <div>
@@ -6103,7 +6102,6 @@ window.loadActivitySchedule = function() {
 })();
 </script>
 <!-- END: Data Kehadiran Module (injected) -->
-
 <script>
 // === PATCH REMOVE ALL REGION TEXTS (FINAL AGGRESSIVE CLEAN) ===
 document.addEventListener("DOMContentLoaded", () => {
@@ -6135,8 +6133,6 @@ document.addEventListener("DOMContentLoaded", () => {
     obs.observe(document.body, { childList: true, subtree: true });
 });
 </script>
-
-
 <!-- AUTO-PATCH: Ensure class filter functions exist and read td[1] -->
 <script>
 (function(){
@@ -6213,7 +6209,6 @@ document.addEventListener("DOMContentLoaded", () => {
 })();
 </script>
 <!-- END AUTO-PATCH -->
-
 <!-- BEGIN: AUTOMATIC PATCH ADDED BY CHATGPT (safety & missing globals) -->
 <script>
 (function(){
@@ -6360,8 +6355,6 @@ document.addEventListener("DOMContentLoaded", () => {
 })();
 </script>
 <!-- END: AUTOMATIC PATCH -->
-
-
 <!-- CONSOLIDATED PATCH: unified filter-dropdown and safe wrappers to avoid redeclare errors -->
 <script>
 (function(){
@@ -6372,7 +6365,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function renderDropdownKelasUnified(containerId, modulName) {
     const container = document.getElementById(containerId);
     if (!container) return;
-    let html = '<label class="block mb-1 text-sm font-medium">Filter Kelas:</label>';
+    let html = '<label class="block mb-1 text-sm font-medium">:</label>';
     html += '<select id="filterKelasSelect_' + modulName + '" class="border rounded p-2 w-full mb-2">';
     html += '<option value="">-- Pilih Kelas --</option>';
     window.daftarKelas.forEach(kls => html += `<option value="${kls}">${kls}</option>`);
@@ -6519,7 +6512,7 @@ function loadMaterials() {
         <div class="fade-in">
             <div class="flex justify-between items-center mb-6">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Filter Kelas</label>
+                    
                     <select id="filterClassMaterial" onchange="filterMaterials()" 
                         class="border border-blue-500 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <option value="all">Semua Kelas</option>
@@ -6605,7 +6598,7 @@ function loadMaterials() {
     if (currentUser.role === 'Admin' || currentUser.role === 'Admin Regional' || currentUser.role === 'Super Admin') {
         filterUI = `
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Filter Kelas</label>
+                
                 <select id="filterClassMaterial" onchange="filterMaterials()" 
                     class="border border-blue-500 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
                     <option value="all">Semua Kelas</option>
