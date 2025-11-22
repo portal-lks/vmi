@@ -180,6 +180,17 @@ div:empty{display:none !important;}
 }
 
 /* === END COMBINED STYLES === */
+
+
+/* === PATCH LAYOUT TAMBAH SISWA (UPDATE) === */
+#contentArea #add-student-layout {
+    display: grid;
+    grid-template-columns: 32% 66%;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+
 </style></head>
 <body class="bg-white">
 
@@ -1714,7 +1725,7 @@ function confirmDeleteRegionalAdmin(username) {
                              ${renderStudentGroupedByClass(displayData, isAdminOrSuperAdmin, 'artProgress')}
                         </div>
                     ` : `
-                        <div class="bg-white border border-gray-200 rounded-lg p-6 rounded-xl shadow-sm">
+                        <div class="bg-white border border-gray-200 rounded-lg p-6 rounded-xl shadow-sm left-card">
                             <h4 class="text-xl font-bold text-gray-900 mb-3">Update Terbaru Karya Siswa</h4>
                             <p class="text-gray-600">Fitur ini menampilkan ringkasan data global. Untuk detail siswa, silakan filter berdasarkan regional di atas.</p>
                             </div>
@@ -1821,7 +1832,7 @@ function confirmDeleteRegionalAdmin(username) {
                              ${renderStudentGroupedByClass(displayData, isAdminOrSuperAdmin, 'skolastikProgress')}
                         </div>
                     ` : `
-                        <div class="bg-white border border-gray-200 rounded-lg p-6 rounded-xl shadow-sm">
+                        <div class="bg-white border border-gray-200 rounded-lg p-6 rounded-xl shadow-sm right-card">
                             <h4 class="text-xl font-bold text-gray-900 mb-3">Update Terbaru Tes Skolastik</h4>
                             <p class="text-gray-600">Fitur ini menampilkan ringkasan data global. Untuk detail siswa, silakan filter berdasarkan regional di atas.</p>
                             <p class="text-sm text-gray-500 mt-2">Tes Terbaru: ${latestTestDate}</p>
@@ -2389,7 +2400,7 @@ function loadAddStudent() {
       <div class="flex justify-between items-center mb-6">
         <h2 class="text-2xl font-bold text-gray-900">👤 Tambah Siswa</h2>
       </div>
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-6">
+      <div id="add-student-layout" class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-6">
         <div class="bg-white border border-gray-200 rounded-lg p-6 rounded-xl shadow-sm">
           <h3 class="text-xl font-semibold text-gray-900 mb-4">Form Tambah Siswa</h3>
           <form id="addStudentForm" class="space-y-4">
