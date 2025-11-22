@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Sistem Informasi Laporan Kemajuan Siswa - Bimbel Gambar Villa Merah</title>
+<title>SISTEM INFORMASI LAPORAN KEMAJUAN SISWA - BIMBEL GAMBAR VILLA MERAH</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
@@ -103,6 +103,10 @@
   margin-bottom:1.5rem!important;
 }
 
+
+#bimbelSubHeader {
+    text-transform: uppercase !important;
+}
 </style>
 <style>@view-transition { navigation: auto; }</style>
 <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
@@ -160,6 +164,26 @@ aside.w-64 {
 }
 </style>
 <style>div:empty{display:none !important;}</style>
+<style>
+#contentArea h1,
+#contentArea h2,
+#contentArea h3,
+#contentArea h4 {
+    text-transform: uppercase !important;
+}
+#sidebarMenu div,
+#sidebarMenu span,
+#sidebarMenu a {
+    text-transform: uppercase !important;
+}
+</style>
+<style>
+.art-zoom-img { cursor: zoom-in; transition: transform .2s; }
+.art-zoom-img:hover { transform: scale(1.03); }
+#zoomViewer img { max-height: 75vh; object-fit: contain; }
+.zoom-nav-btn { position:absolute; top:50%; transform:translateY(-50%); font-size:3rem; background:rgba(0,0,0,.3); padding:.5rem 1rem; border-radius:10px; color:white; cursor:pointer;}
+.zoom-prev{ left:20px;} .zoom-next{ right:20px;}
+</style>
 </head>
 <body class="bg-white">
 <style>
@@ -187,7 +211,7 @@ aside.w-64 {
 <div class="bg-white-600 w-24 h-24 mx-auto rounded-lg flex items-center justify-center mb-4 shadow-lg rounded-xl">
 <img alt="Logo Bimbel Gambar Villa Merah" class="w-50 h-20 p-2" src="https://www.villamerah.com/assets/images/logo/logo-2.png"/>
 </div>
-<h2 class="text-2xl text-center font-bold text-gray-900 mb-2" style="color: red;">Bimbel Gambar Villa Merah</h2>
+<h2 class="text-2xl text-center font-bold text-gray-900 mb-2" style="color: red;">BIMBEL GAMBAR VILLA MERAH</h2>
 <h3 class="text-1xl text-center font-semibold text-blue-600">Laporan Kemajuan Siswa</h3>
 </div>
 <form class="mt-8 space-y-6" id="loginForm">
@@ -213,7 +237,7 @@ aside.w-64 {
 <img alt="Logo Bimbel Gambar Villa Merah" class="w-10 h-10 p-1" src="https://bimbelgambar.id/wp-content/uploads/2023/06/favicon-20200601113259.png"/>
 </div>
 <div>
-<h1 class="text-xl font-bold text-red-600">Bimbel Gambar Villa Merah</h1>
+<h1 class="text-xl font-bold text-red-600">BIMBEL GAMBAR VILLA MERAH</h1>
 <p class="text-sm text-gray-600" id="userRole"></p>
 <p class="text-xs text-blue-600" id="userRegion"></p>
 </div>
@@ -336,7 +360,7 @@ window.saveAllData = saveAllData;
         let selectedClassSchedule = 'all'; // Filter untuk Jadwal (TAMBAHAN BARU)
         let selectedAdminRegion = 'all'; // NEW: Filter Global Admin
         
-        // Data Admin Regional yang terpisah - MODIFIED REGIONAL NAMES
+        // Data Admin yang terpisah - MODIFIED REGIONAL NAMES
         let regionalAdmins = [
             { username: 'admin_jaksel', password: 'admin123', role: 'Admin', name: 'Admin Jakarta Selatan', region: 'Cabang Jakarta Selatan' },
             { username: 'admin_jaktim', password: 'admin123', role: 'Admin', name: 'Admin Jakarta Timur', region: 'Cabang Jakarta Timur' },
@@ -1053,23 +1077,28 @@ else if (role === 'Admin') {
           <p class='text-blue-100'>Informasi Laporan Kemajuan Siswa - ${currentUser.region}</p>
         </div>
 
-        <div class='grid grid-cols-1 md:grid-cols-4 gap-6 mb-8'>
-          <div class=' p-6 rounded-xl shadow-md rounded-xl text-white bg-gradient-to-br from-blue-700 to-blue-900'>
-            <p class='text-sm text-center text-blue-100 mb-1'>Total Siswa</p>
+        <div clas        <div class='grid grid-cols-1 md:grid-cols-4 gap-6 mb-8'>
+
+          <div class='p-6 rounded-xl shadow-md text-white bg-gradient-to-br from-blue-700 to-blue-900'>
+            <p class='text-sm text-center text-blue-100 mb-1'>📘 TOTAL SISWA</p>
             <p class='text-3xl text-center font-bold text-white'>${totalStudents}</p>
           </div>
-          <div class=' p-6 rounded-xl shadow-md text-white bg-gradient-to-br from-green-500 to-green-700'>
-            <p class='text-sm text-center text-green-100 mb-1'>Total Kelas</p>
-            <p class='text-3xl text-center font-semibold text-white'>${[...new Set(adminStudents.map(s=> (s.class||'').toString().trim()).filter(Boolean))].length}</p>
+
+          <div class='p-6 rounded-xl shadow-md text-white bg-gradient-to-br from-green-500 to-green-700'>
+            <p class='text-sm text-center text-green-100 mb-1'>🏫 TOTAL KELAS</p>
+            <p class='text-3xl text-center font-bold text-white'>${[...new Set(adminStudents.map(s=> (s.class||'').toString().trim()).filter(Boolean))].length}</p>
           </div>
-          <div class=' p-6 rounded-xl shadow-md text-white bg-gradient-to-br from-purple-500 to-purple-700'>
-            <p class='text-sm text-center text-purple-100 mb-1'>Siswa Seni Rupa</p>
+
+          <div class='p-6 rounded-xl shadow-md text-white bg-gradient-to-br from-purple-500 to-purple-700'>
+            <p class='text-sm text-center text-purple-100 mb-1'>🎨 SISWA SENI RUPA</p>
             <p class='text-3xl text-center font-bold text-white'>${seniRupaCount}</p>
           </div>
-          <div class=' p-6 rounded-xl shadow-md text-white bg-gradient-to-br from-orange-500 to-orange-700'>
-            <p class='text-sm text-center text-orange-100 mb-1'>Siswa Arsitektur</p>
+
+          <div class='p-6 rounded-xl shadow-md text-white bg-gradient-to-br from-orange-500 to-orange-700'>
+            <p class='text-sm text-center text-orange-100 mb-1'>🏗️ SISWA ARSITEKTUR</p>
             <p class='text-3xl text-center font-bold text-white'>${arsitekturCount}</p>
           </div>
+
         </div>
 
         <h3 class='text-2xl font-bold text-gray-900 mb-4 flex items-center'>
@@ -1262,7 +1291,7 @@ else if (role === 'Admin') {
                     </div>
 
                     <div class="bg-white border border-gray-200  p-6 rounded-xl shadow-sm">
-                        <h3 class="text-xl font-semibold text-gray-900 mb-4">Daftar Akun Admin Regional (${regionalAdmins.length})</h3>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-4">Daftar Akun Admin (${regionalAdmins.length})</h3>
                         <div class="overflow-x-auto">
                             <table class="w-full">
                                 <thead class="bg-blue-800 text-white">
@@ -1304,7 +1333,7 @@ else if (role === 'Admin') {
             const adminRegions = regionalAdmins.map(a => a.region).filter(r => r);
             const existingRegions = [...new Set([...studentRegions, ...adminRegions])];
 
-            openModal('Tambah Admin Regional Baru', `
+            openModal('Tambah Admin Baru', `
                 <form id="addAdminForm" class="space-y-4">
                     <div>
                         <label for="adminName" class="block text-sm font-medium text-gray-700 mb-1">Nama Admin</label>
@@ -1322,16 +1351,16 @@ else if (role === 'Admin') {
                     <div>
                         <label for="adminRegionSelect" class="block text-sm font-medium text-gray-700 mb-1">Regional</label>
                         <select id="adminRegionSelect" onchange="toggleNewRegionInput(this.value)" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
-                            <option value="">--- Pilih Regional yang Sudah Ada ---</option>
+                            <option value="">--- Pilih yang Sudah Ada ---</option>
                             ${existingRegions.sort().map(regionName => `
                                 <option value="${regionName}">${regionName}</option>
                             `).join('')}
-                            <option value="NEW_REGION">--- Tambah Regional Baru ---</option>
+                            <option value="NEW_REGION">--- Tambah Baru ---</option>
                         </select>
                     </div>
 
                     <div id="newRegionInputContainer" class="hidden">
-                        <label for="adminRegionInput" class="block text-sm font-medium text-gray-700 mb-1">Regional Baru</label>
+                        <label for="adminRegionInput" class="block text-sm font-medium text-gray-700 mb-1">Baru</label>
                         <input type="text" id="adminRegionInput" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500" placeholder="Contoh: Jakarta Pusat">
                     </div>
                     <button type="submit" class="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">Tambah Admin</button>
@@ -1365,14 +1394,14 @@ else if (role === 'Admin') {
                 
                 // Cek konflik regional
                 if (regionalAdmins.some(admin => admin.region.toLowerCase() === region.toLowerCase())) {
-                     showNotification('Regional ini sudah memiliki Admin. Harap gunakan nama Regional yang berbeda.', 'error');
+                     showNotification('ini sudah memiliki Admin. Harap gunakan nama yang berbeda.', 'error');
                     return;
                 }
 
                 const newAdmin = { username, password, role: 'Admin', name, region };
                 regionalAdmins.push(newAdmin);
 
-                showNotification('Admin Regional berhasil ditambahkan!');
+                showNotification('Admin berhasil ditambahkan!');
                 this.reset();
                 closeModal();
                 loadManageAdmins();
@@ -1411,7 +1440,7 @@ else if (role === 'Admin') {
 
                 // Check if new region conflicts with other regions
                 if (regionalAdmins.some(a => a.username !== username && a.region.toLowerCase() === newRegion.toLowerCase())) {
-                     showNotification('Regional ini sudah memiliki Admin. Harap gunakan nama Regional yang berbeda.', 'error');
+                     showNotification('ini sudah memiliki Admin. Harap gunakan nama yang berbeda.', 'error');
                     return;
                 }
 
@@ -1433,7 +1462,7 @@ else if (role === 'Admin') {
                 closeModal();
                 loadManageAdmins();
                 try { saveAllData(); } catch(e) { console.warn(e); }
-showNotification('Data Admin Regional berhasil diupdate!');
+showNotification('Data Admin berhasil diupdate!');
             });
         }
 
@@ -1832,7 +1861,7 @@ function confirmDeleteRegionalAdmin(username) {
             `).join('');
         }
         
-        // --- MODIFIED FUNCTION 1: Kemajuan Gambar (Super Admin shows Summary, Admin Regional shows Grouped by Class) ---
+        // --- MODIFIED FUNCTION 1: Kemajuan Gambar (Super Admin shows Summary, Admin shows Grouped by Class) ---
         function loadArtProgress() {
             const content = document.getElementById('contentArea');
             const isAdminOrSuperAdmin = currentUser.role === 'Admin' || currentUser.role === 'Super Admin';
@@ -1845,22 +1874,22 @@ function confirmDeleteRegionalAdmin(username) {
                 displayTitle = currentUser.name;
             } else if (currentUser.role === 'Admin') {
                 displayData = studentsData.filter(s => s.region === currentUser.region);
-                displayTitle = `Regional ${currentUser.region}`;
+                displayTitle = `${currentUser.region}`;
             } else if (currentUser.role === 'Super Admin') {
                 if (selectedAdminRegion !== 'all') {
                      displayData = studentsData.filter(s => s.region === selectedAdminRegion);
-                     displayTitle = `Regional ${selectedAdminRegion}`;
+                     displayTitle = `${selectedAdminRegion}`;
                 } else {
                      displayTitle = 'Global (Semua Regional)';
                 }
             }
 
-            // Apply class filter if any (only applies to Admin Regional view)
+            // Apply class filter if any (only applies to Admin view)
             if (currentUser.role === 'Admin' && selectedClass !== 'all') {
                 displayData = displayData.filter(s => s.class === selectedClass);
             }
              
-            // Calculate Global/Regional Stats
+            // Calculate Global/Stats
             const totalStudents = displayData.length;
             const totalArtworks = displayData.reduce((total, student) => total + student.artworks.length, 0);
             const totalAttendance = displayData.reduce((total, student) => total + student.attendance.length, 0);
@@ -1959,7 +1988,7 @@ function confirmDeleteRegionalAdmin(username) {
             content.innerHTML = `<div class="fade-in">${moduleContent}</div>`;
         }
 
-        // --- MODIFIED FUNCTION 2: Kemajuan Tes Skolastik (Super Admin shows Summary, Admin Regional shows Grouped by Class) ---
+        // --- MODIFIED FUNCTION 2: Kemajuan Tes Skolastik (Super Admin shows Summary, Admin shows Grouped by Class) ---
         function loadSkolastikProgress() {
             const content = document.getElementById('contentArea');
             const isAdminOrSuperAdmin = currentUser.role === 'Admin' || currentUser.role === 'Super Admin';
@@ -1972,11 +2001,11 @@ function confirmDeleteRegionalAdmin(username) {
                 displayTitle = currentUser.name;
             } else if (currentUser.role === 'Admin') {
                 displayData = studentsData.filter(s => s.region === currentUser.region);
-                displayTitle = `Regional ${currentUser.region}`;
+                displayTitle = `${currentUser.region}`;
             } else if (currentUser.role === 'Super Admin') {
                 if (selectedAdminRegion !== 'all') {
                      displayData = studentsData.filter(s => s.region === selectedAdminRegion);
-                     displayTitle = `Regional ${selectedAdminRegion}`;
+                     displayTitle = `${selectedAdminRegion}`;
                 } else {
                      displayTitle = 'Global (Semua Regional)';
                 }
@@ -1987,7 +2016,7 @@ function confirmDeleteRegionalAdmin(username) {
                 displayData = displayData.filter(s => s.class === selectedClass);
             }
             
-            // Calculate Global/Regional Stats
+            // Calculate Global/Stats
             const totalStudents = displayData.length;
             const allSkolastikScores = displayData.flatMap(s => s.skolastikTests.map(t => t.score));
             const totalTests = allSkolastikScores.length;
@@ -2084,7 +2113,7 @@ function confirmDeleteRegionalAdmin(username) {
             content.innerHTML = `<div class="fade-in">${moduleContent}</div>`;
         }
 
-        // --- MODIFIED FUNCTION 3: Kemajuan Tes TKA (Super Admin shows Summary, Admin Regional shows Grouped by Class) ---
+        // --- MODIFIED FUNCTION 3: Kemajuan Tes TKA (Super Admin shows Summary, Admin shows Grouped by Class) ---
         function loadTkaProgress() {
             const content = document.getElementById('contentArea');
             const isAdminOrSuperAdmin = currentUser.role === 'Admin' || currentUser.role === 'Super Admin';
@@ -2097,11 +2126,11 @@ function confirmDeleteRegionalAdmin(username) {
                 displayTitle = currentUser.name;
             } else if (currentUser.role === 'Admin') {
                 displayData = studentsData.filter(s => s.region === currentUser.region);
-                displayTitle = `Regional ${currentUser.region}`;
+                displayTitle = `${currentUser.region}`;
             } else if (currentUser.role === 'Super Admin') {
                 if (selectedAdminRegion !== 'all') {
                      displayData = studentsData.filter(s => s.region === selectedAdminRegion);
-                     displayTitle = `Regional ${selectedAdminRegion}`;
+                     displayTitle = `${selectedAdminRegion}`;
                 } else {
                      displayTitle = 'Global (Semua Regional)';
                 }
@@ -2112,7 +2141,7 @@ function confirmDeleteRegionalAdmin(username) {
                 displayData = displayData.filter(s => s.class === selectedClass);
             }
             
-            // Calculate Global/Regional Stats
+            // Calculate Global/Stats
             const totalStudents = displayData.length;
             const allTkaScores = displayData.flatMap(s => s.tkaTests.map(t => t.score));
             const totalTests = allTkaScores.length;
@@ -2212,8 +2241,15 @@ function confirmDeleteRegionalAdmin(username) {
         function loadEducationInfo() {
             const content = document.getElementById('contentArea');
             const isAdminOrSuperAdmin = currentUser.role === 'Admin' || currentUser.role === 'Super Admin';
-            
-            let infoTitle = currentUser.role === 'Super Admin' ? 'Global' : currentUser.role === 'Admin' ? `Regional ${currentUser.region}` : 'Anda';
+
+            let infoTitle = currentUser.role === 'Super Admin' ? 'Semua Regional' : (currentUser.role === 'Admin' ? `${currentUser.region}` : 'Anda');
+
+            // Filter educationInfo per regional: Super Admin sees all, Admin sees only their region
+            const displayedInfo = (educationInfo || []).filter(i => {
+                if (currentUser.role === 'Super Admin') return true;
+                // If info has no region, treat as global and hide from Admins
+                return i.region === currentUser.region;
+            });
 
             content.innerHTML = `
                 <div class="fade-in">
@@ -2223,13 +2259,14 @@ function confirmDeleteRegionalAdmin(username) {
                     </div>
 
                     <div class="space-y-6">
-                        ${educationInfo.map(info => `
+                        ${displayedInfo.map(info => `
                             <div class="bg-white border border-gray-200 rounded-lg p-6 rounded-xl shadow-sm">
                                 <div class="flex justify-between items-start">
                                     <div class="flex-1">
                                         <h3 class="text-lg font-semibold text-gray-900 mb-2">${info.title}</h3>
                                         <p class="text-gray-700 mb-3 leading-relaxed">${info.content}</p>
                                         <p class="text-sm text-gray-500">📅 ${info.date}</p>
+                                        <p class="text-sm text-gray-400 mt-2">Regional: ${info.region || 'Global'}</p>
                                     </div>
                                     ${isAdminOrSuperAdmin ? `
                                         <div class="flex space-x-2 ml-4">
@@ -2244,7 +2281,6 @@ function confirmDeleteRegionalAdmin(username) {
                 </div>
             `;
         }
-
         // --- MODIFIED FUNCTION 4: Materi Kelas (Ditambahkan Filter Berbasis Kelas dan Regional) ---
         function loadMaterials() {
             const content = document.getElementById('contentArea');
@@ -2284,10 +2320,10 @@ function confirmDeleteRegionalAdmin(username) {
 
             if (currentUser.role === 'Admin') {
                 regionalMaterials = classMaterials.filter(m => m.region === currentUser.region);
-                regionFilterTitle = `Regional ${currentUser.region}`;
+                regionFilterTitle = `${currentUser.region}`;
             } else if (currentUser.role === 'Super Admin' && selectedAdminRegion !== 'all') {
                 regionalMaterials = classMaterials.filter(m => m.region === selectedAdminRegion);
-                regionFilterTitle = `Regional ${selectedAdminRegion}`;
+                regionFilterTitle = `${selectedAdminRegion}`;
             } else if (currentUser.role === 'Super Admin') {
                 regionalMaterials = classMaterials; // Global view for Super Admin default
                 regionFilterTitle = 'Semua Regional';
@@ -2545,10 +2581,10 @@ function confirmDeleteRegionalAdmin(username) {
 
             if (currentUser.role === 'Admin') {
                 regionalSchedule = scheduleData.filter(s => s.region === currentUser.region);
-                regionFilterTitle = `Regional ${currentUser.region}`;
+                regionFilterTitle = `${currentUser.region}`;
             } else if (currentUser.role === 'Super Admin' && selectedAdminRegion !== 'all') {
                 regionalSchedule = scheduleData.filter(s => s.region === selectedAdminRegion);
-                regionFilterTitle = `Regional ${selectedAdminRegion}`;
+                regionFilterTitle = `${selectedAdminRegion}`;
             } else if (currentUser.role === 'Super Admin') {
                 regionalSchedule = scheduleData; // Global view for Super Admin default
                 regionFilterTitle = 'Semua Regional';
@@ -2697,7 +2733,7 @@ function loadAddStudent() {
               <label class="block text-sm font-medium text-gray-700 mb-1">Regional</label>
               ${currentUser.role === 'Super Admin' ? `
                 <select id="studentRegion" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                  <option value="">-- Pilih Regional --</option>
+                  <option value="">-- Pilih --</option>
                   ${[...new Set(regionalAdmins.map(a=>a.region))].map(r=>`<option value="${r}">${r}</option>`).join('')}
                 </select>
               ` : `<input type="text" id="studentRegion" readonly value="${currentUser.region}" class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-600">`}
@@ -2720,7 +2756,7 @@ function loadAddStudent() {
 
           <!--  (vertikal, di atas tabel) -->
           <div class="mb-4">
-            <label for="filterStudentClass" class="block text-sm font-medium text-gray-700 mb-1">🏫 </label>
+            <label></label>
             <select id="filterStudentClass" onchange="filterStudentByClass()" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
               <option value="all">Semua Kelas</option>
               ${classOptions.map(c=>`<option value="${c.name}">${c.name} (${c.region})</option>`).join('')}
@@ -2873,7 +2909,7 @@ function openAddStudentModal() {
                     </div>
                     ${currentUser.role === 'Super Admin' ? `
                         <div>
-                            <label for="editStudentRegion" class="block text-sm font-medium text-gray-700 mb-1">Regional Siswa</label>
+                            <label for="editStudentRegion" class="block text-sm font-medium text-gray-700 mb-1">Siswa</label>
                             <select id="editStudentRegion" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                                 ${regionalAdmins.map(admin => `
                                     <option value="${admin.region}" ${studentData && studentData.region === admin.region ? 'selected' : ''}>${admin.region}</option>
@@ -3541,6 +3577,18 @@ function openAddStudentModal() {
 
         // Education Info Functions
         function addEducationInfo() {
+            // Build region options
+            const regions = [...new Set((studentsData || []).map(s => s.region).filter(Boolean).concat((regionalAdmins || []).map(a=>a.region).filter(Boolean)))];
+            const regionSelectHtml = currentUser.role === 'Super Admin' ? `
+                <div>
+                    <label for="infoRegion" class="block text-sm font-medium text-gray-700 mb-1">Regional</label>
+                    <select id="infoRegion" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="all">Semua Regional</option>
+                        ${regions.map(r=>`<option value="${r}">${r}</option>`).join('')}
+                    </select>
+                </div>
+            ` : `<input type="hidden" id="infoRegion" value="${currentUser.region}">`;
+
             openModal('Tambah Informasi Pendidikan', `
                 <form id="educationInfoForm" class="space-y-4">
                     <div>
@@ -3555,27 +3603,52 @@ function openAddStudentModal() {
                         <label for="infoDate" class="block text-sm font-medium text-gray-700 mb-1">Tanggal</label>
                         <input type="date" id="infoDate" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
+                    ${regionSelectHtml}
                     <button type="submit" class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Simpan</button>
                 </form>
             `);
 
             document.getElementById('educationInfoForm').addEventListener('submit', function(e) {
                 e.preventDefault();
+                // determine region
+                let regionVal = document.getElementById('infoRegion')?.value || currentUser.region || 'all';
+                if (regionVal === 'all') regionVal = 'Global';
                 const newInfo = {
-                    id: educationInfo.length + 1,
+                    id: (educationInfo && educationInfo.length ? Math.max(...educationInfo.map(i=>i.id)) + 1 : 1),
                     title: document.getElementById('infoTitle').value,
                     content: document.getElementById('infoContent').value,
-                    date: document.getElementById('infoDate').value
+                    date: document.getElementById('infoDate').value,
+                    region: regionVal
                 };
+                educationInfo = educationInfo || [];
                 educationInfo.push(newInfo);
+                try{ saveAllData(); } catch(e){}
                 closeModal();
                 loadEducationInfo();
                 showNotification('Informasi pendidikan berhasil ditambahkan!');
-            });
+            }, { once: true });
         }
+function editEducationInfo(id) {
+            const info = (educationInfo || []).find(i => i.id === id);
+            if (!info) { showNotification('Informasi tidak ditemukan','error'); return; }
+            // Admins can only edit info in their region
+            if (currentUser.role === 'Admin' && info.region !== currentUser.region) {
+                showNotification('Anda tidak memiliki izin mengedit informasi ini (bukan regional Anda).', 'error');
+                return;
+            }
 
-        function editEducationInfo(id) {
-            const info = educationInfo.find(i => i.id === id);
+            // Build region options
+            const regions = [...new Set((studentsData || []).map(s => s.region).filter(Boolean).concat((regionalAdmins || []).map(a=>a.region).filter(Boolean)))];
+            const regionSelectHtml = currentUser.role === 'Super Admin' ? `
+                <div>
+                    <label for="editInfoRegion" class="block text-sm font-medium text-gray-700 mb-1">Regional</label>
+                    <select id="editInfoRegion" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="Global">Global</option>
+                        ${regions.map(r=>`<option value="${r}" ${info.region===r? 'selected':''}>${r}</option>`).join('')}
+                    </select>
+                </div>
+            ` : `<input type="hidden" id="editInfoRegion" value="${info.region}">`;
+
             openModal('Edit Informasi Pendidikan', `
                 <form id="editEducationInfoForm" class="space-y-4">
                     <div>
@@ -3590,6 +3663,7 @@ function openAddStudentModal() {
                         <label for="editInfoDate" class="block text-sm font-medium text-gray-700 mb-1">Tanggal</label>
                         <input type="date" id="editInfoDate" value="${info.date}" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
+                    ${regionSelectHtml}
                     <button type="submit" class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Update</button>
                 </form>
             `);
@@ -3599,13 +3673,20 @@ function openAddStudentModal() {
                 info.title = document.getElementById('editInfoTitle').value;
                 info.content = document.getElementById('editInfoContent').value;
                 info.date = document.getElementById('editInfoDate').value;
+                info.region = document.getElementById('editInfoRegion')?.value || info.region;
+                try{ saveAllData(); } catch(e){}
                 closeModal();
                 loadEducationInfo();
                 showNotification('Informasi pendidikan berhasil diupdate!');
-            });
+            }, { once: true });
         }
-
-        function deleteEducationInfo(id) {
+function deleteEducationInfo(id) {
+            const info = (educationInfo || []).find(i => i.id === id);
+            if (!info) { showNotification('Informasi tidak ditemukan','error'); return; }
+            if (currentUser.role === 'Admin' && info.region !== currentUser.region) {
+                showNotification('Anda tidak memiliki izin menghapus informasi ini (bukan regional Anda).', 'error');
+                return;
+            }
             openModal('Konfirmasi Hapus', `
                 <div class="text-center">
                     <div class="mb-4">
@@ -3613,21 +3694,20 @@ function openAddStudentModal() {
                     </div>
                     <p class="text-gray-700 mb-4">Apakah Anda yakin ingin menghapus informasi ini?</p>
                     <div class="flex space-x-3">
-                        <button onclick="confirmDeleteEducationInfo(${id})" class="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">Ya, Hapus</button>
+                        <button onclick="confirmDeleteEducationInfo(${id})" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">Ya, Hapus</button>
                         <button onclick="closeModal()" class="flex-1 px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400">Batal</button>
                     </div>
                 </div>
             `);
         }
-
-        function confirmDeleteEducationInfo(id) {
-            educationInfo = educationInfo.filter(i => i.id !== id);
+function confirmDeleteEducationInfo(id) {
+            educationInfo = (educationInfo || []).filter(i => i.id !== id);
+            try{ saveAllData(); } catch(e){}
             closeModal();
             loadEducationInfo();
             showNotification('Informasi pendidikan berhasil dihapus!');
         }
-
-        // Material Functions - MODIFIED
+// Material Functions - MODIFIED
         function addMaterial() {
             
             // Tentukan regional untuk Super Admin
@@ -3647,9 +3727,9 @@ function openAddStudentModal() {
                 regions.push(...studentsData.map(s => s.region).filter(r => !regions.includes(r)));
                 regionSelectHtml = `
                     <div>
-                        <label for="materialRegion" class="block text-sm font-medium text-gray-700 mb-1">Regional Target</label>
+                        <label for="materialRegion" class="block text-sm font-medium text-gray-700 mb-1">Target</label>
                         <select id="materialRegion" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <option value="">--- Pilih Regional ---</option>
+                            <option value="">--- Pilih ---</option>
                             ${regions.sort().map(regionName => `
                                 <option value="${regionName}" ${selectedAdminRegion === regionName ? 'selected' : ''}>${regionName}</option>
                             `).join('')}
@@ -3673,7 +3753,7 @@ function openAddStudentModal() {
 <div class="mt-3"><label class="block text-sm font-medium text-gray-700 mb-1">Link Video YouTube</label><input id="materialYoutube" type="text" class="w-full border rounded-lg p-2" placeholder="https://www.youtube.com/watch?v=xxxxxx"></div>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Kelas Relevan (Regional ${currentUser.role === 'Admin' ? currentUser.region : (selectedAdminRegion === 'all' ? 'Semua' : selectedAdminRegion)})</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Kelas Relevan (${currentUser.role === 'Admin' ? currentUser.region : (selectedAdminRegion === 'all' ? 'Semua' : selectedAdminRegion)})</label>
                         <div class="space-y-1 p-2 border border-gray-300 rounded-lg">
                             ${regionalClassesForForm.map(classItem => `
                                 <div class="flex items-center">
@@ -3703,7 +3783,7 @@ function openAddStudentModal() {
                 if (currentUser.role === 'Super Admin') {
                     targetRegion = document.getElementById('materialRegion').value;
                     if (!targetRegion) {
-                        showNotification('Super Admin harus memilih Regional Target!', 'error');
+                        showNotification('Super Admin harus memilih Target!', 'error');
                         return;
                     }
                 } else {
@@ -3745,7 +3825,7 @@ function openAddStudentModal() {
 <div class="mt-3"><label class="block text-sm font-medium text-gray-700 mb-1">Link Video YouTube</label><input id="editMaterialYoutube" type="text" class="w-full border rounded-lg p-2" value="${material.youtubeLink || ""}" placeholder="https://www.youtube.com/watch?v=xxxxxx"></div>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Kelas Relevan (Regional ${material.region})</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Kelas Relevan (${material.region})</label>
                         <div class="space-y-1 p-2 border border-gray-300 rounded-lg">
                             ${regionalClassesForForm.map(classItem => `
                                 <div class="flex items-center">
@@ -3826,9 +3906,9 @@ function openAddStudentModal() {
                 regions.push(...studentsData.map(s => s.region).filter(r => !regions.includes(r)));
                 regionSelectHtml = `
                     <div>
-                        <label for="scheduleRegion" class="block text-sm font-medium text-gray-700 mb-1">Regional Target</label>
+                        <label for="scheduleRegion" class="block text-sm font-medium text-gray-700 mb-1">Target</label>
                         <select id="scheduleRegion" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <option value="">--- Pilih Regional ---</option>
+                            <option value="">--- Pilih ---</option>
                             ${regions.sort().map(regionName => `
                                 <option value="${regionName}" ${selectedAdminRegion === regionName ? 'selected' : ''}>${regionName}</option>
                             `).join('')}
@@ -3863,7 +3943,7 @@ function openAddStudentModal() {
                         <input type="text" id="scheduleSubject" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Contoh: Pengenalan Alat Gambar">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Kelas Relevan (Regional ${currentUser.role === 'Admin' ? currentUser.region : (selectedAdminRegion === 'all' ? 'Semua' : selectedAdminRegion)})</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Kelas Relevan (${currentUser.role === 'Admin' ? currentUser.region : (selectedAdminRegion === 'all' ? 'Semua' : selectedAdminRegion)})</label>
                         <div class="space-y-1 p-2 border border-gray-300 rounded-lg">
                             ${regionalClassesForForm.map(classItem => `
                                 <div class="flex items-center">
@@ -3893,7 +3973,7 @@ function openAddStudentModal() {
                 if (currentUser.role === 'Super Admin') {
                     targetRegion = document.getElementById('scheduleRegion').value;
                     if (!targetRegion) {
-                        showNotification('Super Admin harus memilih Regional Target!', 'error');
+                        showNotification('Super Admin harus memilih Target!', 'error');
                         return;
                     }
                 } else {
@@ -3946,7 +4026,7 @@ function openAddStudentModal() {
                         <input type="text" id="editScheduleSubject" value="${schedule.subject}" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Kelas Relevan (Regional ${schedule.region})</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Kelas Relevan (${schedule.region})</label>
                         <div class="space-y-1 p-2 border border-gray-300 rounded-lg">
                             ${regionalClassesForForm.map(classItem => `
                                 <div class="flex items-center">
@@ -4188,7 +4268,7 @@ function loadManageClasses() {
         </div>` : ''}
 
         <div>
-          <label for="filterClass" class="block text-sm font-medium text-gray-700 mb-1">🏫 </label>
+          <label></label>
           <select id="filterClass" onchange="filterClasses()" 
             class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
             <option value="all">Semua Kelas</option>
@@ -4264,9 +4344,9 @@ function filterClasses() {
             if (currentUser.role === 'Super Admin') {
                 regionSelectHtml = `
                     <div>
-                        <label for="modalNewClassRegion" class="block text-sm font-medium text-gray-700 mb-1">Regional Target</label>
+                        <label for="modalNewClassRegion" class="block text-sm font-medium text-gray-700 mb-1">Target</label>
                         <select id="modalNewClassRegion" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
-                            <option value="">--- Pilih Regional ---</option>
+                            <option value="">--- Pilih ---</option>
                             ${regionalAdmins.map(admin => `
                                 <option value="${admin.region}">${admin.region}</option>
                             `).join('')}
@@ -4297,7 +4377,7 @@ function filterClasses() {
                 const targetRegion = currentUser.role === 'Super Admin' ? document.getElementById('modalNewClassRegion').value : currentUser.region;
 
                 if (!targetRegion) {
-                    showNotification('Silakan pilih Regional Target.', 'error');
+                    showNotification('Silakan pilih Target.', 'error');
                     return;
                 }
 
@@ -4459,7 +4539,14 @@ function filterClasses() {
         }
 
         // Fungsi-fungsi lama editStudent dan deleteStudent sudah digantikan dengan editUser dan deleteUser
-    </script>
+    
+document.addEventListener("DOMContentLoaded", () => {
+    const sh = document.getElementById("bimbelSubHeader");
+    if (sh && sh.textContent.trim() !== "") {
+        sh.textContent = sh.textContent.toUpperCase();
+    }
+});
+</script>
 <script>
    (function() {
     function c() {
@@ -4715,7 +4802,7 @@ function getDayNameFromDate(isoDate) {
 function loadActivitySchedule() {
   const content = document.getElementById("contentArea");
   const canEdit = currentUser && (currentUser.role === "Super Admin" || currentUser.role === "Admin");
-  const regionTitle = (currentUser && currentUser.role === "Super Admin") ? "(Semua Regional)" : (currentUser ? `(Regional ${currentUser.region})` : "");
+  const regionTitle = (currentUser && currentUser.role === "Super Admin") ? "(Semua Regional)" : (currentUser ? `(${currentUser.region})` : "");
 
   // class options - try to infer from availableClasses, fallback to defaults
   const classOptions = (typeof availableClasses !== 'undefined' ? 
@@ -4816,7 +4903,7 @@ function loadActivitySchedule() {
 }
 
 function openAddActivityModal() {
-  const regionText = (currentUser && currentUser.role === "Super Admin") ? "Semua Regional" : (currentUser ? `Regional ${currentUser.region}` : '');
+  const regionText = (currentUser && currentUser.role === "Super Admin") ? "Semua Regional" : (currentUser ? `${currentUser.region}` : '');
   // infer class options
   const classOptions = (typeof availableClasses !== 'undefined' ? Array.from(new Set(availableClasses.filter(c => currentUser.role === 'Super Admin' || c.region === currentUser.region).map(c=>c.name))) : ["Kelas GOLD","Kelas SILVER","Kelas BRONZE"]);
 
@@ -4957,7 +5044,7 @@ function deleteActivity(id) {
 function loadSchedule() {
   const content = document.getElementById("contentArea");
   const canEdit = currentUser && (currentUser.role === "Super Admin" || currentUser.role === "Admin");
-  const regionTitle = (currentUser && currentUser.role === "Super Admin") ? "(Semua Regional)" : (currentUser ? `(Regional ${currentUser.region})` : "");
+  const regionTitle = (currentUser && currentUser.role === "Super Admin") ? "(Semua Regional)" : (currentUser ? `(${currentUser.region})` : "");
 
   // class options
   const classOptions = (typeof availableClasses !== 'undefined' ? Array.from(new Set(availableClasses.filter(c => currentUser.role === 'Super Admin' || c.region === currentUser.region).map(c=>c.name))) : ["Kelas GOLD","Kelas SILVER","Kelas BRONZE"]);
@@ -5047,7 +5134,7 @@ function loadSchedule() {
 
 // add schedule modal (with auto-day)
 function openAddScheduleModal() {
-  const regionText = (currentUser && currentUser.role === "Super Admin") ? "Semua Regional" : (currentUser ? `Regional ${currentUser.region}` : '');
+  const regionText = (currentUser && currentUser.role === "Super Admin") ? "Semua Regional" : (currentUser ? `${currentUser.region}` : '');
   const classOptions = (typeof availableClasses !== 'undefined' ? Array.from(new Set(availableClasses.filter(c => currentUser.role === 'Super Admin' || c.region === currentUser.region).map(c=>c.name))) : ["Kelas GOLD","Kelas SILVER","Kelas BRONZE"]);
 
   openModal("Tambah Jadwal Belajar", `
@@ -6489,7 +6576,6 @@ document.addEventListener("DOMContentLoaded", () => {
 })();
 </script>
 <!-- END CONSOLIDATED PATCH -->
-
 <!-- BEGIN: Assistant PATCH - Override loadSchedule to strict Admin/Student table formats -->
 <script>
 /*
@@ -6692,8 +6778,6 @@ window.loadSchedule = function() {
 };
 // END PATCH
 </script>
-
-
 <script>
 // === PATCH: Jadwal Belajar UI Fix ===
 // Wrapper rounded + hapus label "filter kelas:" di admin & siswa
@@ -6727,8 +6811,6 @@ window.loadSchedule = function() {
     };
 })();
 </script>
-
-
 <script>
 // === PATCH POSISI FILTER & TAMBAH MATERI PADA MODUL MATERI ===
 (function() {
@@ -6769,8 +6851,46 @@ window.loadSchedule = function() {
     };
 })();
 </script>
-
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll("#contentArea h1, #contentArea h2, #contentArea h3, #contentArea h4")
+        .forEach(el => el.textContent = el.textContent.toUpperCase());
+    document.querySelectorAll("#sidebarMenu *")
+        .forEach(el => {
+            if (el.textContent.trim() !== "") {
+                el.textContent = el.textContent.toUpperCase();
+            }
+        });
+});
+</script>
+<div id="zoomModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center">
+ <div id="zoomViewer" class="relative text-center">
+  <img id="zoomImage" src="" class="rounded-xl shadow-2xl max-w-[90vw]">
+  <span class="zoom-nav-btn zoom-prev" onclick="slidePrev()">❮</span>
+  <span class="zoom-nav-btn zoom-next" onclick="slideNext()">❯</span>
+  <button class="absolute top-4 right-4 text-white text-4xl" onclick="closeZoom()">×</button>
+ </div>
+</div>
 </body>
+
+<script>
+let currentArtIndex=0,currentArtList=[];
+function openZoom(i,list){currentArtIndex=i;currentArtList=list;
+ document.getElementById("zoomImage").src=list[i].image;
+ document.getElementById("zoomModal").classList.remove("hidden");}
+function closeZoom(){document.getElementById("zoomModal").classList.add("hidden");}
+function slidePrev(){currentArtIndex=(currentArtIndex==0?currentArtList.length-1:currentArtIndex-1);
+ document.getElementById("zoomImage").src=currentArtList[currentArtIndex].image;}
+function slideNext(){currentArtIndex=(currentArtIndex==currentArtList.length-1?0:currentArtIndex+1);
+ document.getElementById("zoomImage").src=currentArtList[currentArtIndex].image;}
+document.addEventListener("click",e=>{
+ if(e.target.closest("#contentArea") && currentModule==="artProgress"){
+  const imgs=[...document.querySelectorAll("#contentArea img")];
+  const list=imgs.map(img=>({image:img.src}));
+  imgs.forEach((img,idx)=>{img.classList.add("art-zoom-img"); img.onclick=()=>openZoom(idx,list);});
+ }
+});
+</script>
 </html>
 <!-- === Materi Kelas UI Override (FINAL FIX) 
 <script>
@@ -6948,13 +7068,13 @@ function filterMaterials() {
 <script>
 // === PATCH: Super Admin dapat menambah beberapa admin di regional yang sama ===
 
-// --- Fungsi Tambah Admin Regional ---
+// --- Fungsi Tambah Admin ---
 function addRegionalAdmin() {
     const studentRegions = studentsData.map(s => s.region).filter(r => r);
     const adminRegions = regionalAdmins.map(a => a.region).filter(r => r);
     const existingRegions = [...new Set([...studentRegions, ...adminRegions])];
 
-    openModal('Tambah Admin Regional Baru', `
+    openModal('Tambah Admin Baru', `
         <form id="addAdminForm" class="space-y-4">
             <div>
                 <label for="adminName" class="block text-sm font-medium text-gray-700 mb-1">Nama Admin</label>
@@ -6972,16 +7092,16 @@ function addRegionalAdmin() {
             <div>
                 <label for="adminRegionSelect" class="block text-sm font-medium text-gray-700 mb-1">Regional</label>
                 <select id="adminRegionSelect" onchange="toggleNewRegionInput(this.value)" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
-                    <option value="">--- Pilih Regional yang Sudah Ada ---</option>
+                    <option value="">--- Pilih yang Sudah Ada ---</option>
                     ${[...new Set(studentsData.map(s => s.region).concat(regionalAdmins.map(a => a.region)))].sort().map(regionName => `
                         <option value="${regionName}">${regionName}</option>
                     `).join('')}
-                    <option value="NEW_REGION">--- Tambah Regional Baru ---</option>
+                    <option value="NEW_REGION">--- Tambah Baru ---</option>
                 </select>
             </div>
 
             <div id="newRegionInputContainer" class="hidden">
-                <label for="adminRegionInput" class="block text-sm font-medium text-gray-700 mb-1">Regional Baru</label>
+                <label for="adminRegionInput" class="block text-sm font-medium text-gray-700 mb-1">Baru</label>
                 <input type="text" id="adminRegionInput" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500" placeholder="Contoh: Jakarta Pusat">
             </div>
 
@@ -7019,7 +7139,7 @@ function addRegionalAdmin() {
         const newAdmin = { username, password, role: 'Admin', name, region };
         regionalAdmins.push(newAdmin);
 
-        showNotification('Admin Regional berhasil ditambahkan!');
+        showNotification('Admin berhasil ditambahkan!');
         this.reset();
         closeModal();
         loadManageAdmins();
@@ -7094,7 +7214,7 @@ function loadManageAdmins() {
             </div>
 
             <div class="bg-white border border-gray-200 rounded-lg p-6 rounded-xl shadow-sm">
-                <h3 class="text-xl font-semibold text-gray-900 mb-4">Daftar Akun Admin Regional (${regionalAdmins.length})</h3>
+                <h3 class="text-xl font-semibold text-gray-900 mb-4">Daftar Akun Admin (${regionalAdmins.length})</h3>
                 <div class="overflow-x-auto">
                     <table class="w-full">
                         <thead class="bg-blue-800 text-white">
