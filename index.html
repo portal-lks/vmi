@@ -109,106 +109,6 @@
 }
 </style>
 <style>@view-transition { navigation: auto; }</style>
-
-<script type="module">
-import {{ createClient }} from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
-
-const SUPABASE_URL = "https://kfmrizghizshuusgvoev.supabase.co";
-const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtmbXJpemdoaXpzaHV1c2d2b2V2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM3ODY5ODQsImV4cCI6MjA3OTM2Mjk4NH0.5SRyQwsSCm9IX-bV7V5Ge7GE-oprRfK3B4A-NIJbdiY";
-const supabase = createClient(SUPABASE_URL, SUPABASE_ANON);
-window.supabase = supabase;
-
-async function fetchAll() {{
-  try {{
-    const [studRes, artRes, attRes, skolRes, tkaRes, cmRes, schRes, actRes, clsRes, adminRes, eduRes] = await Promise.all([
-      supabase.from('students').select('*'),
-      supabase.from('artworks').select('*'),
-      supabase.from('attendance').select('*'),
-      supabase.from('skolastik_tests').select('*'),
-      supabase.from('tka_tests').select('*'),
-      supabase.from('class_materials').select('*'),
-      supabase.from('schedules').select('*'),
-      supabase.from('activity_schedules').select('*'),
-      supabase.from('classes').select('*'),
-      supabase.from('regional_admins').select('*'),
-      supabase.from('education_info').select('*')
-    ]);
-
-    const students = studRes.data || [];
-    const artworks = artRes.data || [];
-    const attendance = attRes.data || [];
-    const skolastik = skolRes.data || [];
-    const tka = tkaRes.data || [];
-    const classMaterials = (cmRes.data || []).map(c => ({{...c}}));
-    const schedules = (schRes.data || []).map(s => ({{...s}}));
-    const activitySchedules = (actRes.data || []).map(a => ({{...a}}));
-    const classes = (clsRes.data || []).map(c => ({{...c}}));
-    const regionalAdmins = (adminRes.data || []).map(a => ({{...a}}));
-    const educationInfo = (eduRes.data || []).map(e => ({{...e}}));
-
-    const studentsData = students.map(s => {{
-      const sArt = artworks.filter(a => a.student_id === s.id).map(a => ({{ id: a.id, title: a.title, description: a.description, date: a.date, image: a.image, comment: a.comment }}));
-      const sAtt = attendance.filter(at => at.student_id === s.id).map(at => ({{ date: at.date, status: at.status }}));
-      const sSkol = skolastik.filter(t => t.student_id === s.id).map(t => ({{ date: t.date, subject: t.subject, score: t.score, comment: t.comment }}));
-      const sTka = tka.filter(t => t.student_id === s.id).map(t => ({{ date: t.date, subject: t.subject, score: t.score, comment: t.comment }}));
-      return {{ 
-        id: s.id,
-        name: s.name,
-        username: s.username,
-        password: s.password,
-        class: s.class_name || s.class,
-        region: s.region,
-        school: s.school,
-        artworks: sArt,
-        attendance: sAtt,
-        skolastikTests: sSkol,
-        tkaTests: sTka
-      }};
-    }});
-
-    const availableClasses = classes.map(c => ({{ id: c.id, name: c.name, description: c.description, region: c.region }}));
-    const classMaterialsOut = classMaterials.map(c => ({{ id: c.id, topic: c.topic, description: c.description, classes: c.classes, region: c.region }}));
-    const scheduleDataOut = schedules.map(s => ({{ id: s.id, date: s.date, day: s.day, subject: s.subject, classes: s.classes, region: s.region }}));
-    const activityScheduleDataOut = activitySchedules.map(a => ({{ id: a.id, date: a.date, name: a.name, goal: a.goal, classes: a.classes, region: a.region }}));
-    const regionalAdminsOut = regionalAdmins.map(a => ({{ username: a.username, password: a.password, role: a.role, name: a.name, region: a.region }}));
-    const educationInfoOut = educationInfo;
-
-    window.studentsData = studentsData;
-    window.classMaterials = classMaterialsOut;
-    window.scheduleData = scheduleDataOut;
-    window.activityScheduleData = activityScheduleDataOut;
-    window.availableClasses = availableClasses;
-    window.regionalAdmins = regionalAdminsOut;
-    window.educationInfo = educationInfoOut;
-
-    try {{
-      localStorage.setItem('studentsData', JSON.stringify(studentsData));
-      localStorage.setItem('classMaterials', JSON.stringify(classMaterialsOut));
-      localStorage.setItem('scheduleData', JSON.stringify(scheduleDataOut));
-      localStorage.setItem('activityScheduleData', JSON.stringify(activityScheduleDataOut));
-      localStorage.setItem('availableClasses', JSON.stringify(availableClasses));
-      localStorage.setItem('regionalAdmins', JSON.stringify(regionalAdminsOut));
-      localStorage.setItem('educationInfo', JSON.stringify(educationInfoOut));
-    }} catch (e) {{
-      console.warn('Could not write to localStorage', e);
-    }}
-
-    console.log('Supabase data loaded and stored to localStorage.');
-
-    setTimeout(() => {{
-      if (typeof loadSidebar === 'function') try {{ loadSidebar(); }} catch(e){{console.warn(e);}}
-      if (typeof loadHome === 'function') try {{ loadHome(); }} catch(e){{console.warn(e);}}
-      if (typeof loadSession === 'function') try {{ loadSession(); }} catch(e){{console.warn(e);}}
-      if (typeof loadAllData === 'function') try {{ loadAllData(); }} catch(e){{console.warn(e);}}
-    }}, 400);
-    
-  }} catch (err) {{
-    console.error('Error fetching from Supabase', err);
-  }}
-}}
-
-fetchAll();
-</script>
 <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
 <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
 <style>
@@ -461,7 +361,11 @@ window.saveAllData = saveAllData;
         let selectedAdminRegion = 'all'; // NEW: Filter Global Admin
         
         // Data Admin yang terpisah - MODIFIED REGIONAL NAMES
-        // REMOVED HARDCODED DATA BLOCK
+        let regionalAdmins = [
+            { username: 'admin_jaksel', password: 'admin123', role: 'Admin', name: 'Admin Jakarta Selatan', region: 'Cabang Jakarta Selatan' },
+            { username: 'admin_jaktim', password: 'admin123', role: 'Admin', name: 'Admin Jakarta Timur', region: 'Cabang Jakarta Timur' },
+            { username: 'admin_bandung', password: 'admin123', role: 'Admin', name: 'Admin Bandung', region: 'Pusat Bandung' }
+        ];
 
         // Gabungan semua users, termasuk Super Admin
         const superAdminUser = { username: 'superadmin', password: 'super123', role: 'Super Admin', name: 'Super Admin Utama', region: 'Pusat' };
@@ -499,21 +403,271 @@ window.saveAllData = saveAllData;
 
         // Data Sekolah Baru
         // MODIFIED: availableClasses kini memiliki properti region
-        // REMOVED HARDCODED DATA BLOCK
+        let availableClasses = [
+            { id: 1, name: 'Gold', description: 'Kelas dasar intensif.', region: 'Cabang Jakarta Selatan' },
+            { id: 2, name: 'Advance', description: 'Kelas lanjutan untuk persiapan kompetisi.', region: 'Cabang Jakarta Selatan' },
+            { id: 3, name: 'Minat Seni', description: 'Kelas santai untuk hobi.', region: 'Cabang Jakarta Timur' },
+            { id: 4, name: 'Arsitek', description: 'Kelas khusus persiapan masuk jurusan Arsitektur.', region: 'Pusat Bandung' }
+        ];
 
         // MODIFIED REGIONAL NAMES IN STUDENTS DATA (MENAMBAH USERNAME DAN PASSWORD)
-        // REMOVED HARDCODED DATA BLOCK
+        let studentsData = [
+            {
+                id: 1,
+                name: 'Budi Santoso',
+                username: 'siswa1', // <<< TAMBAH USERNAME
+                password: 'siswa123', // <<< TAMBAH PASSWORD
+                class: 'Gold',
+                region: 'Cabang Jakarta Selatan',
+                school: 'SMA Negeri 1 Jakarta', // Data Sekolah
+                artworks: [
+                    {
+                        id: 1,
+                        title: 'Sketsa Pemandangan Gunung',
+                        description: 'Gambar pemandangan gunung dengan teknik pensil',
+                        date: '2024-01-15',
+                        image: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%2387CEEB" width="400" height="300"/%3E%3Ccircle cx="320" cy="60" r="40" fill="%23FFD700"/%3E%3Cpath d="M0,200 Q100,150 200,200 T400,200 L400,300 L0,300 Z" fill="%234CAF50"/%3E%3Cpath d="M80,120 L120,200 L40,200 Z" fill="%238B4513"/%3E%3Cpath d="M80,80 Q60,100 40,120 Q100,110 120,120 Q100,100 80,80" fill="%232E7D32"/%3E%3Ctext x="200" y="280" text-anchor="middle" fill="%23333" font-size="14"%3EPemandangan Gunung%3C/text%3E%3C/svg%3E',
+                        comment: 'Komposisi bagus, perhatikan detail bayangan pada gunung'
+                    },
+                    {
+                        id: 2,
+                        title: 'Potret Wajah',
+                        description: 'Latihan menggambar proporsi wajah manusia',
+                        date: '2024-01-20',
+                        image: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23F5F5DC" width="400" height="300"/%3E%3Cellipse cx="200" cy="150" rx="80" ry="100" fill="%23FFE4C4"/%3E%3Cellipse cx="180" cy="130" rx="10" ry="15" fill="%23000"/%3E%3Cellipse cx="220" cy="130" rx="10" ry="15" fill="%23000"/%3Cpath d="M185,160 Q200,170 215,160" stroke="%23000" fill="none" stroke-width="2"/%3E%3Cpath d="M190,180 Q200,190 210,180" stroke="%23000" fill="none" stroke-width="2"/%3E%3Ctext x="200" y="280" text-anchor="middle" fill="%23333" font-size="14"%3EPotret Wajah%3C/text%3E%3C/text%3E%3C/svg%3E',
+                        comment: 'Proporsi wajah sudah baik, tingkatkan detail pada mata dan hidung'
+                    }
+                ],
+                attendance: [
+                    { date: '2024-01-08', status: 'Hadir' },
+                    { date: '2024-01-15', status: 'Hadir' },
+                    { date: '2024-01-22', status: 'Izin' },
+                    { date: '2024-01-29', status: 'Hadir' }
+                ],
+                skolastikTests: [
+                    { date: '2024-01-10', subject: 'Matematika Dasar', score: 85, comment: 'Pemahaman konsep sudah baik, tingkatkan latihan soal' },
+                    { date: '2024-01-17', subject: 'Bahasa Indonesia', score: 90, comment: 'Kemampuan membaca dan menulis sangat baik' },
+                    { date: '2024-01-24', subject: 'Bahasa Inggris', score: 78, comment: 'Perlu latihan lebih pada grammar dan vocabulary' }
+                ],
+                tkaTests: [
+                    { date: '2024-01-12', subject: 'Penalaran Umum', score: 82, comment: 'Logika berpikir sudah berkembang dengan baik' },
+                    { date: '2024-01-19', subject: 'Pengetahuan Kuantitatif', score: 75, comment: 'Perlu latihan lebih pada soal-soal hitungan cepat' },
+                    { date: '2024-01-26', subject: 'Literasi Bahasa Indonesia', score: 88, comment: 'Kemampuan memahami teks sangat baik' }
+                ]
+            },
+            {
+                id: 2,
+                name: 'Sari Dewi',
+                username: 'siswa2', // <<< TAMBAH USERNAME
+                password: 'siswa123', // <<< TAMBAH PASSWORD
+                class: 'Advance',
+                region: 'Cabang Jakarta Timur',
+                school: 'SMA Swasta 7 Bandung', // Data Sekolah
+                artworks: [
+                    {
+                        id: 1,
+                        title: 'Still Life Buah-buahan',
+                        description: 'Gambar still life dengan teknik pensil warna',
+                        date: '2024-01-18',
+                        image: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23FFFAF0" width="400" height="300"/%3E%3Cellipse cx="150" cy="180" rx="40" ry="35" fill="%23FF6347"/%3E%3Cellipse cx="250" cy="170" rx="35" ry="40" fill="%23FFD700"/%3E%3Cellipse cx="200" cy="200" rx="30" ry="25" fill="%23FF4500"/%3E%3Cpath d="M140,150 Q150,140 160,150" stroke="%23228B22" fill="none" stroke-width="3"/%3E%3Cpath d="M240,135 Q250,125 260,135" stroke="%23228B22" fill="none" stroke-width="3"/%E%3Ctext x="200" y="280" text-anchor="middle" fill="%23333" font-size="14"%3EStill Life Buah%3C/text%3E%3C/svg%3E',
+                        comment: 'Penggunaan warna sangat bagus, perhatikan pencahayaan dan bayangan'
+                    }
+                ],
+                attendance: [
+                    { date: '2024-01-08', status: 'Hadir' },
+                    { date: '2024-01-15', status: 'Hadir' },
+                    { date: '2024-01-22', status: 'Hadir' },
+                    { date: '2024-01-29', status: 'Sakit' }
+                ],
+                skolastikTests: [
+                    { date: '2024-01-11', subject: 'Matematika Dasar', score: 92, comment: 'Kemampuan analisis matematika sangat baik' },
+                    { date: '2024-01-18', subject: 'Bahasa Indonesia', score: 95, comment: 'Kemampuan berbahasa luar biasa' }
+                ],
+                tkaTests: [
+                    { date: '2024-01-13', subject: 'Penalaran Umum', score: 90, comment: 'Kemampuan berpikir logis sangat baik' },
+                    { date: '2024-01-20', subject: 'Pengetahuan Kuantitatif', score: 85, comment: 'Konsisten dalam mengerjakan soal matematika' }
+                ]
+            },
+            {
+                id: 3,
+                name: 'Ahmad Rizki',
+                username: 'siswa3', // <<< TAMBAH USERNAME
+                password: 'siswa123', // <<< TAMBAH PASSWORD
+                class: 'Gold', // Mengubah 'Minat Seni' menjadi 'Gold' karena kelas 'Minat Seni' di Jkt Sel telah dihapus dan diganti dengan 'Gold'
+                region: 'Cabang Jakarta Selatan',
+                school: 'SMA Negeri 1 Jakarta', // Data Sekolah
+                artworks: [
+                    {
+                        id: 1,
+                        title: 'Sketsa Arsitektur',
+                        description: 'Gambar perspektif bangunan dengan teknik pensil',
+                        date: '2024-01-22',
+                        image: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23E6F3FF" width="400" height="300"/%3E%3Cpath d="M50,250 L150,100 L350,100 L350,250 Z" fill="%23D3D3D3" stroke="%23000" stroke-width="2"/%3E%3Crect x="100" y="180" width="40" height="70" fill="%23654321"/%3E%3Crect x="200" y="150" width="60" height="40" fill="%234169E1"/%3E%3Crect x="280" y="170" width="50" height="50" fill="%234169E1"/%3E%3Cpath d="M150,100 L200,50 L400,50 L350,100 Z" fill="%23B22222"/%3E%3Ctext x="200" y="280" text-anchor="middle" fill="%23333" font-size="14"%3EArsitektur Bangunan%3C/text%3E%3C/svg%3E',
+                        comment: 'Perspektif sudah baik, tingkatkan detail pada elemen arsitektur'
+                    }
+                ],
+                attendance: [
+                    { date: '2024-01-08', status: 'Hadir' },
+                    { date: '2024-01-15', status: 'Hadir' },
+                    { date: '2024-01-22', status: 'Hadir' },
+                    { date: '2024-01-29', status: 'Hadir' }
+                ],
+                skolastikTests: [
+                    { date: '2024-01-12', subject: 'Matematika Dasar', score: 88, comment: 'Kemampuan problem solving yang baik' },
+                    { date: '2024-01-19', subject: 'Bahasa Indonesia', score: 82, comment: 'Perlu meningkatkan kemampuan analisis teks' }
+                ],
+                tkaTests: [
+                    { date: '2024-01-14', subject: 'Penalaran Umum', score: 86, comment: 'Kemampuan logika berkembang dengan baik' },
+                    { date: '2024-01-21', subject: 'Pengetahuan Kuantitatif', score: 79, comment: 'Perlu latihan lebih pada perhitungan cepat' }
+                ]
+            },
+            {
+                id: 4,
+                name: 'Maya Putri',
+                username: 'siswa4', // <<< TAMBAH USERNAME
+                password: 'siswa123', // <<< TAMBAH PASSWORD
+                class: 'Minat Seni', // Mengubah 'Arsitek' menjadi 'Minat Seni' karena kelas 'Arsitek' di Jkt Timur telah dihapus
+                region: 'Cabang Jakarta Timur',
+                school: 'SMA Swasta 7 Bandung', // Data Sekolah
+                artworks: [
+                    {
+                        id: 1,
+                        title: 'Desain Rumah Minimalis',
+                        description: 'Sketsa desain rumah minimalis 2 lantai',
+                        date: '2024-01-25',
+                        image: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23F0F8FF" width="400" height="300"/%3E%3Crect x="50" y="150" width="300" height="120" fill="%23D3D3D3" stroke="%23000" stroke-width="2"/%3E%3Crect x="80" y="200" width="40" height="70" fill="%23654321"/%3E%3Crect x="150" y="180" width="60" height="40" fill="%234169E1"/%3E%3Crect x="250" y="180" width="60" height="40" fill="%234169E1"/%3E%3Cpath d="M50,150 L200,80 L350,150 Z" fill="%23B22222"/%3E%3Ctext x="200" y="290" text-anchor="middle" fill="%23333" font-size="12"%3ERumah Minimalis 2 Lantai%3C/text%3E%3C/svg%3E',
+                        comment: 'Desain arsitektur yang baik, perhatikan proporsi dan detail struktur'
+                    }
+                ],
+                attendance: [
+                    { date: '2024-01-08', status: 'Hadir' },
+                    { date: '2024-01-15', status: 'Hadir' },
+                    { date: '2024-01-22', status: 'Hadir' },
+                    { date: '2024-01-29', status: 'Hadir' }
+                ],
+                skolastikTests: [
+                    { date: '2024-01-13', subject: 'Matematika Dasar', score: 91, comment: 'Kemampuan matematika untuk arsitektur sangat baik' },
+                    { date: '2024-01-20', subject: 'Fisika Dasar', score: 87, comment: 'Pemahaman konsep fisika bangunan baik' }
+                ],
+                tkaTests: [
+                    { date: '2024-01-15', subject: 'Penalaran Spasial', score: 93, comment: 'Kemampuan visualisasi ruang sangat baik untuk arsitektur' },
+                    { date: '2024-01-22', subject: 'Pengetahuan Kuantitatif', score: 88, comment: 'Kemampuan perhitungan teknis baik' }
+                ]
+            },
+            {
+                id: 5,
+                name: 'Rina Sari',
+                username: 'siswa5', // <<< TAMBAH USERNAME
+                password: 'siswa123', // <<< TAMBAH PASSWORD
+                class: 'Arsitek', // Mengubah 'Gold' menjadi 'Arsitek' karena kelas 'Gold' di Bdg telah dihapus
+                region: 'Pusat Bandung',
+                school: 'SMK Seni Rupa', // Data Sekolah
+                artworks: [
+                    {
+                        id: 1,
+                        title: 'Lukisan Cat Air Bunga',
+                        description: 'Lukisan bunga mawar dengan teknik cat air',
+                        date: '2024-01-28',
+                        image: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23FFF8DC" width="400" height="300"/%3E%3Ccircle cx="200" cy="150" r="60" fill="%23FF69B4" opacity="0.8"/%3E%3Ccircle cx="180" cy="130" r="25" fill="%23FF1493" opacity="0.6"/%3E%3Ccircle cx="220" cy="130" r="25" fill="%23FF1493" opacity="0.6"/%3E%3Ccircle cx="200" cy="170" r="25" fill="%23FF1493" opacity="0.6"/%3E%3Cpath d="M200,210 Q190,240 200,250 Q210,240 200,210" fill="%23228B22"/%3E%3Ctext x="200" y="280" text-anchor="middle" fill="%23333" font-size="14"%3EBunga Mawar Cat Air%3C/text%3E%3C/svg%3E',
+                        comment: 'Teknik cat air sudah baik, perhatikan gradasi warna'
+                    }
+                ],
+                attendance: [
+                    { date: '2024-01-08', status: 'Hadir' },
+                    { date: '2024-01-15', status: 'Hadir' },
+                    { date: '2024-01-22', status: 'Hadir' },
+                    { date: '2024-01-29', status: 'Hadir' }
+                ],
+                skolastikTests: [
+                    { date: '2024-01-14', subject: 'Matematika Dasar', score: 89, comment: 'Kemampuan analisis yang baik' },
+                    { date: '2024-01-21', subject: 'Bahasa Indonesia', score: 93, comment: 'Kemampuan berbahasa sangat baik' }
+                ],
+                tkaTests: [
+                    { date: '2024-01-16', subject: 'Penalaran Umum', score: 87, comment: 'Logika berpikir berkembang baik' },
+                    { date: '2024-01-23', subject: 'Literasi Bahasa Indonesia', score: 91, comment: 'Kemampuan memahami teks sangat baik' }
+                ]
+            },
+            {
+                id: 6,
+                name: 'Doni Pratama',
+                username: 'siswa6', // <<< TAMBAH USERNAME
+                password: 'siswa123', // <<< TAMBAH PASSWORD
+                class: 'Advance',
+                region: 'Pusat Bandung',
+                school: 'SMK Seni Rupa', // Data Sekolah
+                artworks: [
+                    {
+                        id: 1,
+                        title: 'Sketsa Potret Realistis',
+                        description: 'Potret wajah dengan teknik pensil realistis',
+                        date: '2024-01-30',
+                        image: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23F5F5DC" width="400" height="300"/%3E%3Cellipse cx="200" cy="150" rx="70" ry="90" fill="%23FDBCB4"/%3E%3Cellipse cx="180" cy="130" rx="8" ry="12" fill="%23000"/%3E%3Cellipse cx="220" cy="130" rx="8" ry="12" fill="%23000"/%3E%3Cpath d="M185,155 Q200,165 215,155" stroke="%23000" fill="none" stroke-width="2"/%3E%3Cpath d="M190,175 Q200,185 210,175" stroke="%23000" fill="none" stroke-width="2"/%3E%3Cpath d="M170,120 Q180,115 190,120" stroke="%238B4513" fill="none" stroke-width="3"/%E%3Cpath d="M210,120 Q220,115 230,120" stroke="%238B4513" fill="none" stroke-width="3"/%E%3Ctext x="200" y="280" text-anchor="middle" fill="%23333" font-size="14"%3EPotret Realistis%3C/text%3E%3C/svg%3E',
+                        comment: 'Detail dan proporsi sangat baik, tingkatkan teknik shading'
+                    }
+                ],
+                attendance: [
+                    { date: '2024-01-08', status: 'Hadir' },
+                    { date: '2024-01-15', status: 'Hadir' },
+                    { date: '2024-01-22', status: 'Izin' },
+                    { date: '2024-01-29', status: 'Hadir' }
+                ],
+                skolastikTests: [
+                    { date: '2024-01-15', subject: 'Matematika Dasar', score: 86, comment: 'Kemampuan problem solving baik' },
+                    { date: '2024-01-22', subject: 'Bahasa Inggris', score: 84, comment: 'Perlu latihan lebih pada vocabulary' }
+                ],
+                tkaTests: [
+                    { date: '2024-01-17', subject: 'Penalaran Umum', score: 89, comment: 'Kemampuan analisis sangat baik' },
+                    { date: '2024-01-24', subject: 'Pengetahuan Kuantitatif', score: 82, comment: 'Konsisten dalam mengerjakan soal' }
+                ]
+            }
+        ];
 
-        // REMOVED HARDCODED DATA BLOCK
+        let educationInfo = [
+            {
+                id: 1,
+                title: 'Sistem Ujian SNBP 2026',
+                content: 'Seleksi Nasional Berdasarkan Prestasi (SNBP) 2026 menggunakan sistem nilai rapor dan prestasi akademik. Bobot penilaian: 50% nilai rapor, 30% prestasi akademik, 20% portofolio. Pendaftaran dibuka mulai Februari 2026 dengan kuota 20% dari total daya tampung perguruan tinggi.',
+                date: '2024-01-15'
+            },
+            {
+                id: 2,
+                title: 'Sistem Ujian SNBT 2026',
+                content: 'Seleksi Nasional Berdasarkan Tes (SNBT) 2026 terdiri dari Tes Skolastik dan Tes Literasi. Materi tes fokus pada kemampuan penalaran dan pemecahan masalah. Tes dilaksanakan secara serentak di seluruh Indonesia pada bulan Mei 2026.',
+                date: '2024-01-20'
+            },
+            {
+                id: 3,
+                title: 'Sistem Ujian Mandiri 2026',
+                content: 'Ujian mandiri perguruan tinggi 2026 memiliki format yang beragam. Beberapa PT menggunakan tes tertulis, wawancara, atau portofolio sesuai program studi. Jadwal ujian mandiri umumnya dilaksanakan setelah pengumuman SNBT.',
+                date: '2024-01-25'
+            }
+        ];
 
         // MODIFIED: properti 'region' ditambahkan ke setiap materi
-        // REMOVED HARDCODED DATA BLOCK
+        let classMaterials = [
+            { id: 1, topic: 'Pengenalan Alat Gambar', description: 'Mengenal berbagai jenis pensil (2H, HB, 2B, 4B, 6B), kertas gambar, penghapus, dan alat gambar dasar lainnya untuk memulai belajar menggambar dengan benar', classes: ['Gold', 'Advance'], region: 'Cabang Jakarta Selatan' },
+            { id: 2, topic: 'Teknik Garis Dasar', description: 'Belajar membuat garis lurus, lengkung, dan berbagai jenis garis sebagai dasar menggambar. Latihan kontrol tangan dan tekanan pensil', classes: ['Advance', 'Minat Seni'], region: 'Cabang Jakarta Timur' },
+            { id: 3, topic: 'Bentuk Geometri Dasar', description: 'Menggambar lingkaran, persegi, segitiga, dan bentuk geometri dasar lainnya dengan proporsi yang tepat', classes: ['Gold', 'Advance'], region: 'Cabang Jakarta Selatan' },
+            { id: 4, topic: 'Perspektif 1 Titik', description: 'Memahami dan menerapkan perspektif satu titik hilang untuk menciptakan kedalaman dalam gambar objek dan bangunan', classes: ['Arsitek', 'Advance'], region: 'Pusat Bandung' },
+            { id: 5, topic: 'Shading dan Tekstur', description: 'Teknik membuat bayangan dan tekstur pada objek untuk memberikan dimensi dan realisme. Belajar gradasi dan kontras', classes: ['Minat Seni'], region: 'Cabang Jakarta Timur' },
+            { id: 6, topic: 'Perspektif 2 Titik', description: 'Teknik perspektif dua titik hilang untuk menggambar objek dari sudut pandang yang lebih kompleks', classes: ['Arsitek'], region: 'Pusat Bandung' },
+            { id: 7, topic: 'Anatomi Manusia', description: 'Mempelajari proporsi dan anatomi tubuh manusia untuk menggambar figur yang akurat dan realistis', classes: ['Gold'], region: 'Cabang Jakarta Selatan' },
+            { id: 8, topic: 'Komposisi Lanjutan', description: 'Teknik komposisi untuk karya yang lebih kompleks dengan multiple objek dan elemen. Prinsip rule of thirds dan golden ratio', classes: ['Minat Seni', 'Advance'], region: 'Cabang Jakarta Timur' },
+            { id: 9, topic: 'Teknik Rendering', description: 'Teknik finishing dan rendering untuk menghasilkan karya gambar yang profesional dan detail', classes: ['Advance', 'Arsitek'], region: 'Pusat Bandung' }
+        ];
 
         // MODIFIED: Data jadwal diisi dengan properti 'region'
-        // REMOVED HARDCODED DATA BLOCK
+        let scheduleData = [
+            { id: 1, date: '2025-11-05', day: 'Selasa', subject: 'Pengenalan Alat Gambar', classes: ['Gold', 'Advance'], region: 'Cabang Jakarta Selatan' },
+            { id: 2, date: '2025-11-06', day: 'Rabu', subject: 'Perspektif 1 Titik', classes: ['Minat Seni'], region: 'Cabang Jakarta Timur' },
+            { id: 3, date: '2025-11-07', day: 'Kamis', subject: 'Anatomi Manusia', classes: ['Arsitek', 'Advance'], region: 'Pusat Bandung' }
+        ];
 
 // === Data Jadwal Kegiatan (Baru) ===
-// REMOVED HARDCODED DATA BLOCK
+let activityScheduleData = [
+  { id: 1, date: '2025-11-10', name: 'Workshop Arsitektur', goal: 'Melatih kemampuan menggambar bangunan', classes: ['Arsitek'], region: 'Pusat Bandung' },
+  { id: 2, date: '2025-11-12', name: 'Pameran Seni', goal: 'Menampilkan hasil karya siswa', classes: ['Gold', 'Advance'], region: 'Cabang Jakarta Selatan' }
+];
 
         // Login Handler
         document.getElementById('loginForm').addEventListener('submit', function(e) {
@@ -4633,8 +4787,8 @@ function filterActivityByClass(className) {
 <!-- BEGIN: Injected by assistant — Activity & Schedule modules upgrade -->
 <script>
 // Ensure data arrays exist
-if (typeof activityScheduleData === 'undefined') // REMOVED HARDCODED DATA BLOCK
-if (typeof scheduleData === 'undefined') // REMOVED HARDCODED DATA BLOCK
+if (typeof activityScheduleData === 'undefined') activityScheduleData = [];
+if (typeof scheduleData === 'undefined') scheduleData = [];
 
 // Utility: compute day name from YYYY-MM-DD
 function getDayNameFromDate(isoDate) {
@@ -5682,7 +5836,7 @@ window.loadActivitySchedule = function() {
             return;
           }
           // ensure availableClasses exists
-          if (typeof availableClasses === 'undefined') window.// REMOVED HARDCODED DATA BLOCK
+          if (typeof availableClasses === 'undefined') window.availableClasses = [];
           // prevent duplicate name in same region
           const exists = availableClasses.some(c=> (c.name||'').toLowerCase()===name.toLowerCase() && c.region===region);
           if (exists) {
