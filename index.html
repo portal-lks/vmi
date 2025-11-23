@@ -191,7 +191,108 @@ div:empty{display:none !important;}
 }
 
 
-</style></head>
+
+/* === SCROLL INTERNAL UNTUK SEMUA MODUL PROGRESS === */
+.progress-inner-scroll {
+    max-height: 420px;
+    overflow-y: auto;
+    padding-right: 6px;
+    margin-top: 1rem;
+    border-radius: 12px;
+    -webkit-overflow-scrolling: touch;
+}
+.progress-inner-scroll::-webkit-scrollbar { width: 8px; }
+.progress-inner-scroll::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
+.progress-inner-scroll::-webkit-scrollbar-thumb { background: #c7c7c7; border-radius: 10px; }
+
+</style>
+<style>
+/* ==== FIX: Semua tabel tetap berada di dalam rounded, tidak offset keluar ==== */
+.table-responsive {
+    overflow: auto;
+    max-height: 420px;
+    border-radius: 1rem;
+    background: transparent;
+    -webkit-overflow-scrolling: touch;
+    padding: 0.25rem;
+}
+.table-responsive table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0;
+}
+#contentArea table,
+#contentArea table thead,
+#contentArea table tbody {
+    overflow: hidden !important;
+}
+</style>
+
+
+<style>
+.student-table-box {
+    max-height: 420px;
+    overflow-y: auto;
+    border-radius: 12px;
+    padding: 4px;
+}
+.student-table-box table {
+    width: 100%;
+    border-collapse: collapse;
+}
+</style>
+
+<style>
+/* === INTERNAL SCROLL UNTUK MODUL KELOLA KELAS === */
+.class-table-scroll {
+    max-height: 420px;
+    overflow-y: auto;
+    overflow-x: auto;
+    padding-right: 6px;
+    margin-top: 1rem;
+    border-radius: 12px;
+    -webkit-overflow-scrolling: touch;
+}
+.class-table-scroll::-webkit-scrollbar {
+    width: 8px;
+}
+.class-table-scroll::-webkit-scrollbar-thumb {
+    background: #c7c7c7;
+    border-radius: 10px;
+}
+</style>
+<style>
+/* === INTERNAL SCROLL UNTUK MODUL DATA KEHADIRAN === */
+.class-table-scroll {
+    max-height: 420px;
+    overflow-y: auto;
+    overflow-x: auto;
+    padding-right: 6px;
+    margin-top: 1rem;
+    border-radius: 12px;
+    -webkit-overflow-scrolling: touch;
+}
+.class-table-scroll::-webkit-scrollbar {
+    width: 8px;
+}
+.class-table-scroll::-webkit-scrollbar-thumb {
+    background: #c7c7c7;
+    border-radius: 10px;
+}
+</style>
+<style>
+/* scroll for attendance cards */
+.attendance-scroll {
+    max-height: 500px;
+    overflow-y: auto;
+    padding-right: 8px;
+    margin-top: 1rem;
+    border-radius: 12px;
+}
+.attendance-scroll::-webkit-scrollbar { width: 8px; }
+.attendance-scroll::-webkit-scrollbar-thumb { background: #c7c7c7; border-radius: 10px; }
+</style>
+</head>
 <body class="bg-white">
 
 <div class="login-bg min-h-screen flex items-center justify-center py-15 px-4 relative" id="loginPage">
@@ -1171,7 +1272,7 @@ else if (role === 'Admin') {
                     </div>
                     <div class="bg-white border border-gray-200  p-6 rounded-xl shadow-sm">
                         <h3 class="text-xl font-semibold text-gray-900 mb-4">Daftar Akun Admin (${regionalAdmins.length})</h3>
-                        <div class="overflow-x-auto">
+                        <div class="class-table-scroll">
                             <table class="w-full">
                                 <thead class="bg-blue-800 text-white">
                                     <tr>
@@ -1545,7 +1646,7 @@ function confirmDeleteRegionalAdmin(username) {
                                                 <summary class="font-bold text-gray-800 cursor-pointer p-2 -m-2">
                                                     📁 ${monthName} ${year} (${artworksInMonth.length} Karya)
                                                 </summary>
-                                                <div class="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                                <div class="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                                                     ${artworksInMonth.map(art => `
                                                         <div class="border border-gray-200 rounded-lg overflow-hidden shadow-sm">
                                                             <img style="max-width:800px;width:100%;height:auto;display:block;margin:auto;" src="${art.image}" alt="${art.title}" class="w-full h-48 object-cover ${isAdminOrSuperAdmin ? 'editable-image cursor-pointer' : ''}" ${isAdminOrSuperAdmin ? `onclick="editArtworkImage(${student.id}, ${art.id})"` : ''}>
@@ -1588,7 +1689,7 @@ function confirmDeleteRegionalAdmin(username) {
                         </div>
                         ${isAdminOrSuperAdmin && currentUser.role !== 'Siswa' ? `<button onclick="addSkolastikTest(${student.id})" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-sm text-sm">+ Tambah Tes</button>` : ''}
                     </div>
-                    <div class="overflow-x-auto">
+                    <div class="class-table-scroll">
                         <table class="w-full">
                             <thead class="bg-blue-800 text-white">
                                 <tr>
@@ -1632,7 +1733,7 @@ function confirmDeleteRegionalAdmin(username) {
                         </div>
                         ${isAdminOrSuperAdmin && currentUser.role !== 'Siswa' ? `<button onclick="addTkaTest(${student.id})" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-sm text-sm">+ Tambah Tes</button>` : ''}
                     </div>
-                    <div class="overflow-x-auto">
+                    <div class="class-table-scroll">
                         <table class="w-full">
                             <thead class="bg-blue-800 text-white">
                                 <tr>
@@ -1755,7 +1856,7 @@ function confirmDeleteRegionalAdmin(username) {
                          ` : ''}
                     </div>
                     <div id="filterKelasArtProgress" class="mt-3 mb-5"></div>
-<div id="artProgressContent">
+<div id="artProgressContent" class="progress-inner-scroll">
                         ${renderStudentGroupedByClass(displayData, isAdminOrSuperAdmin, 'artProgress')}
                     </div>
                 `;
@@ -1765,7 +1866,7 @@ function confirmDeleteRegionalAdmin(username) {
                     <div class="flex justify-between items-center mb-6">
                         <h2 class="text-2xl font-bold text-gray-900">🎨 Kemajuan Gambar</h2>
                     </div>
-                    <div id="artProgressContent">
+                    <div id="artProgressContent" class="progress-inner-scroll">
                          ${renderArtProgressStudent(displayData, isAdminOrSuperAdmin)}
                     </div>
                 `;
@@ -1860,7 +1961,7 @@ function confirmDeleteRegionalAdmin(username) {
                     <div class="flex justify-between items-center mb-6">
                         <h3 class="text-2xl font-bold text-gray-900">Data Siswa ${displayTitle} (${displayData.length} siswa)</h3>
                     </div>
-                    <div id="skolastikContent">
+                    <div id="skolastikContent" class="progress-inner-scroll">
                         ${renderStudentGroupedByClass(displayData, isAdminOrSuperAdmin, 'skolastikProgress')}
                     </div>
                 `;
@@ -1870,7 +1971,7 @@ function confirmDeleteRegionalAdmin(username) {
                     <div class="flex justify-between items-center mb-6">
                         <h2 class="text-2xl font-bold text-gray-900">📊 Kemajuan Tes Skolastik</h2>
                     </div>
-                    <div id="skolastikContent">
+                    <div id="skolastikContent" class="progress-inner-scroll">
                         ${renderSkolastikProgressStudent(displayData, isAdminOrSuperAdmin)}
                     </div>
                 `;
@@ -1965,7 +2066,7 @@ function confirmDeleteRegionalAdmin(username) {
                     <div class="flex justify-between items-center mb-6">
                         <h3 class="text-2xl font-bold text-gray-900">Data Siswa ${displayTitle} (${displayData.length} siswa)</h3>
                     </div>
-                    <div id="tkaContent">
+                    <div id="tkaContent" class="progress-inner-scroll">
                         ${renderStudentGroupedByClass(displayData, isAdminOrSuperAdmin, 'tkaProgress')}
                     </div>
                 `;
@@ -1975,7 +2076,7 @@ function confirmDeleteRegionalAdmin(username) {
                     <div class="flex justify-between items-center mb-6">
                         <h2 class="text-2xl font-bold text-gray-900">📈 Kemajuan TKA</h2>
                     </div>
-                    <div id="tkaContent">
+                    <div id="tkaContent" class="progress-inner-scroll">
                         ${renderTkaProgressStudent(displayData, isAdminOrSuperAdmin)}
                     </div>
                 `;
@@ -2102,7 +2203,7 @@ function confirmDeleteRegionalAdmin(username) {
                         <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center">
                             <span class="text-3xl mr-3">📚</span> Daftar Materi Kelas ${currentUser.role !== 'Siswa' ? `(${regionFilterTitle})` : ''}
                         </h2>
-                        <div class="overflow-x-auto">
+                        <div class="class-table-scroll">
                             <table class="w-full">
                                 <thead class="bg-blue-800 text-white">
                                     <tr>
@@ -2340,7 +2441,7 @@ function confirmDeleteRegionalAdmin(username) {
                         <div class="bg-gray-700 text-white px-6 py-3">
                             <h3 class="text-lg font-semibold">Daftar Jadwal Kelas ${!isAdminOrSuperAdmin && studentClass ? `(Kelas ${studentClass})` : ''}</h3>
                         </div>
-                        <div class="overflow-x-auto">
+                        <div class="class-table-scroll">
                             <table class="w-full">
                                 <thead class="bg-blue-800 text-white">
                                     <tr>
@@ -2450,8 +2551,8 @@ function loadAddStudent() {
               ${classOptions.map(c=>`<option value="${c.name}">${c.name} (${c.region})</option>`).join('')}
             </select>
           </div>
-          <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200">
+          <div class="class-table-scroll">
+            <div class="student-table-box"><table class="min-w-full divide-y divide-gray-200">
               <thead class="bg-blue-800 text-white">
                 <tr>
                   <th class="px-4 py-3 text-left text-sm font-semibold text-white-700 text-center text-sm min-w-[120px]">NAMA</th>
@@ -2474,7 +2575,7 @@ function loadAddStudent() {
                   </tr>
                 `).join('')}
               </tbody>
-            </table>
+            </table></table></div>
           </div>
         </div>
       </div>
@@ -3820,7 +3921,7 @@ function loadManageClasses() {
           </select>
         </div>
       </div>
-      <div class="bg-white border border-gray-200 rounded-lg p-6 rounded-xl shadow-sm overflow-x-auto">
+      <div class="bg-white border border-gray-200 rounded-lg p-6 rounded-xl shadow-sm class-table-scroll">
         <table class="min-w-full divide-y divide-gray-200">
           <thead class="bg-blue-800 text-white">
             <tr>
@@ -4145,7 +4246,7 @@ function loadActivitySchedule() {
                     `<button onclick="openAddActivity()" class='px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-sm'>+ Tambah Kegiatan</button>` : ''}
             </div>
             <div class="bg-white border border-gray-200 rounded-lg p-6 rounded-xl shadow-sm">
-                <div class="overflow-x-auto">
+                <div class="class-table-scroll">
                     <table class="w-full">
                         <thead class="bg-blue-800 text-white">
                             <tr>
@@ -4347,7 +4448,7 @@ function loadActivitySchedule() {
           </select>
         </div>
       </div>` : ''}
-      <div class="bg-white border border-gray-200 rounded-lg shadow-sm overflow-x-auto">
+      <div class="bg-white border border-gray-200 rounded-lg shadow-sm class-table-scroll">
         <table class="min-w-full divide-y divide-gray-200">
           <thead class="bg-blue-800 text-white">
             <tr>
@@ -4555,7 +4656,7 @@ function loadSchedule() {
           ${classOptions.map(opt => `<option ${opt === currentFilter ? 'selected' : ''} value="${opt}">${opt}</option>`).join('')}
         </select>
       </div>` : ''}
-      <div class="bg-white border border-gray-200 rounded-lg shadow-sm overflow-x-auto">
+      <div class="bg-white border border-gray-200 rounded-lg shadow-sm class-table-scroll">
         <table class="min-w-full divide-y divide-gray-200">
           <thead class="bg-blue-800 text-white">
             <tr>
@@ -4930,7 +5031,7 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
         <div class="bg-white border border-gray-200 rounded-lg p-6 rounded-xl shadow-sm">
           <h3 class="text-xl font-semibold text-gray-900 mb-4">Daftar Kelas (${filteredClasses.length})</h3>
-          <div class="overflow-x-auto">
+          <div class="class-table-scroll">
             <table class="min-w-full divide-y divide-gray-200">
               <thead class="bg-blue-800 text-white">
                 <tr>
@@ -5186,13 +5287,14 @@ document.addEventListener('DOMContentLoaded', () => {
               </div>
             </div>
           </div>
-          <div id="attendanceStudentsWrapper" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+          <div class="attendance-scroll"><div id="attendanceStudentsWrapper" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+</div>
           <div id="attendanceTableCard" class="mt-6 bg-white rounded-xl p-4 rounded-xl shadow-md rounded-xl border border-blue-50 hidden">
             <div class="mb-4 flex items-center justify-between">
               <h3 class="text-lg font-bold" id="attendanceTableTitle">Tabel Kehadiran</h3>
               <button id="attendanceBackBtn" class="px-3 py-1 border rounded-lg">Kembali</button>
             </div>
-            <div class="overflow-x-auto">
+            <div class="class-table-scroll">
               <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-blue-800 text-white">
                   <tr>
@@ -5293,7 +5395,7 @@ document.addEventListener('DOMContentLoaded', () => {
             </select>
           </div>
           <div class="bg-white rounded-xl p-4 rounded-xl shadow-md rounded-xl border border-blue-50">
-            <div class="overflow-x-auto">
+            <div class="class-table-scroll">
               <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-blue-800 text-white">
                   <tr>
@@ -5785,7 +5887,7 @@ window.loadSchedule = function() {
       </div>`;
     }
     // Build table HTML depending on role
-    let tableHtml = `<div class="bg-white border border-gray-200 rounded-lg shadow-sm overflow-x-auto">`;
+    let tableHtml = `<div class="bg-white border border-gray-200 rounded-lg shadow-sm class-table-scroll">`;
     if (role === 'Siswa') {
       tableHtml += `
         <table class="min-w-full divide-y divide-gray-200">
@@ -6101,7 +6203,7 @@ function loadManageAdmins() {
             </div>
             <div class="bg-white border border-gray-200 rounded-lg p-6 rounded-xl shadow-sm">
                 <h3 class="text-xl font-semibold text-gray-900 mb-4">Daftar Akun Admin (${regionalAdmins.length})</h3>
-                <div class="overflow-x-auto">
+                <div class="class-table-scroll">
                     <table class="w-full">
                         <thead class="bg-blue-800 text-white">
                             <tr>
@@ -6201,6 +6303,26 @@ if (typeof window.saveMaterial === 'undefined') {
 
 
 /* === END COMBINED INLINE SCRIPTS === */
+
+/* ==== AUTO-WRAP TABLES: Semua <table> dibungkus otomatis ==== */
+(function(){
+    document.addEventListener('DOMContentLoaded', function() {
+        const content = document.getElementById('contentArea');
+        if (!content) return;
+        content.querySelectorAll('table').forEach(table => {
+            const parent = table.parentElement;
+            if (!parent.classList.contains('table-responsive')) {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'table-responsive';
+                parent.insertBefore(wrapper, table);
+                wrapper.appendChild(table);
+            } else {
+                if (!parent.style.maxHeight) parent.style.maxHeight = '420px';
+            }
+        });
+    });
+})();
+
 </script>
 
 <div class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center" id="zoomModal">
