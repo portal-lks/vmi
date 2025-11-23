@@ -292,6 +292,19 @@ div:empty{display:none !important;}
 .attendance-scroll::-webkit-scrollbar { width: 8px; }
 .attendance-scroll::-webkit-scrollbar-thumb { background: #c7c7c7; border-radius: 10px; }
 </style>
+
+<style>
+/* PATCH: hilangkan rounded luar hanya untuk tampilan HOME */
+#contentArea.home-no-rounded > div,
+#contentArea.home-no-rounded > main {
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    padding: 0 !important;
+    margin-bottom: 0 !important;
+}
+</style>
+
 </head>
 <body class="bg-white">
 
@@ -851,6 +864,9 @@ let activityScheduleData = [
         ca.classList.remove('student-view');
     }
             currentModule = moduleId;
+            // toggle home-no-rounded class based on module
+            try { if (ca) { if (moduleId === 'home') ca.classList.add('home-no-rounded'); else ca.classList.remove('home-no-rounded'); } } catch(e) {}
+
             setActiveMenu(moduleId);
             // Reset filters when changing modules (especially Super Admin's class filter for performance)
             if (currentUser.role === 'Super Admin' || currentUser.role === 'Admin') {
@@ -899,6 +915,8 @@ let activityScheduleData = [
         }
         function loadHome() {
             const content = document.getElementById('contentArea');
+    // tambahkan class untuk non-rounded outer pada HOME
+    if (content) content.classList.add('home-no-rounded');
             const role = currentUser.role;
 if (role === 'Super Admin') {
     const regions = [...new Set(studentsData.map(s => s.region))];
