@@ -355,7 +355,7 @@ div:empty{display:none !important;}
 <div class="flex items-center justify-center min-h-full p-4 rounded-xl">
 <div class="modal-backdrop fixed inset-0" onclick="closeModal()"></div>
 <div class="bg-white rounded-lg shadow-xl relative z-10 max-w-4xl w-full max-h-full overflow-y-auto">
-<div class="p-6 rounded-xl">
+<div class="p-4 rounded-xl">
 <div class="flex justify-between items-center mb-4">
 <h3 class="text-xl font-bold text-gray-900" id="modalTitle"></h3><button class="text-gray-400 hover:text-gray-600" onclick="closeModal()"> <span class="text-2xl">×</span> </button>
 </div>
@@ -938,33 +938,33 @@ if (role === 'Super Admin') {
         const totalKelas = [...new Set(studentsData.map(s => (s.class||'').toString().trim()).filter(Boolean))].length;
 content.innerHTML = `
         <div class="fade-in ml-2 mr-6">
-            <div class="bg-gradient-to-r from-blue-600 to-blue-800  p-6 rounded-xl mb-6 text-white shadow-lg rounded-xl">
+            <div class="bg-gradient-to-r from-blue-600 to-blue-800  p-4 rounded-xl mb-6 text-white shadow-lg rounded-xl">
                 <h2 class="text-4xl font-bold mb-2 rounded-xl">Selamat Datang ${currentUser.name}</h2>
                 <p class="text-blue-100 text-lg">Dashboard Kontrol Pusat - Semua Regional</p>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-4 gap-5 mb-6">
-                <div class="p-6 rounded-xl  shadow-lg bg-gradient-to-br from-blue-700 to-blue-900 border border-blue-200 text-center rounded-xl">
+                <div class="p-4 rounded-xl  shadow-lg bg-gradient-to-br from-blue-700 to-blue-900 border border-blue-200 text-center rounded-xl">
                     <h4 class="font-semibold text-white mb-2 text-lg">📘 Total Siswa</h4>
                     <p class="text-4xl font-extrabold text-white">${totalStudents}</p>
                     <p class="text-sm text-blue-100 mt-2">Total seluruh regional</p>
                 </div>
-                <div class="p-6 rounded-xl  shadow-lg bg-gradient-to-br from-green-500 to-green-700 border border-green-200 text-white text-center rounded-xl">
+                <div class="p-4 rounded-xl  shadow-lg bg-gradient-to-br from-green-500 to-green-700 border border-green-200 text-white text-center rounded-xl">
                     <h4 class="font-semibold mb-2 text-lg">🏫 Total Kelas</h4>
     <p class="text-4xl font-bold text-white">${totalKelas}</p>
     <p class="text-sm text-green-100 mt-2">Total seluruh regional</p>
 </div>
-                <div class="p-6 rounded-xl  shadow-lg bg-gradient-to-br from-purple-500 to-purple-700 border border-purple-200 text-center text-white rounded-xl">
+                <div class="p-4 rounded-xl  shadow-lg bg-gradient-to-br from-purple-500 to-purple-700 border border-purple-200 text-center text-white rounded-xl">
                     <h4 class="font-semibold text-lg mb-2">🎨 Siswa Seni Rupa</h4>
                     <p class="text-4xl font-extrabold text-white">${seniRupaCount}</p>
                     <p class="text-sm text-white mt-2">Total seluruh regional</p>
                 </div>
-                <div class="p-6 rounded-xl  shadow-lg bg-gradient-to-br from-orange-500 to-orange-700 border border-orange-200 text-center text-white rounded-xl">
+                <div class="p-4 rounded-xl  shadow-lg bg-gradient-to-br from-orange-500 to-orange-700 border border-orange-200 text-center text-white rounded-xl">
                     <h4 class="font-semibold text-lg mb-2">🏗️ Siswa Arsitektur</h4>
                     <p class="text-4xl font-extrabold text-white">${arsitekturCount}</p>
                     <p class="text-sm text-white mt-2">Total seluruh regional</p>
                 </div>
             </div>
-            <div class="bg-white/80 backdrop-blur-sm border border-gray-200  shadow-xl p-6 rounded-xl">
+            <div class="bg-white/80 backdrop-blur-sm border border-gray-200  shadow-xl p-4 rounded-xl">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="text-2xl font-bold text-gray-900">📋 Data Kelas Aktif</h3>
                 </div>
@@ -1101,20 +1101,20 @@ else if (role === 'Admin') {
           <h2 class='text-3xl font-bold mb-2'>Selamat Datang ${currentUser.name}</h2>
           <p class='text-blue-100'>Informasi Laporan Kemajuan Siswa - ${currentUser.region}</p>
         </div>
-        <div clas        <div class='grid grid-cols-1 md:grid-cols-4 gap-6 mb-8'>
-          <div class='p-6 rounded-xl shadow-md text-white bg-gradient-to-br from-blue-700 to-blue-900'>
+        <div clas        <div class='grid grid-cols-1 md:grid-cols-4 gap-4 mb-8'>
+          <div class='p-4 rounded-xl shadow-md text-white bg-gradient-to-br from-blue-700 to-blue-900'>
             <p class='text-sm text-center text-blue-100 mb-1'>📘 TOTAL SISWA</p>
             <p class='text-3xl text-center font-bold text-white'>${totalStudents}</p>
           </div>
-          <div class='p-6 rounded-xl shadow-md text-white bg-gradient-to-br from-green-500 to-green-700'>
+          <div class='p-4 rounded-xl shadow-md text-white bg-gradient-to-br from-green-500 to-green-700'>
             <p class='text-sm text-center text-green-100 mb-1'>🏫 TOTAL KELAS</p>
             <p class='text-3xl text-center font-bold text-white'>${[...new Set(adminStudents.map(s=> (s.class||'').toString().trim()).filter(Boolean))].length}</p>
           </div>
-          <div class='p-6 rounded-xl shadow-md text-white bg-gradient-to-br from-purple-500 to-purple-700'>
+          <div class='p-4 rounded-xl shadow-md text-white bg-gradient-to-br from-purple-500 to-purple-700'>
             <p class='text-sm text-center text-purple-100 mb-1'>🎨 SISWA SENI RUPA</p>
             <p class='text-3xl text-center font-bold text-white'>${seniRupaCount}</p>
           </div>
-          <div class='p-6 rounded-xl shadow-md text-white bg-gradient-to-br from-orange-500 to-orange-700'>
+          <div class='p-4 rounded-xl shadow-md text-white bg-gradient-to-br from-orange-500 to-orange-700'>
             <p class='text-sm text-center text-orange-100 mb-1'>🏗️ SISWA ARSITEKTUR</p>
             <p class='text-3xl text-center font-bold text-white'>${arsitekturCount}</p>
           </div>
@@ -1159,7 +1159,7 @@ else if (role === 'Admin') {
     const avgTKA = tkaScores.length > 0 ? Math.round(tkaScores.reduce((a,b)=>a+b,0) / tkaScores.length) : 0;
     content.innerHTML = `
     <div class="fade-in ml-2 mr-6">
-        <div class="bg-gradient-to-r from-blue-600 to-blue-800  p-6 rounded-xl mb-4 text-white shadow-lg rounded-xl">
+        <div class="bg-gradient-to-r from-blue-600 to-blue-800  p-4 rounded-xl mb-4 text-white shadow-lg rounded-xl">
             <h2 class="text-4xl font-bold mb-3 rounded-xl">Selamat Datang ${currentUser.name}</h2>
             <p class="text-blue-100 text-2xl mt-1">Pantau terus perkembangan belajar Anda</p>
         </div>
@@ -1280,7 +1280,7 @@ else if (role === 'Admin') {
                         <h2 class="text-2xl font-bold text-gray-900">🛡️ Kelola Admin Regional</h2>
                         <button onclick="addRegionalAdmin()" class="px-4 py-2 bg-red-600 text-white  hover:bg-red-700 shadow-sm">+ Tambah Admin Regional</button>
                     </div>
-                    <div class="bg-white border border-gray-200  p-6 rounded-xl shadow-sm">
+                    <div class="bg-white border border-gray-200  p-4 rounded-xl shadow-sm">
                         <h3 class="text-xl font-semibold text-gray-900 mb-4">Daftar Akun Admin (${regionalAdmins.length})</h3>
                         <div class="class-table-scroll">
                             <table class="w-full">
@@ -1499,7 +1499,7 @@ function confirmDeleteRegionalAdmin(username) {
                 }
             });
             return `
-                <div class="bg-white border border-gray-200 rounded-lg p-6 rounded-xl shadow-sm mb-6">
+                <div class="bg-white border border-gray-200 rounded-lg p-4 rounded-xl shadow-sm mb-6">
                     <h4 class="text-lg font-semibold text-gray-900 mb-3">Filter Regional</h4>
                     <select onchange="${filterFunctionName}(this.value)" class="w-full md:w-64 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
                         <option value="all" ${currentRegionFilter === 'all' ? 'selected' : ''}>Semua Regional</option>
@@ -1549,7 +1549,7 @@ function confirmDeleteRegionalAdmin(username) {
         // NEW: Function to render student list grouped by class
         function renderStudentGroupedByClass(displayData, isAdminOrSuperAdmin, currentModule) {
             if (displayData.length === 0) {
-                return `<div class="text-center p-6 rounded-xl text-gray-500">Tidak ada data siswa yang ditemukan di regional ini atau filter kelas yang dipilih.</div>`;
+                return `<div class="text-center p-4 rounded-xl text-gray-500">Tidak ada data siswa yang ditemukan di regional ini atau filter kelas yang dipilih.</div>`;
             }
             // Get available classes for the current region
             const regionalClasses = availableClasses.filter(c =>
@@ -1564,7 +1564,7 @@ function confirmDeleteRegionalAdmin(username) {
                 return groups;
             }, {});
             if (Object.keys(groupedStudents).length === 0) {
-                 return `<div class="text-center p-6 rounded-xl text-gray-500">Tidak ada siswa yang terdaftar di kelas yang tersedia atau filter kelas yang dipilih.</div>`;
+                 return `<div class="text-center p-4 rounded-xl text-gray-500">Tidak ada siswa yang terdaftar di kelas yang tersedia atau filter kelas yang dipilih.</div>`;
             }
             let contentHtml = '';
             const detailFunction = currentModule === 'artProgress'
@@ -1592,7 +1592,7 @@ function confirmDeleteRegionalAdmin(username) {
                     classStatHtml = `<p class="text-sm text-gray-600 mt-2">Total Tes TKA: ${allScores.length} | Rata-rata Nilai: <span class="font-bold text-purple-600">${avgScore}</span></p>`;
                 }
                 contentHtml += `
-                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 rounded-xl mb-6 shadow-md rounded-xl">
+                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 rounded-xl mb-6 shadow-md rounded-xl">
                         <h3 class="text-xl font-bold text-blue-800 mb-2">Kelas ${className} (${studentsInClass.length} Siswa)</h3>
                         ${classStatHtml}
                         <div class="mt-4 space-y-3">
@@ -1811,21 +1811,21 @@ function confirmDeleteRegionalAdmin(username) {
             if (currentUser.role === 'Super Admin') {
                 // --- SUPER ADMIN VIEW: SUMMARY ONLY ---
                 moduleContent = `
-                    <div class="bg-gradient-to-r from-red-600 to-red-800 rounded-lg p-6 rounded-xl mb-8 text-white shadow-lg rounded-xl">
+                    <div class="bg-gradient-to-r from-red-600 to-red-800 rounded-lg p-4 rounded-xl mb-8 text-white shadow-lg rounded-xl">
                         <h3 class="text-xl font-bold">Ringkasan Kemajuan Gambar ${displayTitle}</h3>
                         <p class="text-sm text-red-100 mt-1">Status terbaru dari karya siswa di seluruh regional/regional terpilih</p>
                     </div>
                     ${renderRegionDropdown(selectedAdminRegion, 'filterArtProgressByRegion')}
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-6">
-                        <div class="super-admin-card-3 rounded-xl bg-gradient-to-br from-blue-700 to-blue-900" rounded-lg p-6 rounded-xl text-white shadow-xl">
+                        <div class="super-admin-card-3 rounded-xl bg-gradient-to-br from-blue-700 to-blue-900" rounded-lg p-4 rounded-xl text-white shadow-xl">
                             <p class="text-blue-100">Total Siswa</p>
                             <p class="text-4xl font-bold">${totalStudents}</p>
                         </div>
-                        <div class="bg-green-500 rounded-lg p-6 rounded-xl text-white shadow-xl">
+                        <div class="bg-green-500 rounded-lg p-4 rounded-xl text-white shadow-xl">
                             <p class="text-green-100">Total Karya Seni</p>
                             <p class="text-4xl font-bold">${totalArtworks}</p>
                         </div>
-                        <div class="bg-yellow-500 rounded-lg p-6 rounded-xl text-white shadow-xl">
+                        <div class="bg-yellow-500 rounded-lg p-4 rounded-xl text-white shadow-xl">
                             <p class="text-yellow-100">Rata-rata Kehadiran</p>
                             <p class="text-4xl font-bold">${avgAttendanceRate}%</p>
                         </div>
@@ -1836,7 +1836,7 @@ function confirmDeleteRegionalAdmin(username) {
                              ${renderStudentGroupedByClass(displayData, isAdminOrSuperAdmin, 'artProgress')}
                         </div>
                     ` : `
-                        <div class="bg-white border border-gray-200 rounded-lg p-6 rounded-xl shadow-sm left-card">
+                        <div class="bg-white border border-gray-200 rounded-lg p-4 rounded-xl shadow-sm left-card">
                             <h4 class="text-xl font-bold text-gray-900 mb-3">Update Terbaru Karya Siswa</h4>
                             <p class="text-gray-600">Fitur ini menampilkan ringkasan data global. Untuk detail siswa, silakan filter berdasarkan regional di atas.</p>
                             </div>
@@ -1918,21 +1918,21 @@ function confirmDeleteRegionalAdmin(username) {
             if (currentUser.role === 'Super Admin') {
                 // --- SUPER ADMIN VIEW: SUMMARY ONLY ---
                 moduleContent = `
-                    <div class="bg-gradient-to-r from-red-600 to-red-800 rounded-lg p-6 rounded-xl mb-8 text-white shadow-lg rounded-xl">
+                    <div class="bg-gradient-to-r from-red-600 to-red-800 rounded-lg p-4 rounded-xl mb-8 text-white shadow-lg rounded-xl">
                         <h3 class="text-xl font-bold">Ringkasan Kemajuan Tes Skolastik ${displayTitle}</h3>
                         <p class="text-sm text-red-100 mt-1">Status terbaru dari tes skolastik siswa di seluruh regional/regional terpilih</p>
                     </div>
                     ${renderRegionDropdown(selectedAdminRegion, 'filterSkolastikByRegion')}
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-6">
-                        <div class="super-admin-card-3 rounded-xl bg-gradient-to-br from-blue-700 to-blue-900" rounded-lg p-6 rounded-xl text-white shadow-xl">
+                        <div class="super-admin-card-3 rounded-xl bg-gradient-to-br from-blue-700 to-blue-900" rounded-lg p-4 rounded-xl text-white shadow-xl">
                             <p class="text-blue-100">Total Siswa</p>
                             <p class="text-4xl font-bold">${totalStudents}</p>
                         </div>
-                        <div class="bg-purple-500 rounded-lg p-6 rounded-xl text-white shadow-xl">
+                        <div class="bg-purple-500 rounded-lg p-4 rounded-xl text-white shadow-xl">
                             <p class="text-purple-100">Total Tes Dilakukan</p>
                             <p class="text-4xl font-bold">${totalTests}</p>
                         </div>
-                        <div class="bg-blue-500 rounded-lg p-6 rounded-xl text-white shadow-xl">
+                        <div class="bg-blue-500 rounded-lg p-4 rounded-xl text-white shadow-xl">
                             <p class="text-blue-100">Rata-rata Nilai Skolastik</p>
                             <p class="text-4xl font-bold">${avgScore}</p>
                         </div>
@@ -1943,7 +1943,7 @@ function confirmDeleteRegionalAdmin(username) {
                              ${renderStudentGroupedByClass(displayData, isAdminOrSuperAdmin, 'skolastikProgress')}
                         </div>
                     ` : `
-                        <div class="bg-white border border-gray-200 rounded-lg p-6 rounded-xl shadow-sm right-card">
+                        <div class="bg-white border border-gray-200 rounded-lg p-4 rounded-xl shadow-sm right-card">
                             <h4 class="text-xl font-bold text-gray-900 mb-3">Update Terbaru Tes Skolastik</h4>
                             <p class="text-gray-600">Fitur ini menampilkan ringkasan data global. Untuk detail siswa, silakan filter berdasarkan regional di atas.</p>
                             <p class="text-sm text-gray-500 mt-2">Tes Terbaru: ${latestTestDate}</p>
@@ -2023,21 +2023,21 @@ function confirmDeleteRegionalAdmin(username) {
             if (currentUser.role === 'Super Admin') {
                 // --- SUPER ADMIN VIEW: SUMMARY ONLY ---
                 moduleContent = `
-                    <div class="bg-gradient-to-r from-red-600 to-red-800 rounded-lg p-6 rounded-xl mb-8 text-white shadow-lg rounded-xl">
+                    <div class="bg-gradient-to-r from-red-600 to-red-800 rounded-lg p-4 rounded-xl mb-8 text-white shadow-lg rounded-xl">
                         <h3 class="text-xl font-bold">Ringkasan Kemajuan Tes TKA ${displayTitle}</h3>
                         <p class="text-sm text-red-100 mt-1">Status terbaru dari tes TKA siswa di seluruh regional/regional terpilih</p>
                     </div>
                     ${renderRegionDropdown(selectedAdminRegion, 'filterTkaByRegion')}
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-6">
-                        <div class="super-admin-card-3 rounded-xl bg-gradient-to-br from-blue-700 to-blue-900" rounded-lg p-6 rounded-xl text-white shadow-xl">
+                        <div class="super-admin-card-3 rounded-xl bg-gradient-to-br from-blue-700 to-blue-900" rounded-lg p-4 rounded-xl text-white shadow-xl">
                             <p class="text-blue-100">Total Siswa</p>
                             <p class="text-4xl font-bold">${totalStudents}</p>
                         </div>
-                        <div class="bg-purple-500 rounded-lg p-6 rounded-xl text-white shadow-xl">
+                        <div class="bg-purple-500 rounded-lg p-4 rounded-xl text-white shadow-xl">
                             <p class="text-purple-100">Total Tes Dilakukan</p>
                             <p class="text-4xl font-bold">${totalTests}</p>
                         </div>
-                        <div class="bg-blue-500 rounded-lg p-6 rounded-xl text-white shadow-xl">
+                        <div class="bg-blue-500 rounded-lg p-4 rounded-xl text-white shadow-xl">
                             <p class="text-blue-100">Rata-rata Nilai TKA</p>
                             <p class="text-4xl font-bold">${avgScore}</p>
                         </div>
@@ -2048,7 +2048,7 @@ function confirmDeleteRegionalAdmin(username) {
                              ${renderStudentGroupedByClass(displayData, isAdminOrSuperAdmin, 'tkaProgress')}
                         </div>
                     ` : `
-                        <div class="bg-white border border-gray-200 rounded-lg p-6 rounded-xl shadow-sm">
+                        <div class="bg-white border border-gray-200 rounded-lg p-4 rounded-xl shadow-sm">
                             <h4 class="text-xl font-bold text-gray-900 mb-3">Update Terbaru Tes TKA</h4>
                             <p class="text-gray-600">Fitur ini menampilkan ringkasan data global. Untuk detail siswa, silakan filter berdasarkan regional di atas.</p>
                             <p class="text-sm text-gray-500 mt-2">Tes Terbaru: ${latestTestDate}</p>
@@ -2111,7 +2111,7 @@ function confirmDeleteRegionalAdmin(username) {
                     </div>
                     <div class="space-y-6">
                         ${displayedInfo.map(info => `
-                            <div class="bg-white border border-gray-200 rounded-lg p-6 rounded-xl shadow-sm">
+                            <div class="bg-white border border-gray-200 rounded-lg p-4 rounded-xl shadow-sm">
                                 <div class="flex justify-between items-start">
                                     <div class="flex-1">
                                         <h3 class="text-lg font-semibold text-gray-900 mb-2">${info.title}</h3>
@@ -2209,7 +2209,7 @@ function confirmDeleteRegionalAdmin(username) {
                         ${filterUI}
                         ${isAdminOrSuperAdmin ? '<button onclick="openAddMaterialModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow transition">+ Tambah Materi</button>' : ''}
                     </div>
-                    <div class=" p-6 rounded-xl ">
+                    <div class=" p-4 rounded-xl ">
                         <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center">
                             <span class="text-3xl mr-3">📚</span> Daftar Materi Kelas ${currentUser.role !== 'Siswa' ? `(${regionFilterTitle})` : ''}
                         </h2>
@@ -2512,7 +2512,7 @@ function loadAddStudent() {
         <h2 class="text-2xl font-bold text-gray-900">👤 Tambah Siswa</h2>
       </div>
       <div id="add-student-layout" class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-6">
-        <div class="bg-white border border-gray-200 rounded-lg p-6 rounded-xl shadow-sm">
+        <div class="bg-white border border-gray-200 rounded-lg p-4 rounded-xl shadow-sm">
           <h3 class="text-xl font-semibold text-gray-900 mb-4">Form Tambah Siswa</h3>
           <form id="addStudentForm" class="space-y-4">
             <div>
@@ -2552,7 +2552,7 @@ function loadAddStudent() {
             </div>
           </form>
         </div>
-        <div class="bg-white border border-gray-200 rounded-lg p-6 rounded-xl shadow-sm">
+        <div class="bg-white border border-gray-200 rounded-lg p-4 rounded-xl shadow-sm">
           <h3 class="text-xl font-semibold text-gray-900 mb-4">Siswa Terdaftar</h3>
           <div class="mb-4">
             <label></label>
@@ -3931,7 +3931,7 @@ function loadManageClasses() {
           </select>
         </div>
       </div>
-      <div class="bg-white border border-gray-200 rounded-lg p-6 rounded-xl shadow-sm class-table-scroll">
+      <div class="bg-white border border-gray-200 rounded-lg p-4 rounded-xl shadow-sm class-table-scroll">
         <table class="min-w-full divide-y divide-gray-200">
           <thead class="bg-blue-800 text-white">
             <tr>
@@ -4255,7 +4255,7 @@ function loadActivitySchedule() {
                 ${(currentUser.role === 'Admin' || currentUser.role === 'Super Admin') ?
                     `<button onclick="openAddActivity()" class='px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-sm'>+ Tambah Kegiatan</button>` : ''}
             </div>
-            <div class="bg-white border border-gray-200 rounded-lg p-6 rounded-xl shadow-sm">
+            <div class="bg-white border border-gray-200 rounded-lg p-4 rounded-xl shadow-sm">
                 <div class="class-table-scroll">
                     <table class="w-full">
                         <thead class="bg-blue-800 text-white">
@@ -5039,7 +5039,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <button id="btnAddClass" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-sm">+ Tambah Kelas</button>
 </div>
         </div>
-        <div class="bg-white border border-gray-200 rounded-lg p-6 rounded-xl shadow-sm">
+        <div class="bg-white border border-gray-200 rounded-lg p-4 rounded-xl shadow-sm">
           <h3 class="text-xl font-semibold text-gray-900 mb-4">Daftar Kelas (${filteredClasses.length})</h3>
           <div class="class-table-scroll">
             <table class="min-w-full divide-y divide-gray-200">
@@ -5279,10 +5279,10 @@ document.addEventListener('DOMContentLoaded', () => {
       const classOptionsHTML = ['<option value="all">Semua Kelas</option>'].concat(classes.map(c=>`<option value="${c}">${c}</option>`)).join('');
       content.innerHTML = `
         <div class="fade-in ml-2 mr-6">
-          <div class="bg-white rounded-lg p-6 mb-6 text-black shadow-lg">
+          <div class="bg-white rounded-lg p-4 mb-6 text-black shadow-lg">
             <h2 class="text-2xl font-bold">🗓️ Data Kehadiran - ${currentUser.region}</h2>
           </div>
-          <div class="bg-white rounded-2xl p-6 rounded-xl shadow-md rounded-xl mb-6 border border-blue-100">
+          <div class="bg-white rounded-2xl p-4 rounded-xl shadow-md rounded-xl mb-6 border border-blue-100">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
               <div>
                 <select id="attendanceClassFilter" class="w-full px-3 py-2 border rounded-lg">${classOptionsHTML}</select>
@@ -5352,24 +5352,37 @@ document.addEventListener('DOMContentLoaded', () => {
         if (typeof addAttendance === 'function') addAttendance(null);
       });
       // show/hide table for a student
-      window.showAttendanceForStudent = function(studentId) {
-        const card = document.getElementById('attendanceTableCard');
-        const tbody = document.getElementById('attendanceTableBody');
-        const st = studentsData.find(s=>s.id===studentId);
-        if (!st) return;
-        document.getElementById('attendanceTableTitle').textContent = 'Kehadiran: ' + st.name;
-        // filter by month
-        const mfilter = document.getElementById('attendanceMonthFilter').value;
-        const list = st.attendance || [];
-        const filtered = list.filter(a=>{
-          if (mfilter==='all') return true;
-          const dt = new Date(a.date);
-          return (dt.getMonth()+1) === Number(mfilter);
-        });
-        tbody.innerHTML = renderAttendanceRows(filtered, true, studentId);
-        card.classList.remove('hidden');
-        card.scrollIntoView({behavior:'smooth', block:'center'});
-      };
+      
+
+window.showAttendanceForStudent=function(studentId){
+ const st=studentsData.find(s=>s.id===studentId);
+ if(!st) return;
+ let rows=(st.attendance||[]).map((a,i)=>`
+   <tr class='border-b'>
+<td class='px-4 py-2 text-center'>${i+1}</td>
+<td class='px-4 py-2 text-center'>${a.date}</td>
+<td class='px-4 py-2 text-center'>${a.status}</td>
+<td class='px-4 py-2 text-center'>
+<button class='bg-yellow-500 text-white px-2 py-1 rounded mr-2' onclick='editAttendance(${st.id}, ${i})'>Edit</button>
+<button class='bg-red-600 text-white px-2 py-1 rounded' onclick='deleteAttendance(${st.id}, ${i})'>Hapus</button>
+</td>
+</tr>`).join('');
+ document.getElementById('attendanceModalTitle').textContent="Kehadiran: "+st.name;
+ document.getElementById('attendanceModalBody').innerHTML=`
+   <table class='min-w-full text-sm'>
+     <thead class='bg-blue-700 text-white'>
+       <tr>
+         <th class='px-4 py-2 text-center'>NO</th>
+         <th class='px-4 py-2 text-center'>TANGGAL</th>
+         <th class='px-4 py-2 text-center'>STATUS</th><th class="px-4 py-2 text-center">AKSI</th>
+       </tr>
+     </thead>
+     <tbody>${rows}</tbody>
+   </table>`;
+ document.getElementById('attendanceModal').classList.remove('hidden');
+};
+
+
       document.getElementById('attendanceBackBtn').addEventListener('click', function(){
         document.getElementById('attendanceTableCard').classList.add('hidden');
       });
@@ -5387,12 +5400,12 @@ document.addEventListener('DOMContentLoaded', () => {
       // Student view
       const student = studentsData.find(s => s.username === currentUser.username || s.name === currentUser.name || s.id === currentUser.id);
       if (!student) {
-        content.innerHTML = '<div class="p-6 rounded-xl bg-white rounded-xl shadow-md rounded-xl text-center">Data siswa tidak ditemukan</div>';
+        content.innerHTML = '<div class="p-4 rounded-xl bg-white rounded-xl shadow-md rounded-xl text-center">Data siswa tidak ditemukan</div>';
         return;
       }
       content.innerHTML = `
         <div class="fade-in ml-2 mr-6">
-          <div class="bg-white rounded-lg p-6 mb-6 text-black shadow-lg">
+          <div class="bg-white rounded-lg p-4 mb-6 text-black shadow-lg">
             <h2 class="text-2xl font-bold">${student.name}</h2>
             <p class="text-blue-800 font-semibold">${student.school || "Nama sekolah tidak tersedia"}</p>
           </div>
@@ -5831,7 +5844,7 @@ window.loadSchedule = function() {
       // find student record to identify class and region
       const stud = studentsData.find(s => s.username === currentUser.username || s.name === currentUser.name);
       if (!stud) {
-        content.innerHTML = '<div class="p-6 bg-white rounded-xl shadow text-center text-gray-700">Data siswa tidak ditemukan.</div>';
+        content.innerHTML = '<div class="p-4 bg-white rounded-xl shadow text-center text-gray-700">Data siswa tidak ditemukan.</div>';
         return;
       }
       list = list.filter(s => (s.region === stud.region) && (Array.isArray(s.classes) ? s.classes.includes(stud.class) : (s.classTarget ? s.classTarget === stud.class : true)));
@@ -6011,7 +6024,7 @@ window.loadSchedule = function() {
         if (!firstChild) return;
         if (!firstChild.classList.contains("jadwal-wrapper")) {
             const wrapper = document.createElement("div");
-            wrapper.className = "jadwal-wrapper bg-white shadow-md rounded-2xl p-6 mb-6";
+            wrapper.className = "jadwal-wrapper bg-white shadow-md rounded-2xl p-4 mb-6";
             while (content.firstChild) {
                 wrapper.appendChild(content.firstChild);
             }
@@ -6209,7 +6222,7 @@ function loadManageAdmins() {
                 <h2 class="text-2xl font-bold text-gray-900">🛡️ Kelola Admin Regional</h2>
                 <button onclick="addRegionalAdmin()" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 shadow-sm">+ Tambah Admin Regional</button>
             </div>
-            <div class="bg-white border border-gray-200 rounded-lg p-6 rounded-xl shadow-sm">
+            <div class="bg-white border border-gray-200 rounded-lg p-4 rounded-xl shadow-sm">
                 <h3 class="text-xl font-semibold text-gray-900 mb-4">Daftar Akun Admin (${regionalAdmins.length})</h3>
                 <div class="class-table-scroll">
                     <table class="w-full">
@@ -6420,5 +6433,21 @@ if (typeof window.saveMaterial === 'undefined') {
 })();
 </script>
 <!-- END AUTO NO COLUMN PATCH -->
+
+<!-- Attendance Modal -->
+<div id="attendanceModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+  <div class="bg-white rounded-xl shadow-xl p-4 w-1/2 max-h-[80vh] overflow-auto relative">
+    <button onclick="closeAttendanceModal()" class="absolute top-3 right-3 text-xl font-bold">✖</button>
+    <h2 id="attendanceModalTitle" class="text-2xl font-bold mb-4">Data Kehadiran</h2>
+    <div id="attendanceModalBody"></div>
+  </div>
+</div>
+
+<script>
+function closeAttendanceModal(){
+  document.getElementById('attendanceModal').classList.add('hidden');
+}
+</script>
+
 </body>
 </html>
